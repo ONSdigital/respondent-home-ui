@@ -3,25 +3,73 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title><%=h title %> - Response Operations</title>
-    <link rel="stylesheet" href="/css/reset.css" media="all" type="text/css">
-    <link rel="stylesheet" href="/css/fonts.css" media="all" type="text/css">
-    <link rel="stylesheet" href="/css/grids.css" media="all" type="text/css">
-    <link rel="stylesheet" href="/css/screen.css" media="screen" type="text/css">
+    <link rel="stylesheet" href="/css/main.css" media="all" type="text/css">
+    <script src="/js/header.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js" type="text/javascript"></script>
     <%= yield_content :javascript %>
   </head>
   <body>
-    <div id="doc" class="yui-t7">
-      <div id="hd">
-        <img id="onslogo" src="/images/onslogo.gif" alt="ONS logo">
-        <h2><span class="heavy">Response</span>Operations</h2>
-        <h1><%=h title %></h1>
-      <% if content_for? :sub_heading %>
-        <p class="subhead">
-          <%= yield_content :sub_heading %>
-        </p>
-      <% end %>
+    <a class="skiplink visuallyhidden focusable" href="#main" tabindex="0">
+      <span>Skip to main content</span>
+    </a>
+
+    <header class="global-header">
+      <div class="global-header__wrapper">
+        <a class="main-logo" href="...html">
+          <img src="../img/ons-logo.svg" alt="Office for National Statistics"
+          />
+        </a>
+        <ul class="nav globaltop-nav">
+          <li><a href="#">Release Calendar</a>
+          </li>
+          <li><a href="#">Methodology</a>
+          </li>
+          <li><a href="#">About</a>
+          </li>
+        </ul>
       </div>
+    </header>
+    <nav class="ons-nav">
+      <ul class="nav nav--controls">
+        <li class="nav--controls__menu">
+          <a href="#nav-primary" id="menu-toggle" aria-controls="nav-primary">
+            <span class="nav--controls__icon icon-menu icon--inline icon--large" role="presentation"></span>
+            <span class="nav--controls__text">Menu</span>
+          </a>
+        </li>
+        <li class="nav--controls__search">
+          <a href="#nav-search" id="search-toggle" aria-controls="nav-search">
+            <span class="nav--controls__icon icon-search-1 icon--inline icon--large" role="presentation"></span>
+            <span class="nav--controls__text">Search</span>
+          </a>
+        </li>
+      </ul>
+      <ul class="nav nav--block nav--primary" id="nav-primary">
+        <li class="nav--primary__secondary-content">
+          <a href="#">Release calendar</a>
+        </li>
+        <li class="nav--primary__secondary-content">
+          <a href="#">Methodology</a>
+        </li>
+        <li class="nav--primary__secondary-content">
+          <a href="#">About</a>
+        </li>
+      </ul>
+      <div class="slate--grey search-wrapper">
+        <form class="nav-search nav-search--hidden" id="searchBar">
+          <div class="nav-search__container">
+            <label class="visuallyhidden" for="nav-search">Search for keyword or time series ID</label>
+            <input type="search" class="nav-search__field" id="nav-search" name="nav-search"
+            value="" placeholder="Enter keyword or time series ID">
+          </div>
+          <button type="submit" class="btn btn--primary btn--nav-search" id="nav-search-submit">
+            <span class="icon-search-1" role="presentation"></span>
+            <span class="visuallyhidden">Search</span>
+          </button>
+        </form>
+      </div>
+    </nav>
+    <div id="doc" class="yui-t7">
       <div id="bd">
         <div id="yui-main">
           <div class="yui-b">
@@ -35,5 +83,70 @@
         </div> <!-- #yui-main -->
       </div> <!-- #bd -->
     </div> <!-- #doc.yui-t7 -->
+    <footer class="global-footer">
+      <h2 class="visuallyhidden">Footer links</h2>
+      <div class="slate--light panel--pad-large panel--separated">
+        <div class="wrapper">
+          <nav class="grid-wrap">
+            <div class="grid-col tablet-grid-one-third">
+              <h3 class="delta headline-separated">Legal</h3>
+              <ul class="list--neutral list--grid list--spaced">
+                <li><a href="#">Business Transparency</a>
+                </li>
+                <li><a href="#">Terms and Conditions</a>
+                </li>
+                <li><a href="#">Copyright</a>
+                </li>
+                <li><a href="#">Cookies and Privacy</a>
+                </li>
+              </ul>
+            </div>
+            <div class="grid-col tablet-grid-one-third">
+              <h3 class="delta headline-separated">About ONS</h3>
+              <ul class="list--neutral list--grid list--spaced">
+                <li><a href="#">Who we are</a>
+                </li>
+                <li><a href="#">Careers</a>
+                </li>
+                <li><a href="#">Products and Services</a>
+                </li>
+                <li><a href="#">Contact us</a>
+                </li>
+                <li><a href="#">Our offices</a>
+                </li>
+              </ul>
+            </div>
+            <div class="grid-col tablet-grid-one-third">
+              <h3 class="delta headline-separated">Connect with us</h3>
+              <ul class="list--neutral list--grid list--spaced">
+                <li><a href="#">Facebook</a>
+                </li>
+                <li><a href="#">Twitter</a>
+                </li>
+                <li><a href="#">YouTube</a>
+                </li>
+                <li><a href="#">Email subscriptions</a>
+                </li>
+              </ul>
+            </div>
+          </nav>
+        </div>
+        <!-- /wrapper -->
+      </div>
+      <!-- /slate -->
+      <div class="slate--mid-grey">
+        <div class="wrapper">
+          <div class="footer__license">
+            <img class="footer__license__img" alt="OGL" width="60" src="../img/ogl.png">
+            <p class="footer__license__body">
+              All content is available under the Open Government Licence v2.0, except where otherwise
+              stated
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="./dist/js/footer.js"></script>
   </body>
 </html>

@@ -1,17 +1,16 @@
 
-<% content_for :breadcrumbs do %>
-  Home
-<% end %>
+<div class="wrapper panel--mar">
+  <div class="grid-wrap">
+    <div class="grid-col desktop-grid-full-width">
 
-<% content_for :sub_heading do %>
-  Welcome to Respondent Home.
-<% end %>
+    <% if !description_error.nil? %>
+      <p><span class="required"><%=h description_error %></span></p>
+    <% end %>
 
-<% if !description_error.nil? %>
-  <p><span class="required"><%=h description_error %></span></p>
-<% end %>
-
-<form action="/" method="POST">
-    Internet Access Code: <input type="text" name="iac">
-    <input type="submit">
-</form>
+    <form action="/" method="POST">
+        Internet Access Code: <input type="text" name="iac">
+        <input type="submit" value="Go">
+    </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,459 @@
+@import 'colours';
+@import 'typography';
+@import 'rounded-corners';
+
+body {
+  background-color: $white;
+  color: $black;
+  font-family: $primary-fonts;
+}
+
+a:link {
+  color: $black;
+}
+
+a:visited {
+  color: $black;
+}
+
+a:hover {
+  color: $alternate;
+}
+
+a:active {
+  color: $black;
+}
+
+form p, label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+form table {
+  border-collapse: collapse;
+  margin-top: 0;
+}
+
+form td {
+  padding: 0 50px 5px 0;
+}
+
+form[action="/signin"] input, form[action="/signin/secondfactor"] input {
+  margin-bottom: 5px;
+}
+
+form[action="/signin/secondfactor"] label {
+  font-weight: normal;
+  margin-left: 10px;
+}
+
+h1, h3 {
+  color: $alternate;
+  font-family: $secondary-fonts;
+  font-weight: normal;
+}
+
+h1 {
+  border-bottom: 2px solid $secondary-light;
+  font-size: 2em;
+  padding-bottom: 5px;
+}
+
+h2 {
+  color: $primary-alternate;
+  font: 1.6em $secondary-fonts;
+  margin: 4px 12px 4px 4px;
+  text-align: right;
+  text-transform: uppercase;
+}
+
+h3 {
+  border-bottom: 1px solid $secondary-light;
+  clear: both;
+  font-size: 1.4em;
+  padding-bottom: 5px;
+}
+
+hr {
+  border-top: 2px solid $secondary-light;
+}
+
+iframe {
+  @include border-radius-large;
+  border: 2px solid $primary-alternate;
+  float: right;
+  height: 300px;
+  padding: 1px;
+  width: 380px;
+}
+
+input[type="text"], input[type="password"], select, textarea {
+  @include border-radius-medium;
+  border: 1px solid $secondary-light;
+  padding: 2px 4px 2px;
+}
+
+table {
+  border-collapse: separate; /* Needed to get the rounded corners to appear. */
+  border-spacing: 1px;
+  @include border-radius-large;
+  margin-top: 20px;
+}
+
+thead {
+  color: $white;
+}
+
+th {
+  font-weight: bold;
+}
+
+th, td {
+  padding: 5px 15px 5px 5px;
+  vertical-align: top;
+}
+
+ul {
+  list-style: disc;
+  padding-left: 20px;
+}
+
+li {
+  padding-top: 5px;
+}
+
+strong {
+  font-weight: bold;
+}
+
+#badges {
+  bottom: 25px;
+  position: absolute;
+}
+
+#badges img {
+  margin-right: 5px;
+}
+
+#breadcrumbs {
+  color: $secondary-light;
+  font: 1em $secondary-fonts;
+  margin-bottom: 5px;
+  text-align: right;
+}
+
+#breadcrumbs a, #signoutlink a {
+  color: $secondary-light;
+  text-decoration: none;
+}
+
+#breadcrumbs a:hover, #signoutlink a:hover {
+  text-decoration: underline;
+}
+
+#doc {
+  width: 95%;
+}
+
+#ft {
+  font-size: 100%;
+  font-family: $primary-fonts;
+}
+
+#gateway {
+  background-color: $primary-alternate;
+  @include border-radius-large;
+  font-size: 120%;
+  margin: 20px 0 20px;
+  padding: 10px;
+  width: 300px;
+}
+
+#gateway #status {
+  border-bottom: 2px solid $white;
+  font-weight: bold;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+}
+
+#gateway #status form {
+  float: right;
+  font-size: 80%;
+}
+
+#gateway p:first-of-type {
+  margin-bottom: 5px;
+}
+
+#gateway p:last-of-type {
+  font-size: 80%;
+  margin-top: 15px;
+}
+
+#gateway .value {
+  float: right;
+}
+
+#information {
+  clear: both;
+  color: $alternate;
+  font-size: 120%;
+  margin-top: 10px;
+}
+
+#manage {
+  font-size: 120%;
+  font-weight: bold;
+  list-style-type: none;
+}
+
+#manage li {
+  margin-left: 0;
+}
+
+#manage a:link, #manage a:visited, #manage a:active {
+  background-color: $white;
+  color: $alternate;
+  text-decoration: none;
+}
+
+#manage a:hover {
+  text-decoration: underline;
+}
+
+#menucontainer {
+  background-color: $secondary-lightest;
+  @include border-radius-large;
+  border: 1px solid $secondary-lightest;
+  height: 25px;
+  margin-bottom: 10px;
+  padding: 0;
+}
+
+#menucontainer ul {
+  border: 0;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+#menucontainer ul li {
+  display: block;
+  float: left;
+  margin: 0 2px 0 0;
+  padding: 0;
+  text-align: center;
+}
+
+#menucontainer ul li a {
+  background-color: $secondary-lightest;
+  @include border-radius-large;
+  color: $secondary-light;
+  display: block;
+  font-size: 1.1em;
+  padding: 4px;
+  text-align: center;
+  text-decoration: none;
+  width: 80px;
+}
+
+#menucontainer ul li a:hover {
+  background: $secondary-light;
+  color: $secondary-lightest;
+}
+
+#menucontainer a:active {
+  background-color: $secondary-light;
+  color: $white;
+}
+
+#menucontainer li#active a {
+  background-color: $secondary-light;
+  color: $white;
+}
+
+#newfollowup .button, #newquestionnaire .button {
+  margin: 15px 0 0;
+}
+
+#onslogo {
+  height: 66px;
+  margin-bottom: -15px;
+  width: 150px;
+}
+
+#requiredfields {
+  color: $secondary-light;
+}
+
+#signoutlink {
+  float: right;
+  margin: 5px 10px 0 0;
+}
+
+#signoutlink a:active {
+  background-color: $secondary-lightest;
+  color: $secondary-light;
+}
+
+#questionnairelookup {
+  @include border-radius-small;
+  border: 1px solid $secondary-light;
+  float: right;
+  margin: 1px 5px 0 0;
+}
+
+#questionnairelookup input {
+  border: 0;
+  padding-left: 5px;
+}
+
+.primary {
+  background-color: $primary-light;
+  border: 2px solid $primary-light;
+  font-size: 90%;
+}
+
+.primary tbody {
+  background-color: $white;
+}
+
+.primary .primarylines {
+  background-color: $alternate-lightest;
+  width: 100%;
+}
+
+.button {
+  background-color: $alternate-lightest;
+  @include border-radius-large;
+  border-top: 2px solid $secondary-lightest;
+  border-right: 2px solid $secondary-light;
+  border-bottom: 2px solid $secondary-light;
+  border-left: 2px solid $secondary-lightest;
+  padding: 1px 8px 1px;
+}
+
+.buttons {
+  font-weight: normal;
+  margin-top: 15px;
+}
+
+.even {
+  background-color: $alternate-lightest;
+}
+
+.heavy {
+  font-weight: bold;
+}
+
+/* CTPA-394 */
+#yui-main .message {
+  margin-bottom: 15px;
+}
+
+.message {
+  background-color: $alternate-lightest;
+  @include border-radius-large;
+  color: $alternate;
+  font-weight: bold;
+  padding: 2px;
+}
+
+.message:first-of-type {
+  margin-top: 5px;
+}
+
+.message:last-of-type {
+  margin-bottom: 15px;
+}
+
+.multiline {
+  white-space: pre-wrap;
+}
+
+.number {
+  text-align: right;
+}
+
+.odd {
+  background-color: $primary-lighter;
+}
+
+.pagination {
+  margin-top: 20px;
+}
+
+.pagination, .secondarypagination {
+  color: $black;
+  font-size: 90%;
+  font-weight: bold;
+}
+
+.pagination a, .secondarypagination a {
+  @include border-radius-large;
+  background-color: $white;
+  border: 2px solid $secondary-lightest;
+  color: $secondary-light;
+  font-weight: normal;
+  margin-right: 1px;
+  padding: 2px 4px 2px;
+  text-decoration: none;
+}
+
+.pagination a:hover, .secondarypagination a:hover {
+  background-color: $white;
+  border: 2px solid $secondary-light;
+  color: $black;
+}
+
+.pagination .disabled, .secondarypagination .disabled {
+  display: none;
+}
+
+.secondarypagination {
+  clear: both;
+  padding-top: 20px;
+}
+
+.required {
+  color: $alternate;
+}
+
+.secondarytext {
+  color: $grey;
+}
+
+.subhead {
+  font-size: 120%;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.secondary {
+  background-color: $secondary-light;
+  border: 2px solid $secondary-light;
+  font-size: 90%;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.secondary thead {
+  background-color: $secondary-light;
+}
+
+.secondary .even {
+  background-color: $secondary-lightest;
+}
+
+.secondary .odd {
+  background-color: $secondary-lighter;
+}
+
+.surveytoken {
+  font-family: $fixed-width-fonts;
+}
+
+.ui-datepicker-calendar th span {
+  color: $black;
+}

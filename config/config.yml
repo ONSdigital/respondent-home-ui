@@ -1,0 +1,11 @@
+frame-webservice:
+  host: localhost
+  port: 8171
+
+eq-service:
+  host: preprod-surveys.eq.ons.digital
+
+badges:
+  built: 01_Jan_1970
+  commit: commit
+  environment: development

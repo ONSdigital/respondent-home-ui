@@ -67,9 +67,9 @@ module Beyond
         end
 
         if form.failed?
-          action = "/"
-          erb :index, layout: :simple_layout, locals: { title: "Home",
-                                description_error: "Internet Access Code Required"
+          action = '/'
+          erb :index, layout: :simple_layout, locals: { title: 'Home',
+                                description_error: 'Internet Access Code Required'
                               }
         else
           iac = "#{params[:iac]}"
@@ -77,14 +77,14 @@ module Beyond
           RestClient.get("http://#{settings.frame_service_host}:#{settings.frame_service_port}/questionnaires/iac/#{iac}") do |response, _request, _result, &_block|
           iac_response = JSON.parse(response)
           if response.code == 404
-            erb :index, layout: :simple_layout, locals: { title: "Home",
-                                  description_error: "Invalid Internet Access Code"
+            erb :index, layout: :simple_layout, locals: { title: 'Home',
+                                  description_error: 'Invalid Internet Access Code'
                                 }
           else
 
             if !iac_response['responseDateTime'].nil?
-              erb :index, layout: :simple_layout, locals: { title: "Home",
-                                    description_error: "Questionnaire has been completed"
+              erb :index, layout: :simple_layout, locals: { title: 'Home',
+                                    description_error: 'Questionnaire has been completed'
                                   }
             else
               payload = {
@@ -123,9 +123,8 @@ module Beyond
       end
 
 
-      # Show Respondent help
       get '/help' do
-        erb :help, locals: { title: 'Help' }
+        erb :help, layout: :simple_layout, locals: { title: 'Help' }
       end
 
 

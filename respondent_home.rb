@@ -1,22 +1,17 @@
+require 'sinatra'
 require 'sinatra/content_for2'
 require 'sinatra/flash'
 require 'sinatra/formkeeper'
-require 'will_paginate'
-require 'will_paginate/array'
 require 'rest_client'
 require 'json'
 require 'yaml'
 require 'jwt'
 
 
-module Beyond
-  module Routes
 
-    class Base < Sinatra::Application
-      configure do
 
         # Load various settings from a configuration file.
-        config = YAML.load_file(File.join(__dir__, '../../config/config.yml'))
+        config = YAML.load_file(File.join(__dir__, '/config/config.yml'))
         set :frame_service_host, config['frame-webservice']['host']
         set :frame_service_port, config['frame-webservice']['port']
         set :eq_service_host, config['eq-service']['host']
@@ -24,10 +19,8 @@ module Beyond
 
         # Set global view options.
         set :erb, escape_html: false
-        set :views, File.dirname(__FILE__) + '/../views'
-        set :public_folder, File.dirname(__FILE__) + '/../../public'
 
-      end
+
 
       # View helper for defining blocks inside views for rendering in templates.
             helpers Sinatra::ContentFor2
@@ -54,9 +47,7 @@ module Beyond
 
       # Home page.
       get '/' do
-        erb :index, layout: :simple_layout, locals: { title: 'Home',
-                              description_error: ""
-                             }
+        erb :index, layout: :simple_layout, locals: { title: 'Home' }
       end
 
       # Home Page.
@@ -67,25 +58,21 @@ module Beyond
         end
 
         if form.failed?
-          action = '/'
-          erb :index, layout: :simple_layout, locals: { title: 'Home',
-                                description_error: 'Internet Access Code Required'
-                              }
+          flash[:notice] = 'Internet Access Code Required'
+          erb :index, layout: :simple_layout, locals: { title: 'Home' }
         else
           iac = "#{params[:iac]}"
           iac_response = []
           RestClient.get("http://#{settings.frame_service_host}:#{settings.frame_service_port}/questionnaires/iac/#{iac}") do |response, _request, _result, &_block|
           iac_response = JSON.parse(response)
           if response.code == 404
-            erb :index, layout: :simple_layout, locals: { title: 'Home',
-                                  description_error: 'Invalid Internet Access Code'
-                                }
+            flash[:notice] = 'Invalid Internet Access Code'
+            erb :index, layout: :simple_layout, locals: { title: 'Home' }
           else
 
-            if !iac_response['responseDateTime'].nil?
-              erb :index, layout: :simple_layout, locals: { title: 'Home',
-                                    description_error: 'Questionnaire has been completed'
-                                  }
+            if iac_response['responseDateTime']
+              flash[:notice] = 'Questionnaire has been completed'
+              erb :index, layout: :simple_layout, locals: { title: 'Home' }
             else
               payload = {
                           :user_id => iac_response['iac'],
@@ -118,21 +105,9 @@ module Beyond
           end
         end
 
-
         end
       end
-
 
       get '/help' do
         erb :help, layout: :simple_layout, locals: { title: 'Help' }
       end
-
-
-
-
-      use Rack::ETag           # Add an ETag
-      use Rack::ConditionalGet # Support caching
-      use Rack::Deflater       # GZip
-    end
-  end
-end

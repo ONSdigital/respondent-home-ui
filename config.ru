@@ -3,5 +3,5 @@ require 'bundler'
 
 Bundler.require
 
-require_relative './app/app.rb'
-run Beyond::App
+require_relative 'respondent_home'
+run Sinatra::Application

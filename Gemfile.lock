@@ -1,10 +1,6 @@
 GEM
   remote: https://rubygems.org/
-  remote: http://192.168.11.11:8003/
   specs:
-    ctp-common (7.7.1)
-      pg (~> 0, >= 0.18.3)
-      rest-client (~> 1, >= 1.8.0)
     domain_name (0.5.20160310)
       unf (>= 0.0.5, < 1.0.0)
     formkeeper (0.0.15)
@@ -16,11 +12,7 @@ GEM
     json (1.8.3)
     jwt (1.5.4)
     mime-types (2.99.1)
-    net-ldap (0.14.0)
     netrc (0.11.0)
-    ons-ldap (8.13.0)
-      net-ldap (~> 0, >= 0.11)
-    pg (0.18.4)
     rack (1.6.4)
     rack-protection (1.5.3)
       rack
@@ -28,7 +20,6 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 3.0)
       netrc (~> 0.7)
-    rotp (2.1.1)
     sass (3.4.21)
     sinatra (1.4.7)
       rack (~> 1.5)
@@ -47,24 +38,19 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.2)
-    will_paginate (3.1.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  ctp-common!
   json
   jwt
-  ons-ldap (~> 8)!
   rest-client
-  rotp
   sass
   sinatra
   sinatra-content-for2
   sinatra-flash
   sinatra-formkeeper
-  will_paginate
 
 BUNDLED WITH
    1.11.2

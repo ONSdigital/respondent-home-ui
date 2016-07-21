@@ -1,14 +1,14 @@
-
 <div class="wrapper panel--mar">
   <div class="grid-wrap">
     <div class="grid-col desktop-grid-full-width">
 
-    <% if !description_error.nil? %>
-      <p><span class="required"><%=h description_error %></span></p>
+    <% if flash[:notice] %>
+      <p class="whatever"><%=h flash[:notice] %></p>
+      asdlkfhasldkfhalksdjf
     <% end %>
 
     <form action="/" method="POST">
-        Internet Access Code: <input type="text" name="iac">
+        Internet Access Code: <input type="text" name="iac" autofocus>
         <input type="submit" value="Go">
     </form>
     </div>

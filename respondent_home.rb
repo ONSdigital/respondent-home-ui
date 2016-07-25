@@ -15,6 +15,7 @@ config = YAML.load_file(File.join(__dir__, '/config/config.yml'))
 set :frame_service_host, config['frame-webservice']['host']
 set :frame_service_port, config['frame-webservice']['port']
 set :eq_service_host, config['eq-service']['host']
+set :eq_service_port, config['eq-service']['port']
 
 
 # Set global view options.
@@ -96,8 +97,8 @@ post '/' do
 
         logger.info token
 
-        #url = "https://#{settings.eq_service_host}/session?token=#{token}"
-        url = "http://www.google.co.uk"
+        url = "http://#{settings.eq_service_host}:#{settings.eq_service_port}/session?token=#{token}"
+        #url = "http://www.google.co.uk"
         redirect url
 
       end

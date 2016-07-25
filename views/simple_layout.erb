@@ -73,11 +73,6 @@
       <div id="bd">
         <div id="yui-main">
           <div class="yui-b">
-            <% [:error, :notice].each do |key| %>
-        <% if flash[key] %>
-            <p class="message"><%= flash[key] %></p>
-          <% end %>
-        <% end %>
             <%= yield %>
           </div> <!-- .yui-b -->
         </div> <!-- #yui-main -->

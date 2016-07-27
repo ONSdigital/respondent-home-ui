@@ -6,7 +6,8 @@ gem 'sinatra'
 gem 'sinatra-content-for2'
 gem 'sinatra-flash'
 gem 'sinatra-formkeeper'
-gem 'jwt'
+gem 'json-jwt'
+gem 'jwe'
 
 group :development do
   gem 'sass'

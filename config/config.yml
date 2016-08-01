@@ -1,5 +1,5 @@
 frame-webservice:
-  host: localhost
+  host: collect-server
   port: 8171
 
 eq-service:

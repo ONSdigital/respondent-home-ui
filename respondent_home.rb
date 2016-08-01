@@ -106,17 +106,17 @@ post '/' do
         cek =  Random.new.bytes(32)
         iv  =  Random.new.bytes(12)
 
-        # header - NEED TO ENCYRPT TO BASE64
-        header {typ: 'jwt', kid: 'EDCRRM', alg: 'RS256'}
-
-        logger.info header
 
         jwt = JSON::JWT.new(payload)
-        jws = jwt.sign(private_key, 'RS256')
+        jwt.kid = 'EDCRRM'
+        jwt.alg = :RS256
+
+
+        jws = jwt.sign(private_key, :RS256)
 
 
         # encrypt the token
-        eqtoken = jws.encrypt(public_key,'RSA-OAEP', 'A256GCM').to_s
+        eqtoken = jws.encrypt(public_key,'RSA-OAEP', :A256GCM).to_s
 
         logger.info eqtoken
         url = "http://#{settings.eq_service_host}:#{settings.eq_service_port}/session?token=" + eqtoken

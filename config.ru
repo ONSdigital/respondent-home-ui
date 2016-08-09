@@ -3,7 +3,7 @@ require 'bundler'
 
 Bundler.require
 
-require_relative 'respondent_home'
+require_relative 'routes/home'
 
 require 'rack/etag'
 require 'rack/conditionalget'

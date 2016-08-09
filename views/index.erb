@@ -1,15 +1,13 @@
 <div class="wrapper panel--mar">
   <div class="grid-wrap">
     <div class="grid-col desktop-grid-full-width">
-
     <% if flash[:notice] %>
       <p class="formfailed"><b><%=h flash[:notice] %></b></p>
     <% end %>
-
-    <form action="/" method="POST">
-        Internet Access Code: <input type="text" name="iac" autofocus>
+      <form action="/" method="POST">
+        Internet Access Code: <input type="text" name="iac" autocomplete="off" autofocus>
         <input type="submit" value="Go">
-    </form>
+      </form>
     </div>
   </div>
 </div>

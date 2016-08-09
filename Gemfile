@@ -6,8 +6,10 @@ gem 'sinatra'
 gem 'sinatra-content-for2'
 gem 'sinatra-flash'
 gem 'sinatra-formkeeper'
-gem 'json-jwt'
-gem 'jwe'
+
+source 'http://rubygems.ctpdev.local' do
+  gem 'ons-jwe'
+end
 
 group :development do
   gem 'sass'

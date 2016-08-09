@@ -24,9 +24,6 @@ set :case_service_port, config['case-webservice']['port']
 set :eq_service_host, config['eq-service']['host']
 set :eq_service_port, config['eq-service']['port']
 
-# Set global view options.
-set :erb, escape_html: false
-
 # View helper for defining blocks inside views for rendering in templates.
 helpers Sinatra::ContentFor2
 helpers do

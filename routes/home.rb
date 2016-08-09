@@ -12,17 +12,17 @@ require 'base64'
 
 SESSION_EXPIRATION_PERIOD = 60 * 60 * 6
 
-# Expire sessions after ten minutes of inactivity.
-use Rack::Session::Cookie, key: 'rack.session', path: '/',
-                           secret: 'f089802942494ca9a7250a849d8d8c0c',
-                           expire_after: SESSION_EXPIRATION_PERIOD
-
 # Load various settings from a configuration file.
 config = YAML.load_file(File.join(__dir__, '../config.yml'))
 set :case_service_host, config['case-webservice']['host']
 set :case_service_port, config['case-webservice']['port']
 set :eq_service_host, config['eq-service']['host']
 set :eq_service_port, config['eq-service']['port']
+
+# Expire sessions after SESSION_EXPIRATION_PERIOD minutes of inactivity.
+use Rack::Session::Cookie, key: 'rack.session', path: '/',
+                           secret: 'f089802942494ca9a7250a849d8d8c0c',
+                           expire_after: SESSION_EXPIRATION_PERIOD
 
 # View helper for defining blocks inside views for rendering in templates.
 helpers Sinatra::ContentFor2

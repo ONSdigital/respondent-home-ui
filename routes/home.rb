@@ -18,7 +18,7 @@ use Rack::Session::Cookie, key: 'rack.session', path: '/',
                            expire_after: SESSION_EXPIRATION_PERIOD
 
 # Load various settings from a configuration file.
-config = YAML.load_file(File.join(__dir__, 'config.yml'))
+config = YAML.load_file(File.join(__dir__, '../config.yml'))
 set :case_service_host, config['case-webservice']['host']
 set :case_service_port, config['case-webservice']['port']
 set :eq_service_host, config['eq-service']['host']

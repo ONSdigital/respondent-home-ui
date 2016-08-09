@@ -14,10 +14,13 @@ SESSION_EXPIRATION_PERIOD = 60 * 60 * 6
 
 # Load various settings from a configuration file.
 config = YAML.load_file(File.join(__dir__, '../config.yml'))
-set :case_service_host, config['case-webservice']['host']
-set :case_service_port, config['case-webservice']['port']
-set :eq_service_host, config['eq-service']['host']
-set :eq_service_port, config['eq-service']['port']
+set :case_service_host,      config['case-webservice']['host']
+set :case_service_port,      config['case-webservice']['port']
+set :eq_service_host,        config['eq-service']['host']
+set :eq_service_port,        config['eq-service']['port']
+set :public_key,             config['eq-service']['public_key']
+set :private_key,            config['eq-service']['private_key']
+set :private_key_passphrase, config['eq-service']['private_key_passphrase']
 
 # Expire sessions after SESSION_EXPIRATION_PERIOD minutes of inactivity.
 use Rack::Session::Cookie, key: 'rack.session', path: '/',

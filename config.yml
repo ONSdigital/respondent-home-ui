@@ -5,3 +5,6 @@ case-webservice:
 eq-service:
   host: localhost
   port: 5000
+  public_key: ./keys/sdc-user-authentication-encryption-sr-public-key.pem
+  private_key: ./keys/sdc-user-authentication-signing-rrm-private-key.pem
+  private_key_passphrase: 'digitaleq'

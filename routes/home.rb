@@ -14,7 +14,7 @@ SESSION_EXPIRATION_PERIOD = 60 * 60 * 6
 
 # Expire sessions after ten minutes of inactivity.
 use Rack::Session::Cookie, key: 'rack.session', path: '/',
-                           secret: 'eb46fa947d8411e5996329c9ef0ba35d',
+                           secret: 'f089802942494ca9a7250a849d8d8c0c',
                            expire_after: SESSION_EXPIRATION_PERIOD
 
 # Load various settings from a configuration file.

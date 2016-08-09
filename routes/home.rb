@@ -5,10 +5,7 @@ require 'sinatra/formkeeper'
 require 'rest_client'
 require 'json'
 require 'yaml'
-require 'json/jwt'
-require 'jwe'
 require 'openssl'
-require 'base64'
 
 SESSION_EXPIRATION_PERIOD = 60 * 60 * 6
 
@@ -30,6 +27,7 @@ use Rack::Session::Cookie, key: 'rack.session', path: '/',
 # View helper for defining blocks inside views for rendering in templates.
 helpers Sinatra::ContentFor2
 helpers do
+
   # View helper for escaping HTML output.
   def h(text)
     Rack::Utils.escape_html(text)
@@ -41,15 +39,11 @@ before do
   headers 'Content-Type' => 'text/html; charset=utf-8'
 end
 
-# Home page.
 get '/' do
   erb :index, layout: :simple_layout, locals: { title: 'Home' }
 end
 
-# Home Page.
 post '/' do
-
-  # test for existence of iac
   form do
     field :iac, present: true
   end
@@ -63,7 +57,7 @@ post '/' do
     RestClient.get("http://#{settings.case_service_host}:#{settings.case_service_port}/questionnaires/iac/#{iac}") do |response, _request, _result, &_block|
       iac_response = JSON.parse(response)
       if response.code == 404
-        flash[:notice] = 'Invalid Internet Access Code.'
+        flash[:notice] = 'Invalid Internet access code.'
         redirect '/'
       elsif iac_response['responseDateTime']
         flash[:notice] = 'Questionnaire has been completed.'

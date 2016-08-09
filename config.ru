@@ -4,6 +4,7 @@ require 'bundler'
 Bundler.require
 
 require_relative 'routes/home'
+require_relative 'routes/error'
 
 require 'rack/etag'
 require 'rack/conditionalget'

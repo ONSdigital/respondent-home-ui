@@ -38,14 +38,6 @@ before do
   headers 'Content-Type' => 'text/html; charset=utf-8'
 end
 
-error 404 do
-  erb :not_found, locals: { title: '404 Not Found' }
-end
-
-error 500 do
-  erb :internal_server_error, locals: { title: '500 Internal Server Error' }
-end
-
 # Home page.
 get '/' do
   erb :index, layout: :simple_layout, locals: { title: 'Home' }

@@ -8,7 +8,7 @@ require 'openssl'
 require 'json'
 require 'yaml'
 
-KEY_ID                    = 'EDCRRM'
+KEY_ID                    = 'EDCRRM'.freeze
 SESSION_EXPIRATION_PERIOD = 60 * 60 * 6
 
 # Load various settings from a configuration file.

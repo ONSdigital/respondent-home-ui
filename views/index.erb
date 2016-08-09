@@ -2,7 +2,7 @@
   <div class="grid-wrap">
     <div class="grid-col desktop-grid-full-width">
     <% if flash[:notice] %>
-      <p class="formfailed"><b><%=h flash[:notice] %></b></p>
+      <p class="formfailed"><strong><%=h flash[:notice] %></strong></p>
     <% end %>
       <form action="/" method="POST">
         Internet Access Code: <input type="text" name="iac" autocomplete="off" autofocus>

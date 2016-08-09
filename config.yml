@@ -1,4 +1,4 @@
-frame-webservice:
+case-webservice:
   host: collect-server
   port: 8171
 

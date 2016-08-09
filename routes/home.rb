@@ -18,9 +18,9 @@ use Rack::Session::Cookie, key: 'rack.session', path: '/',
                            expire_after: SESSION_EXPIRATION_PERIOD
 
 # Load various settings from a configuration file.
-config = YAML.load_file(File.join(__dir__, '/config/config.yml'))
-set :frame_service_host, config['frame-webservice']['host']
-set :frame_service_port, config['frame-webservice']['port']
+config = YAML.load_file(File.join(__dir__, 'config.yml'))
+set :case_service_host, config['case-webservice']['host']
+set :case_service_port, config['case-webservice']['port']
 set :eq_service_host, config['eq-service']['host']
 set :eq_service_port, config['eq-service']['port']
 
@@ -68,7 +68,7 @@ post '/' do
   else
     iac = params[:iac]
     iac_response = []
-    RestClient.get("http://#{settings.frame_service_host}:#{settings.frame_service_port}/questionnaires/iac/#{iac}") do |response, _request, _result, &_block|
+    RestClient.get("http://#{settings.case_service_host}:#{settings.case_service_port}/questionnaires/iac/#{iac}") do |response, _request, _result, &_block|
       iac_response = JSON.parse(response)
       if response.code == 404
         flash[:notice] = 'Invalid Internet Access Code.'

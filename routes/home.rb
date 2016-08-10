@@ -64,7 +64,7 @@ before do
 end
 
 get '/' do
-  erb :index, layout: :simple_layout, locals: { title: 'Home' }
+  erb :index, locals: { title: 'Home' }
 end
 
 post '/' do
@@ -100,5 +100,5 @@ post '/' do
 end
 
 get '/help' do
-  erb :help, layout: :simple_layout, locals: { title: 'Help' }
+  erb :help, locals: { title: 'Help' }
 end

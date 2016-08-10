@@ -8,7 +8,7 @@ require 'openssl'
 require 'json'
 require 'yaml'
 
-KEY_ID                    = 'EDCRRM'.freeze
+KEY_ID = 'EDCRRM'.freeze
 
 # Load various settings from a configuration file.
 config = YAML.load_file(File.join(__dir__, '../config.yml'))

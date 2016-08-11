@@ -1,12 +1,13 @@
 Respondent Home Ruby Web Application
-========================================
+====================================
 
-This Ruby Sinatra application allows users to validate their IAC and forwards to eQ
+This Ruby [Sinatra](http://www.sinatrarb.com/) application is the user interface for the Respondent Home product. It allows users to validate their Internet Access Code (IAC) and forwards
+them to the [ONS eQ Survey Runner](https://github.com/ONSdigital/eq-survey-runner) upon successful validation.
 
 Prerequisites
 -------------
 
-The application's `config.yml` configuration file references the Java web services using a `collect-server` name which needs to be present in your hosts file. Install the RubyGems the application depends on by running `bundle install`.
+The application's `config.yml` configuration file references the Java web services using `collect-server` and `eq-server` names that need to be present in your hosts file. Install the RubyGems the application depends on by running `bundle install`.
 
 Running
 -------
@@ -20,8 +21,8 @@ and access using [http://localhost:9292](http://localhost:9292)
 Running Using the Mock Backend
 ------------------------------
 
-This project includes a Sinatra applications that provide mock versions of the caseframeservice. To run them, edit your hosts file so that `collect-server` uses 127.0.0.1. Then run:
+This project includes a Sinatra application that provide a mock version of the Case web service. To run it, edit your hosts file so that `collect-server` uses 127.0.0.1. Then run:
 
-  `bundle exec rackup -p 8178` from within the `mock\caseframeservice` directory
+  `./run.sh` from within the `mock` directory. This is a shell script that starts the mock web service in the background. Use Ctrl + C to terminate it. The output from the background process is written to `mock/nohup.out`. This file can be deleted if not required.
 
 Start the user interface normally as described above.

@@ -3,7 +3,7 @@ case-webservice:
   port: 8171
 
 eq-service:
-  host: localhost
+  host: eq-server
   port: 5000
   public_key: ../keys/sdc-user-authentication-encryption-sr-public-key.pem
   private_key: ../keys/sdc-user-authentication-signing-rrm-private-key.pem

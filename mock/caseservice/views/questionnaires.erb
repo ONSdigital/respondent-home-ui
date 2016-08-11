@@ -1,0 +1,20 @@
+<% if iac %>
+[
+  {
+    "questionnaireId": 160233311537150,
+    "caseId": "<%= case_id %>",
+    "state": "state",
+    "dispatchDateTime": "2016-02-11T11:38:08.141Z",
+    "responseDateTime": "2016-02-11T11:38:08.141Z",
+    "receiptDateTime": "2016-02-11T11:38:08.141Z",
+    "questionSet": "HH",
+    "iac": 12345678909876543210
+  }
+]
+<% else %>
+{
+  "code": "code",
+  "timestamp": 0,
+  "message": "message"
+}
+<% end %>

@@ -84,7 +84,9 @@ post '/' do
       if response.code == 404
         flash[:notice] = 'Invalid Internet access code.'
         redirect '/'
-      elsif iac_response['responseDateTime']
+
+      # TODO: Need a better check for whether an IAC has been used.
+      elsif iac_response.first['responseDateTime']
         flash[:notice] = 'Questionnaire has been completed.'
         redirect '/'
       else

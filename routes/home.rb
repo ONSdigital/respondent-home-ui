@@ -8,7 +8,8 @@ require 'openssl'
 require 'json'
 require 'yaml'
 
-KEY_ID = 'EDCRRM'.freeze
+KEY_ID                    = 'EDCRRM'.freeze
+SESSION_EXPIRATION_PERIOD = 60 * 60 * 6
 
 # Load various settings from a configuration file.
 config = YAML.load_file(File.join(__dir__, '../config.yml'))
@@ -19,6 +20,11 @@ set :eq_service_port,        config['eq-service']['port']
 set :public_key,             config['eq-service']['public_key']
 set :private_key,            config['eq-service']['private_key']
 set :private_key_passphrase, config['eq-service']['private_key_passphrase']
+
+# Expire sessions after SESSION_EXPIRATION_PERIOD minutes of inactivity.
+use Rack::Session::Cookie, key: 'rack.session', path: '/',
+                           secret: 'f089802942494ca9a7250a849d8d8c0c',
+                           expire_after: SESSION_EXPIRATION_PERIOD
 
 # View helper for defining blocks inside views for rendering in templates.
 helpers Sinatra::ContentFor2

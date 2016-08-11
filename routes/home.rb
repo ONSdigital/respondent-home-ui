@@ -86,7 +86,7 @@ post '/' do
         redirect '/'
 
       # TODO: Need a better check for whether an IAC has been used.
-      elsif iac_response.first['responseDateTime']
+      elsif iac_response['responseDateTime']
         flash[:notice] = 'Questionnaire has been completed.'
         redirect '/'
       else

@@ -1,147 +1,80 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<!--[if lt IE 7]>      <html lang="en-gb" dir="ltr" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en-gb" dir="ltr" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en-gb" dir="ltr" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en-gb" dir="ltr" class="no-js"> <!--<![endif]-->
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title><%=h title %> - Respondent Home</title>
-    <link rel="stylesheet" href="/css/main.css" media="all" type="text/css">
-    <script src="/js/header.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js" type="text/javascript"></script>
-    <%= yield_content :javascript %>
+    <meta content="" name="description">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,600,700,' rel='stylesheet' type='text/css'>
+    <!--[if lt IE 9]>
+      <script src="/js/vendor/html5shiv.min.js"></script>
+    <![endif]-->
+    <!--[if lte IE 9]>
+      <script src="/js/polyfills.js"></script>
+    <![endif]-->
+    <!--[if gt IE 8]><!-->
+    <script>document.documentElement.className = document.documentElement.className.replace('no-js','has-js')</script>
+    <!--<![endif]-->
+    <!--[if (gt IE 9) | (IEMobile)]><!-->
+    <link href="/css/default/responsive.css" rel="stylesheet">
+    <!--<![endif]-->
+    <!--[if (lte IE 9) & (!IEMobile)]>
+    <link href="/css/default/fixed.css" rel="stylesheet">
+    <![endif]-->
   </head>
   <body>
-    <a class="skiplink visuallyhidden focusable" href="#main" tabindex="0">
-      <span>Skip to main content</span>
-    </a>
+    <div class="bar" role="banner">
+      <div class="skip">
+        <a class="skip__link" href="#main">Skip to content</a>
+      </div>
+      <div class="bar__inner container">
+        <div class="badge badge--amber u-mr-xs">ALPHA</div>
+        <div class="bar__title">Respondent Home</div>
+      </div>
+    </div>
 
-    <header class="global-header">
-      <div class="global-header__wrapper">
-        <a class="main-logo" href="...html">
-          <img src="../img/ons-logo.svg" alt="Office for National Statistics"
-          />
-        </a>
-        <ul class="nav globaltop-nav">
-          <li><a href="#">Release Calendar</a>
-          </li>
-          <li><a href="#">Methodology</a>
-          </li>
-          <li><a href="#">About</a>
-          </li>
-        </ul>
-      </div>
-    </header>
-    <nav class="ons-nav">
-      <ul class="nav nav--controls">
-        <li class="nav--controls__menu">
-          <a href="#nav-primary" id="menu-toggle" aria-controls="nav-primary">
-            <span class="nav--controls__icon icon-menu icon--inline icon--large" role="presentation"></span>
-            <span class="nav--controls__text">Menu</span>
-          </a>
-        </li>
-        <li class="nav--controls__search">
-          <a href="#nav-search" id="search-toggle" aria-controls="nav-search">
-            <span class="nav--controls__icon icon-search-1 icon--inline icon--large" role="presentation"></span>
-            <span class="nav--controls__text">Search</span>
-          </a>
-        </li>
-      </ul>
-      <ul class="nav nav--block nav--primary" id="nav-primary">
-        <li class="nav--primary__secondary-content">
-          <a href="#">Release calendar</a>
-        </li>
-        <li class="nav--primary__secondary-content">
-          <a href="#">Methodology</a>
-        </li>
-        <li class="nav--primary__secondary-content">
-          <a href="#">About</a>
-        </li>
-      </ul>
-      <div class="slate--grey search-wrapper">
-        <form class="nav-search nav-search--hidden" id="searchBar">
-          <div class="nav-search__container">
-            <label class="visuallyhidden" for="nav-search">Search for keyword or time series ID</label>
-            <input type="search" class="nav-search__field" id="nav-search" name="nav-search"
-            value="" placeholder="Enter keyword or time series ID">
+    <div class="container">
+      <div class="panel">
+        <div class="panel__header survey-header u-cf">
+          <div class="logo survey-header__logo">
+            <img src="/img/logo.svg" alt="Office for National Statistics" class="logo__img">
           </div>
-          <button type="submit" class="btn btn--primary btn--nav-search" id="nav-search-submit">
-            <span class="icon-search-1" role="presentation"></span>
-            <span class="visuallyhidden">Search</span>
-          </button>
-        </form>
-      </div>
-    </nav>
-    <div id="doc" class="yui-t7">
-      <div id="bd">
-        <div id="yui-main">
-          <div class="yui-b">
-            <%= yield %>
-          </div> <!-- .yui-b -->
-        </div> <!-- #yui-main -->
-      </div> <!-- #bd -->
-    </div> <!-- #doc.yui-t7 -->
-    <footer class="global-footer">
-      <h2 class="visuallyhidden">Footer links</h2>
-      <div class="slate--light panel--pad-large panel--separated">
-        <div class="wrapper">
-          <nav class="grid-wrap">
-            <div class="grid-col tablet-grid-one-third">
-              <h3 class="delta headline-separated">Legal</h3>
-              <ul class="list--neutral list--grid list--spaced">
-                <li><a href="#">Business Transparency</a>
-                </li>
-                <li><a href="#">Terms and Conditions</a>
-                </li>
-                <li><a href="#">Copyright</a>
-                </li>
-                <li><a href="#">Cookies and Privacy</a>
-                </li>
-              </ul>
+          <div class="info survey-header__info" role="contentinfo">
+            <h2 class="info__title">Survey Help</h2>
+            <div class="info__tel">
+              0300 1234 931
             </div>
-            <div class="grid-col tablet-grid-one-third">
-              <h3 class="delta headline-separated">About ONS</h3>
-              <ul class="list--neutral list--grid list--spaced">
-                <li><a href="#">Who we are</a>
-                </li>
-                <li><a href="#">Careers</a>
-                </li>
-                <li><a href="#">Products and Services</a>
-                </li>
-                <li><a href="#">Contact us</a>
-                </li>
-                <li><a href="#">Our offices</a>
-                </li>
-              </ul>
-            </div>
-            <div class="grid-col tablet-grid-one-third">
-              <h3 class="delta headline-separated">Connect with us</h3>
-              <ul class="list--neutral list--grid list--spaced">
-                <li><a href="#">Facebook</a>
-                </li>
-                <li><a href="#">Twitter</a>
-                </li>
-                <li><a href="#">YouTube</a>
-                </li>
-                <li><a href="#">Email subscriptions</a>
-                </li>
-              </ul>
-            </div>
-          </nav>
+          </div>
         </div>
-        <!-- /wrapper -->
-      </div>
-      <!-- /slate -->
-      <div class="slate--mid-grey">
-        <div class="wrapper">
-          <div class="footer__license">
-            <img class="footer__license__img" alt="OGL" width="60" src="../img/ogl.png">
-            <p class="footer__license__body">
-              All content is available under the Open Government Licence v2.0, except where otherwise
-              stated
-            </p>
+        <div role="main" class="panel__body" id="main">
+          <div class="header">
+            <h1 class="header__title">Welcome</h1>
+            <div class="box">
+              <%= yield %>
+            </div>
           </div>
         </div>
       </div>
-    </footer>
+    </div>
 
-    <script src="./js/footer.js"></script>
+    <!-- jQuery 1 -->
+  	<!--[if lt IE 9]>
+  	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  	<script>window.jQuery || document.write('<script "/js/vendor/jquery-1.12.0.min.js"><\/script>')</script>
+  	<![endif]-->
+  	<!-- jQuery 2 -->
+  	<!--[if gte IE 9]><!-->
+  	<script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
+  	<script>window.jQuery || document.write('<script "/js/vendor/jquery-2.2.0.min.js><\/script>')</script>
+  	<!--<![endif]-->
+
+    <!--[if gte IE 9]><!-->
+    <script src="/js/bundle.js"></script>
+    <!--<![endif]-->
   </body>
 </html>

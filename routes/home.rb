@@ -64,7 +64,7 @@ before do
 end
 
 get '/' do
-  erb :index, locals: { title: 'Home' }
+  erb :index, locals: { title: 'Welcome' }
 end
 
 post '/' do
@@ -73,7 +73,7 @@ post '/' do
   end
 
   if form.failed?
-    flash[:notice] = 'Internet access code required.'
+    flash[:notice] = 'An Internet access code is required.'
     redirect '/'
   else
     iac = params[:iac]
@@ -82,12 +82,12 @@ post '/' do
       iac_response = JSON.parse(response)
 
       if response.code == 404
-        flash[:notice] = 'Invalid Internet access code.'
+        flash[:notice] = 'The Internet access code entered is not valid.'
         redirect '/'
 
       # TODO: Need a better check for whether an IAC has been used.
       elsif iac_response['responseDateTime']
-        flash[:notice] = 'Questionnaire has been completed.'
+        flash[:notice] = 'A questionnaire has already been completed for that Internet access code.'
         redirect '/'
       else
         public_key  = load_key_from_file(settings.public_key)

@@ -1,13 +1,33 @@
-<div class="wrapper panel--mar">
-  <div class="grid-wrap">
-    <div class="grid-col desktop-grid-full-width">
-    <% if flash[:notice] %>
-      <p class="formfailed"><strong><%=h flash[:notice] %></strong></p>
-    <% end %>
-      <form action="/" method="POST">
-        Internet Access Code: <input type="text" name="iac" autocomplete="off" autofocus>
-        <input type="submit" value="Go">
-      </form>
+<p class="u-m-s u-mb-no" style="padding-bottom: 20px;">Enter your Internet access code below.</p>
+<% if flash[:notice] %>
+<div class="alert alert--error">
+  <div class="alert__header">
+    <div class="alert__title">
+      <h2 class="alert__title"><%=h flash[:notice] %></h2>
     </div>
   </div>
+  <div class="alert__body">
+    <form action="/" method="post">
+      <fieldset class="fieldset">
+        <div class="field">
+          <input type="text" name="iac" class="input input--text" size="20" maxlength="20" autocomplete="off" autofocus>
+        </div>
+      </fieldset>
+      <div class="group" style="margin-top: 40px;">
+        <input type="submit" class="btn btn--secondary qa-btn-submit" value="Continue">
+      </div>
+    </form>
+  </div>
 </div>
+<% else %>
+<form action="/" method="post">
+  <fieldset class="fieldset">
+    <div class="field">
+      <input type="text" name="iac" class="input input--text" size="20" maxlength="20" autocomplete="off" autofocus>
+    </div>
+  </fieldset>
+  <div class="group" style="margin-top: 40px;">
+    <input type="submit" class="btn btn--secondary qa-btn-submit" value="Continue">
+  </div>
+</form>
+<% end %>

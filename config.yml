@@ -1,6 +1,6 @@
-case-webservice:
+iac-webservice:
   host: collect-server
-  port: 8171
+  port: 8141
 
 eq-service:
   host: eq-server

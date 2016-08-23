@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'sinatra'
 
-require_relative 'routes/case'
+require_relative 'routes/iac'
 
 require 'rack/etag'
 require 'rack/conditionalget'

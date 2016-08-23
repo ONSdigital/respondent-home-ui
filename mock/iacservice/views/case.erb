@@ -1,0 +1,29 @@
+<% if iac && iac == 'hhrc zv2b' %>
+{
+  "caseId": 1,
+  "iac": "hhrc zv2b",
+  "uprn": 452000113,
+  "sampleId": 1,
+  "surveyId": 1,
+  "parentCaseId": 0,
+  "questionSet": "HH",
+  "responseDateTime": "2016-08-22 14:00:00.00+00"
+}
+<% elsif iac && iac == 'x6k 5z6m' %>
+{
+  "caseId": 2,
+  "iac": "x6k 5z6m",
+  "uprn": 452000088,
+  "sampleId": 1,
+  "surveyId": 1,
+  "parentCaseId": 0,
+  "questionSet": "HH",
+  "responseDateTime": null
+}
+<% else %>
+{
+  "code": "code",
+  "timestamp": 0,
+  "message": "message"
+}
+<% end %>

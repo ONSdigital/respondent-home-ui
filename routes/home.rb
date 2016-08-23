@@ -13,8 +13,8 @@ SESSION_EXPIRATION_PERIOD = 60 * 60 * 6
 
 # Load various settings from a configuration file.
 config = YAML.load_file(File.join(__dir__, '../config.yml'))
-set :case_service_host,      config['case-webservice']['host']
-set :case_service_port,      config['case-webservice']['port']
+set :iac_service_host,       config['iac-webservice']['host']
+set :iac_service_port,       config['iac-webservice']['port']
 set :eq_service_host,        config['eq-service']['host']
 set :eq_service_port,        config['eq-service']['port']
 set :public_key,             config['eq-service']['public_key']
@@ -78,7 +78,7 @@ post '/' do
   else
     iac = params[:iac]
     iac_response = []
-    RestClient.get("http://#{settings.case_service_host}:#{settings.case_service_port}/questionnaires/iac/#{iac}") do |response, _request, _result, &_block|
+    RestClient.get("http://#{settings.iac_service_host}:#{settings.iac_service_port}/iacs/#{iac}") do |response, _request, _result, &_block|
       iac_response = JSON.parse(response)
 
       if response.code == 404

@@ -1,17 +1,17 @@
 #!/bin/sh
 #
-# Script for running the mock Case web service.
+# Script for running the mock Internet Access Code web service.
 # The process is started in the background. Use Ctrl + C to terminate.
 #
 # Usage: run.sh
 #
 # Author: John Topley (john.topley@ons.gov.uk)
 #
-nohup bundle exec rackup -p 8171 ./caseservice/config.ru &
-case_pid=$!
+nohup bundle exec rackup -p 8141 ./iacservice/config.ru &
+iac_pid=$!
 
-# Trap SIGINTs so we can send them back to $case_pid.
-trap "kill -2 $case_pid" 2
+# Trap SIGINTs so we can send them back to $iac_pid.
+trap "kill -2 $iac_pid" 2
 
-# In the meantime, wait for $case_pid to end.
-wait $case_pid
+# In the meantime, wait for $iac_pid to end.
+wait $iac_pid

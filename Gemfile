@@ -2,13 +2,14 @@ source 'https://rubygems.org'
 
 gem 'json'
 gem 'rest-client'
+gem 'ons-jwe'
 gem 'sinatra'
 gem 'sinatra-content-for2'
 gem 'sinatra-flash'
 gem 'sinatra-formkeeper'
 
 source 'http://rubygems.ctpdev.local' do
-  gem 'ons-jwe'
+  gem 'iac-validator'
 end
 
 group :development do

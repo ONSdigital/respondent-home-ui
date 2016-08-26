@@ -2,6 +2,7 @@ require 'sinatra'
 require 'sinatra/content_for2'
 require 'sinatra/flash'
 require 'sinatra/formkeeper'
+require 'iac-validator'
 require 'rest_client'
 require 'ons-jwe'
 require 'openssl'
@@ -77,6 +78,12 @@ post '/' do
     redirect '/'
   else
     iac = params[:iac]
+
+    unless InternetAccessCodeValidator.new(iac).valid?
+      flash[:notice] = 'The Internet access code entered is not valid.'
+      redirect '/'
+    end
+
     iac_response = []
     RestClient.get("http://#{settings.iac_service_host}:#{settings.iac_service_port}/iacs/#{iac}") do |response, _request, _result, &_block|
       iac_response = JSON.parse(response)

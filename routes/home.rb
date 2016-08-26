@@ -30,6 +30,12 @@ use Rack::Session::Cookie, key: 'rack.session', path: '/',
 # View helper for defining blocks inside views for rendering in templates.
 helpers Sinatra::ContentFor2
 helpers do
+
+  # Returns the IAC lowercased and with any spaces removed.
+  def canonicalize_iac(iac)
+    iac.downcase.tr(' ', '')
+  end
+
   def claims(iac)
     {
       user_id: iac,
@@ -77,7 +83,7 @@ post '/' do
     flash[:notice] = 'An Internet access code is required.'
     redirect '/'
   else
-    iac = params[:iac]
+    iac = canonicalize_iac(params[:iac])
 
     unless InternetAccessCodeValidator.new(iac).valid?
       flash[:notice] = 'The Internet access code entered is not valid.'

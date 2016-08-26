@@ -19,7 +19,6 @@ GEM
       domain_name (~> 0.5)
     i18n (0.7.0)
     iac-validator (1.0.0)
-      verhoeff (~> 2, >= 2.1.0)
     json (2.0.2)
     json-jwt (1.6.3)
       activesupport
@@ -65,7 +64,6 @@ GEM
       unf_ext
     unf_ext (0.0.7.2)
     url_safe_base64 (0.2.2)
-    verhoeff (2.1.0)
 
 PLATFORMS
   ruby

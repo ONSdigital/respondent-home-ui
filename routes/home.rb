@@ -93,23 +93,22 @@ post '/' do
     iac_response = []
     RestClient.get("http://#{settings.iac_service_host}:#{settings.iac_service_port}/iacs/#{iac}") do |response, _request, _result, &_block|
       iac_response = JSON.parse(response)
+      redirect_url = '/'
 
       if response.code == 404
         flash[:notice] = 'The Internet access code entered is not valid.'
-        redirect '/'
-
-      # TODO: Need a better check for whether an IAC has been used.
       elsif iac_response['responseDateTime']
         flash[:notice] = 'A questionnaire has already been completed for that Internet access code.'
-        redirect '/'
       else
         public_key  = load_key_from_file(settings.public_key)
         private_key = load_key_from_file(settings.private_key,
                                          settings.private_key_passphrase)
 
-        token = JWEToken.new(KEY_ID, claims(iac), public_key, private_key)
-        redirect "http://#{settings.eq_service_host}:#{settings.eq_service_port}/session?token=#{token.value}"
+        token        = JWEToken.new(KEY_ID, claims(iac), public_key, private_key)
+        redirect_url = "http://#{settings.eq_service_host}:#{settings.eq_service_port}/session?token=#{token.value}"
       end
+
+      redirect redirect_url
     end
   end
 end

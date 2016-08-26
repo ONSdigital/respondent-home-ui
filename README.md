@@ -3,7 +3,7 @@ This Ruby [Sinatra](http://www.sinatrarb.com/) application is the user interface
 them to the [ONS eQ Survey Runner](https://github.com/ONSdigital/eq-survey-runner) upon successful validation.
 
 ## Prerequisites
-The application's `config.yml` configuration file references the Java web services using `collect-server` and `eq-server` names that need to be present in your hosts file. Install the RubyGems the application depends on by running `bundle install`. Note that this application depends on a private `iac-validator` RubyGem for performing IAC validation. This gem is only used in one place within **routes/home.rb**:
+The application's `config.yml` configuration file references the Java web services using `collect-server` and `eq-server` names that need to be present in your hosts file. Install the RubyGems the application depends on by running `bundle install`. Note that this application depends on a private `iac-validator` RubyGem for performing IAC validation. This gem is only used in one place within `routes/home.rb`:
 
 ```ruby
 unless InternetAccessCodeValidator.new(iac).valid?

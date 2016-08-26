@@ -3,7 +3,13 @@ This Ruby [Sinatra](http://www.sinatrarb.com/) application is the user interface
 them to the [ONS eQ Survey Runner](https://github.com/ONSdigital/eq-survey-runner) upon successful validation.
 
 ## Prerequisites
-The application's `config.yml` configuration file references the Java web services using `collect-server` and `eq-server` names that need to be present in your hosts file. Install the RubyGems the application depends on by running `bundle install`.
+The application's `config.yml` configuration file references the Java web services using `collect-server` and `eq-server` names that need to be present in your hosts file. Install the RubyGems the application depends on by running `bundle install`. Note that this application depends on a private `iac-validator` RubyGem for performing IAC validation. This gem is only used in one place within **routes/home.rb**:
+
+```ruby
+unless InternetAccessCodeValidator.new(iac).valid?
+  ...
+end
+```
 
 ## Running
 To run this project in development using its [Rackup](http://rack.github.io/) file use:
@@ -17,4 +23,4 @@ This project includes a Sinatra application that provide a mock version of the I
 
   `./run.sh` from within the `mock` directory. This is a shell script that starts the mock web service in the background. Use Ctrl + C to terminate it. The output from the background process is written to `mock/nohup.out`. This file can be deleted if not required.
 
-Start the user interface normally as described above. Use *q8ms h8vd nj6d* as a test IAC that is no longer valid because the questionnaire has already been submitted. Use *yxf4 f87d hj73* as a valid test IAC.
+Start the user interface normally as described above. Use **q8ms h8vd nj6d** as a test IAC that is no longer valid because the questionnaire has already been submitted. Use **yxf4 f87d hj73** as a valid test IAC.

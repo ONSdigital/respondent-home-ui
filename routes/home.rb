@@ -94,11 +94,11 @@ post '/' do
     RestClient.get("http://#{settings.iac_service_host}:#{settings.iac_service_port}/iacs/#{iac}") do |response, _request, _result, &_block|
       iac_response = JSON.parse(response)
       redirect_url = '/'
-
+      
       if response.code == 404
         flash[:notice] = 'The Internet access code entered is not valid.'
-      elsif iac_response['responseDateTime']
-        flash[:notice] = 'A questionnaire has already been completed for that Internet access code.'
+      elsif iac_response['active'] == false
+        flash[:notice] = 'The Internet access code entered has already been used.'
       else
         public_key  = load_key_from_file(settings.public_key)
         private_key = load_key_from_file(settings.private_key,

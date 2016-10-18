@@ -94,7 +94,7 @@ post '/' do
     RestClient.get("http://#{settings.iac_service_host}:#{settings.iac_service_port}/iacs/#{iac}") do |response, _request, _result, &_block|
       iac_response = JSON.parse(response)
       redirect_url = '/'
-      
+
       if response.code == 404
         flash[:notice] = 'The Internet access code entered is not valid.'
       elsif iac_response['active'] == false
@@ -111,8 +111,4 @@ post '/' do
       redirect redirect_url
     end
   end
-end
-
-get '/help' do
-  erb :help, locals: { title: 'Help' }
 end

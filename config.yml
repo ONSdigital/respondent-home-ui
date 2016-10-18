@@ -3,7 +3,7 @@ locale: en
 
 iac-webservice:
   host: collect-server
-  port: 8141
+  port: 8121
 
 eq-service:
   host: eq-server

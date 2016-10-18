@@ -7,7 +7,7 @@
 #
 # Author: John Topley (john.topley@ons.gov.uk)
 #
-nohup bundle exec rackup -p 8141 ./iacservice/config.ru &
+nohup bundle exec rackup -p 8121 ./iacservice/config.ru &
 iac_pid=$!
 
 # Trap SIGINTs so we can send them back to $iac_pid.

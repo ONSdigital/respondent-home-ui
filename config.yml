@@ -1,5 +1,5 @@
 # Supported locales are en (English) or cy (Welsh).
-locale: cy
+locale: en
 
 iac-webservice:
   host: collect-server

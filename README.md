@@ -24,3 +24,6 @@ This project includes a Sinatra application that provide a mock version of the I
   `./run.sh` from within the `mock` directory. This is a shell script that starts the mock web service in the background. Use Ctrl + C to terminate it. The output from the background process is written to `mock/nohup.out`. This file can be deleted if not required.
 
 Start the user interface normally as described above. Use **q8ms h8vd nj6d** as a test IAC that is no longer valid because the questionnaire has already been submitted. Use **yxf4 f87d hj73** as a valid test IAC.
+
+## Multiple Language Support
+The application's `config.yml` configuration file contains a `locale` setting that controls the language displayed.

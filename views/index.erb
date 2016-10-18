@@ -1,4 +1,4 @@
-<p class="u-m-s u-mb-no" style="padding-bottom: 20px;">Enter your Internet access code below.</p>
+<p class="u-m-s u-mb-no" style="padding-bottom: 20px;"><%= I18n.t 'enter_your_iac' %></p>
 <% if flash[:notice] %>
 <div class="alert alert--error">
   <div class="alert__header">
@@ -14,7 +14,7 @@
         </div>
       </fieldset>
       <div class="group" style="margin-top: 40px;">
-        <input type="submit" class="btn btn--secondary qa-btn-submit" value="Continue">
+        <input type="submit" class="btn btn--secondary qa-btn-submit" value="<%= I18n.t 'continue' %>">
       </div>
     </form>
   </div>
@@ -27,7 +27,7 @@
     </div>
   </fieldset>
   <div class="group" style="margin-top: 40px;">
-    <input type="submit" class="btn btn--secondary qa-btn-submit" value="Continue">
+    <input type="submit" class="btn btn--secondary qa-btn-submit" value="<%= I18n.t 'continue' %>">
   </div>
 </form>
 <% end %>

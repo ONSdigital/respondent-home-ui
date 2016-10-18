@@ -1,3 +1,6 @@
+# Supported locales are en (English) or cy (Welsh).
+locale: cy
+
 iac-webservice:
   host: collect-server
   port: 8141

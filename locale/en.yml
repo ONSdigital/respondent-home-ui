@@ -1,0 +1,18 @@
+# English language strings.
+en:
+  404_not_found: "404 Not Found"
+  500_internal_server_error: "500 Internal Server Error"
+  alpha: "ALPHA"
+  app_name: "Respondent Home"
+  continue: "Continue"
+  enter_your_iac: "Enter your Internet access code below."
+  iac_invalid: "The Internet access code entered is not valid."
+  iac_required: "An Internet access code is required."
+  iac_used: "The Internet access code entered has already been used."
+  internal_server_error: "An internal server error has occurred."
+  lang: "en-gb"
+  not_found: "The page you were looking for cannot be found."
+  ons: "Office for National Statistics"
+  skip_to_content: "Skip to content"
+  survey_help: "Survey Help"
+  welcome: "Welcome"

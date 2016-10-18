@@ -22,6 +22,13 @@ set :public_key,             config['eq-service']['public_key']
 set :private_key,            config['eq-service']['private_key']
 set :private_key_passphrase, config['eq-service']['private_key_passphrase']
 
+# Configure internationalisation.
+locale = config['locale']
+I18n.load_path = Dir['locale/*.yml']
+I18n.backend.load_translations
+I18n.default_locale = locale
+I18n.locale = locale
+
 # Expire sessions after SESSION_EXPIRATION_PERIOD minutes of inactivity.
 use Rack::Session::Cookie, key: 'rack.session', path: '/',
                            secret: 'f089802942494ca9a7250a849d8d8c0c',
@@ -71,7 +78,7 @@ before do
 end
 
 get '/' do
-  erb :index, locals: { title: 'Welcome' }
+  erb :index, locals: { title: I18n.t('welcome') }
 end
 
 post '/' do
@@ -80,13 +87,13 @@ post '/' do
   end
 
   if form.failed?
-    flash[:notice] = 'An Internet access code is required.'
+    flash[:notice] = I18n.t('iac_required')
     redirect '/'
   else
     iac = canonicalize_iac(params[:iac])
 
     unless InternetAccessCodeValidator.new(iac).valid?
-      flash[:notice] = 'The Internet access code entered is not valid.'
+      flash[:notice] = I18n.t('iac_invalid')
       redirect '/'
     end
 
@@ -96,9 +103,9 @@ post '/' do
       redirect_url = '/'
 
       if response.code == 404
-        flash[:notice] = 'The Internet access code entered is not valid.'
+        flash[:notice] = I18n.t('iac_invalid')
       elsif iac_response['active'] == false
-        flash[:notice] = 'The Internet access code entered has already been used.'
+        flash[:notice] = I18n.t('iac_used')
       else
         public_key  = load_key_from_file(settings.public_key)
         private_key = load_key_from_file(settings.private_key,

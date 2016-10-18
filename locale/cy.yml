@@ -1,0 +1,18 @@
+# Welsh language strings.
+cy:
+  404_not_found: "404 Heb ei ddarganfod"
+  500_internal_server_error: "500 Gwall gweinydd mewnol"
+  alpha: "ALFFA"
+  app_name: "Ymatebydd cartref"
+  continue: "Parhau"
+  enter_your_iac: "Rhowch eich cod mynediad i'r Rhyngrwyd isod."
+  iac_invalid: "Nid yw'r cod mynediad i'r rhyngrwyd yn ddilys."
+  iac_required: "Cod mynediad rhyngrwyd yn ofynnol."
+  iac_used: "Mae cofnodi'r cod mynediad rhyngrwyd eisoes wedi'i ddefnyddio."
+  internal_server_error: "Mae gwall gweinydd mewnol wedi digwydd."
+  lang: "cy-gb"
+  not_found: "Ni allaf ganfod y dudalen roeddech yn chwilio amdano."
+  ons: "Swyddfa Ystadegau Gwladol"
+  skip_to_content: "Neidio i'r cynnwys"
+  survey_help: "Arolwg Help"
+  welcome: "Croeso"

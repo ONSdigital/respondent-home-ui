@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'i18n'
 gem 'json'
 gem 'rest-client'
 gem 'ons-jwe'

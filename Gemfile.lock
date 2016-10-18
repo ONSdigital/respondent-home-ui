@@ -7,20 +7,20 @@ GEM
       i18n (~> 0.7)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
-    bindata (2.3.1)
+    bindata (2.3.4)
     concurrent-ruby (1.0.2)
-    domain_name (0.5.20160615)
+    domain_name (0.5.20160826)
       unf (>= 0.0.5, < 1.0.0)
     formkeeper (0.0.15)
       hpricot
       rack
     hpricot (0.8.6)
-    http-cookie (1.0.2)
+    http-cookie (1.0.3)
       domain_name (~> 0.5)
     i18n (0.7.0)
     iac-validator (1.0.0)
     json (2.0.2)
-    json-jwt (1.6.3)
+    json-jwt (1.6.5)
       activesupport
       bindata
       multi_json (>= 1.3)
@@ -29,7 +29,7 @@ GEM
     mime-types (3.1)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2016.0521)
-    minitest (5.9.0)
+    minitest (5.9.1)
     multi_json (1.12.1)
     netrc (0.11.0)
     ons-jwe (1.0.0)
@@ -69,6 +69,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  i18n
   iac-validator!
   json
   ons-jwe

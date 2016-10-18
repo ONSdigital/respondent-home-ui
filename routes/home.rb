@@ -22,6 +22,12 @@ set :public_key,             config['eq-service']['public_key']
 set :private_key,            config['eq-service']['private_key']
 set :private_key_passphrase, config['eq-service']['private_key_passphrase']
 
+# Display badges with the built date, environment and commit SHA in
+# non-production environments.
+set :built, config['badges']['built']
+set :commit, config['badges']['commit']
+set :environment, config['badges']['environment']
+
 # Configure internationalisation.
 locale = config['locale']
 I18n.load_path = Dir['locale/*.yml']
@@ -72,13 +78,21 @@ helpers do
   end
 end
 
-# Always send UTF-8 Content-Type HTTP header.
 before do
   headers 'Content-Type' => 'text/html; charset=utf-8'
+  @built  = settings.built
+  @commit = settings.commit
+
+  # Display the correct built date and commit SHA when running locally.
+  @built = Date.today.strftime('%d_%b_%Y') if @built == '01_Jan_1970'
+  @commit = `git rev-parse --short HEAD` if @commit == 'commit'
 end
 
 get '/' do
-  erb :index, locals: { title: I18n.t('welcome') }
+  erb :index, locals: { title: I18n.t('welcome'),
+                        built: @built,
+                        commit: @commit,
+                        environment: settings.environment }
 end
 
 post '/' do

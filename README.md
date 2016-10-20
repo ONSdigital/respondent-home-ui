@@ -25,5 +25,11 @@ This project includes a Sinatra application that provide a mock version of the I
 
 Start the user interface normally as described above. Use **q8ms h8vd nj6d** as a test IAC that is no longer valid because the questionnaire has already been submitted. Use **yxf4 f87d hj73** as a valid test IAC.
 
-## Multiple Language Support
-The application's `config.yml` configuration file contains a `locale` setting that controls the language displayed.
+## Environment Variables
+The environment variables below must be provided:
+
+`RESPONDENT_HOME_LOCALE = (en|cy)`
+`RESPONDENT_HOST_EQ_HOST`
+`RESPONDENT_HOST_EQ_PORT`
+`RESPONDENT_HOME_IAC_SERVICE_HOST`
+`RESPONDENT_HOME_IAC_SERVICE_PORT`

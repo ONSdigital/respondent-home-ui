@@ -14,10 +14,11 @@ SESSION_EXPIRATION_PERIOD = 60 * 60 * 6
 
 # Load various settings from a configuration file.
 config = YAML.load_file(File.join(__dir__, '../config.yml'))
-set :iac_service_host,       config['iac-webservice']['host']
-set :iac_service_port,       config['iac-webservice']['port']
-set :eq_service_host,        config['eq-service']['host']
-set :eq_service_port,        config['eq-service']['port']
+set :locale,                 ENV['RESPONDENT_HOME_LOCALE']
+set :eq_service_host,        ENV['RESPONDENT_HOME_EQ_HOST']
+set :eq_service_port,        ENV['RESPONDENT_HOME_EQ_PORT']
+set :iac_service_host,       ENV['RESPONDENT_HOME_IAC_SERVICE_HOST']
+set :iac_service_port,       ENV['RESPONDENT_HOME_IAC_SERVICE_PORT']
 set :public_key,             config['eq-service']['public_key']
 set :private_key,            config['eq-service']['private_key']
 set :private_key_passphrase, config['eq-service']['private_key_passphrase']
@@ -29,11 +30,10 @@ set :commit, config['badges']['commit']
 set :environment, config['badges']['environment']
 
 # Configure internationalisation.
-locale = config['locale']
 I18n.load_path = Dir['locale/*.yml']
 I18n.backend.load_translations
-I18n.default_locale = locale
-I18n.locale = locale
+I18n.default_locale = settings.locale
+I18n.locale = settings.locale
 
 # Expire sessions after SESSION_EXPIRATION_PERIOD minutes of inactivity.
 use Rack::Session::Cookie, key: 'rack.session', path: '/',

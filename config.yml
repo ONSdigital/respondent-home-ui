@@ -1,13 +1,4 @@
-# Supported locales are en (English) or cy (Welsh).
-locale: en
-
-iac-webservice:
-  host: collect-server
-  port: 8121
-
 eq-service:
-  host: eq-server
-  port: 5000
   public_key: ../keys/sdc-user-authentication-encryption-sr-public-key.pem
   private_key: ../keys/sdc-user-authentication-signing-rrm-private-key.pem
   private_key_passphrase: 'digitaleq'

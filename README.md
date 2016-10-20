@@ -28,8 +28,8 @@ Start the user interface normally as described above. Use **q8ms h8vd nj6d** as 
 ## Environment Variables
 The environment variables below must be provided:
 
-`RESPONDENT_HOME_LOCALE = (en|cy)`
-`RESPONDENT_HOST_EQ_HOST`
-`RESPONDENT_HOST_EQ_PORT`
-`RESPONDENT_HOME_IAC_SERVICE_HOST`
-`RESPONDENT_HOME_IAC_SERVICE_PORT`
+`RESPONDENT_HOME_LOCALE = (en|cy)
+ RESPONDENT_HOST_EQ_HOST
+ RESPONDENT_HOST_EQ_PORT
+ RESPONDENT_HOME_IAC_SERVICE_HOST
+ RESPONDENT_HOME_IAC_SERVICE_PORT`

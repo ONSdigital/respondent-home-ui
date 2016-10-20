@@ -9,25 +9,28 @@ require 'openssl'
 require 'json'
 require 'yaml'
 
+require_relative '../lib/configuration'
+
 KEY_ID                    = 'EDCRRM'.freeze
 SESSION_EXPIRATION_PERIOD = 60 * 60 * 6
 
-# Load various settings from a configuration file.
-config = YAML.load_file(File.join(__dir__, '../config.yml'))
-set :locale,                 ENV['RESPONDENT_HOME_LOCALE']
-set :eq_service_host,        ENV['RESPONDENT_HOME_EQ_HOST']
-set :eq_service_port,        ENV['RESPONDENT_HOME_EQ_PORT']
-set :iac_service_host,       ENV['RESPONDENT_HOME_IAC_SERVICE_HOST']
-set :iac_service_port,       ENV['RESPONDENT_HOME_IAC_SERVICE_PORT']
-set :public_key,             config['eq-service']['public_key']
-set :private_key,            config['eq-service']['private_key']
-set :private_key_passphrase, config['eq-service']['private_key_passphrase']
+config = Configuration.new(ENV)
+set :locale,           config.locale
+set :eq_host,          config.eq_host
+set :eq_port,          config.eq_port
+set :iac_service_host, config.iac_service_host
+set :iac_service_port, config.iac_service_port
+
+config_file = YAML.load_file(File.join(__dir__, '../config.yml'))
+set :public_key,             config_file['eq-service']['public_key']
+set :private_key,            config_file['eq-service']['private_key']
+set :private_key_passphrase, config_file['eq-service']['private_key_passphrase']
 
 # Display badges with the built date, environment and commit SHA in
 # non-production environments.
-set :built, config['badges']['built']
-set :commit, config['badges']['commit']
-set :environment, config['badges']['environment']
+set :built,       config_file['badges']['built']
+set :commit,      config_file['badges']['commit']
+set :environment, config_file['badges']['environment']
 
 # Configure internationalisation.
 I18n.load_path = Dir['locale/*.yml']
@@ -125,7 +128,7 @@ post '/' do
                                          settings.private_key_passphrase)
 
         token        = JWEToken.new(KEY_ID, claims(iac), public_key, private_key)
-        redirect_url = "http://#{settings.eq_service_host}:#{settings.eq_service_port}/session?token=#{token.value}"
+        redirect_url = "http://#{settings.eq_host}:#{settings.eq_port}/session?token=#{token.value}"
       end
 
       redirect redirect_url

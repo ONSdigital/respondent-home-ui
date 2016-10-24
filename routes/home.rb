@@ -3,6 +3,7 @@ require 'sinatra/content_for2'
 require 'sinatra/flash'
 require 'sinatra/formkeeper'
 require 'iac-validator'
+require 'securerandom'
 require 'rest_client'
 require 'ons-jwe'
 require 'openssl'
@@ -51,22 +52,14 @@ helpers do
     iac.downcase.tr(' ', '')
   end
 
-  def claims(iac)
+  # Returns the eQ claims for the passed case reference and question set.
+  def claims_for(case_ref, question_set)
     {
-      user_id: iac,
+      user_id: case_ref,
+      form_type: question_set,
       iat: Time.now.to_i,
       exp: Time.now.to_i + 60 * 60,
-      eq_id: '1',
-      period_str: '2016-01-01',
-      period_id: '2016-01-01',
-      form_type: '0205',
-      collection_exercise_sid: '789',
-      ref_p_start_date: '2016-01-01',
-      ref_p_end_date: '2016-09-01',
-      ru_ref: '12346789012A',
-      ru_name: 'Office for National Statistics',
-      return_by: '2016-04-30',
-      employment_date: '2016-06-10'
+      tx_id: SecureRandom.uuid
     }
   end
 
@@ -127,7 +120,8 @@ post '/' do
         private_key = load_key_from_file(settings.private_key,
                                          settings.private_key_passphrase)
 
-        token        = JWEToken.new(KEY_ID, claims(iac), public_key, private_key)
+        claims       = claims_for(iac_response['caseRef'], iac_response['questionSet'])
+        token        = JWEToken.new(KEY_ID, claims, public_key, private_key)
         redirect_url = "http://#{settings.eq_host}:#{settings.eq_port}/session?token=#{token.value}"
       end
 

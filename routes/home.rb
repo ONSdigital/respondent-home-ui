@@ -108,19 +108,19 @@ post '/' do
 
     iac_response = []
     RestClient.get("http://#{settings.iac_service_host}:#{settings.iac_service_port}/iacs/#{iac}") do |response, _request, _result, &_block|
-      iac_response = JSON.parse(response)
+      case_summary = JSON.parse(response)
       redirect_url = '/'
 
       if response.code == 404
         flash[:notice] = I18n.t('iac_invalid')
-      elsif iac_response['active'] == false
+      elsif case_summary['active'] == false
         flash[:notice] = I18n.t('iac_used')
       else
         public_key  = load_key_from_file(settings.public_key)
         private_key = load_key_from_file(settings.private_key,
                                          settings.private_key_passphrase)
 
-        claims       = claims_for(iac_response['caseRef'], iac_response['questionSet'])
+        claims       = claims_for(case_summary['caseRef'], case_summary['questionSet'])
         token        = JWEToken.new(KEY_ID, claims, public_key, private_key)
         redirect_url = "http://#{settings.eq_host}:#{settings.eq_port}/session?token=#{token.value}"
       end

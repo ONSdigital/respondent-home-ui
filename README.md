@@ -35,3 +35,5 @@ RESPONDENT_HOME_EQ_PORT
 RESPONDENT_HOME_IAC_SERVICE_HOST
 RESPONDENT_HOME_IAC_SERVICE_PORT
 ```
+
+The script `/env.sh` can be sourced in development to set these variables with reasonable defaults.

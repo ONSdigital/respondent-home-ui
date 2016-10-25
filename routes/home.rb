@@ -115,7 +115,7 @@ post '/' do
       redirect '/'
     end
 
-    iac_response = []
+    case_summary = []
     RestClient.get("http://#{settings.iac_service_host}:#{settings.iac_service_port}/iacs/#{iac}") do |response, _request, _result, &_block|
       case_summary = JSON.parse(response)
       redirect_url = '/'

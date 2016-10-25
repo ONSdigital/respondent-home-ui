@@ -55,11 +55,20 @@ helpers do
   # Returns the eQ claims for the passed case reference and question set.
   def claims_for(case_ref, question_set)
     {
-      user_id: case_ref,
+      collection_exercise_sid: '2017',
+      eq_id: '1',
+      exp: Time.now.to_i + 60 * 60,
       form_type: question_set,
       iat: Time.now.to_i,
-      exp: Time.now.to_i + 60 * 60,
-      tx_id: SecureRandom.uuid
+      period_id: '1',
+      period_str: '2016-01-01',
+      ref_p_start_date: '2016-01-01',
+      ref_p_end_date: '2016-09-01',
+      ru_name: 'Office for National Statistics',
+      ru_ref: '12346789012A',
+      return_by: '2016-04-30',
+      tx_id: SecureRandom.uuid,
+      user_id: case_ref
     }
   end
 

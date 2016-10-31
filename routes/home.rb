@@ -96,7 +96,8 @@ get '/' do
   erb :index, locals: { title: I18n.t('welcome'),
                         built: @built,
                         commit: @commit,
-                        environment: settings.environment }
+                        environment: settings.environment,
+                        locale: settings.locale }
 end
 
 post '/' do

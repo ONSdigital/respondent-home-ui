@@ -47,9 +47,9 @@ use Rack::Session::Cookie, key: 'rack.session', path: '/',
 # View helper for defining blocks inside views for rendering in templates.
 helpers Sinatra::ContentFor2
 helpers do
-  # Returns the IAC lowercased and with any spaces removed.
-  def canonicalize_iac(iac)
-    iac.downcase.tr(' ', '')
+  # Returns the IAC from its segments and lowercased.
+  def canonicalize_iac(*segments)
+    segments.join.downcase
   end
 
   # Returns the eQ claims for the passed case reference and question set.
@@ -102,14 +102,16 @@ end
 
 post '/' do
   form do
-    field :iac, present: true
+    field :iac1, present: true
+    field :iac2, present: true
+    field :iac3, present: true
   end
 
   if form.failed?
     flash[:notice] = I18n.t('iac_required')
     redirect '/'
   else
-    iac = canonicalize_iac(params[:iac])
+    iac = canonicalize_iac(params[:iac1], params[:iac2], params[:iac3])
 
     unless InternetAccessCodeValidator.new(iac).valid?
       flash[:notice] = I18n.t('iac_invalid')

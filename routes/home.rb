@@ -10,6 +10,7 @@ require 'openssl'
 require 'json'
 require 'yaml'
 
+require_relative '../lib/authentication_attempt_limiter'
 require_relative '../lib/configuration'
 
 KEY_ID                    = 'EDCRRM'.freeze
@@ -21,6 +22,9 @@ set :eq_host,          config.eq_host
 set :eq_port,          config.eq_port
 set :iac_service_host, config.iac_service_host
 set :iac_service_port, config.iac_service_port
+set :max_iac_attempts, config.max_iac_attempts
+set :redis_host,       config.redis_host
+set :redis_port,       config.redis_port
 
 config_file = YAML.load_file(File.join(__dir__, '../config.yml'))
 set :public_key,             config_file['eq-service']['public_key']
@@ -84,6 +88,10 @@ end
 
 before do
   headers 'Content-Type' => 'text/html; charset=utf-8'
+  @attempt_limiter ||= AuthenticationAttemptLimiter.new(settings.redis_host,
+                                                        settings.redis_port,
+                                                        settings.max_iac_attempts,
+                                                        request.ip)
   @built  = settings.built
   @commit = settings.commit
 
@@ -101,6 +109,8 @@ get '/' do
 end
 
 post '/' do
+  halt 429 if @attempt_limiter.max_attempts?
+
   form do
     field :iac1, present: true
     field :iac2, present: true
@@ -114,6 +124,7 @@ post '/' do
     iac = canonicalize_iac(form[:iac1], form[:iac2], form[:iac3])
 
     unless InternetAccessCodeValidator.new(iac).valid?
+      @attempt_limiter.attempt!
       flash[:notice] = I18n.t('iac_invalid')
       redirect '/'
     end

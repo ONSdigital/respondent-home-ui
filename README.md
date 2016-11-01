@@ -11,7 +11,7 @@ unless InternetAccessCodeValidator.new(iac).valid?
 end
 ```
 
-A [http://redis.io/](Redis) server is required to keep track of the number of attempts a client makes to use an IAC. Specify the Redis host and port using the `RESPONDENT_HOME_REDIS_HOST` and `RESPONDENT_HOME_REDIS_PORT` environment variables as listed in the **Environment Variables** section below.
+A [Redis](http://redis.io/) server is required to keep track of the number of attempts a client makes to use an IAC. Specify the Redis host and port using the `RESPONDENT_HOME_REDIS_HOST` and `RESPONDENT_HOME_REDIS_PORT` environment variables as listed in the **Environment Variables** section below.
 
 ## Running
 To run this application in development using its [Rackup](http://rack.github.io/) file use:

@@ -3,7 +3,7 @@ This Ruby [Sinatra](http://www.sinatrarb.com/) application is the user interface
 them to the [ONS eQ Survey Runner](https://github.com/ONSdigital/eq-survey-runner) upon successful validation.
 
 ## Prerequisites
-The application's `config.yml` configuration file references the Java web services using `collect-server` and `eq-server` names that need to be present in your hosts file. Install the RubyGems the application depends on by running `bundle install`. Note that this application depends on a private `iac-validator` RubyGem for performing IAC validation. This gem is only used in one place within `routes/home.rb`:
+Install the RubyGems the application depends on by running `bundle install`. Note that this application depends on a private `iac-validator` RubyGem for performing IAC validation. This gem is only used in one place within `routes/home.rb`:
 
 ```ruby
 unless InternetAccessCodeValidator.new(iac).valid?
@@ -11,8 +11,10 @@ unless InternetAccessCodeValidator.new(iac).valid?
 end
 ```
 
+A [http://redis.io/](Redis) server is required to keep track of the number of attempts a client makes to use an IAC. Specify the Redis host and port using the `RESPONDENT_HOME_REDIS_HOST` and `RESPONDENT_HOME_REDIS_PORT` environment variables as listed in the **Environment Variables** section below.
+
 ## Running
-To run this project in development using its [Rackup](http://rack.github.io/) file use:
+To run this application in development using its [Rackup](http://rack.github.io/) file use:
 
   `bundle exec rackup config.ru` (the `config.ru` may be omitted as Rack looks for this file by default)
 
@@ -34,8 +36,11 @@ RESPONDENT_HOME_EQ_HOST
 RESPONDENT_HOME_EQ_PORT
 RESPONDENT_HOME_IAC_SERVICE_HOST
 RESPONDENT_HOME_IAC_SERVICE_PORT
+RESPONDENT_HOME_MAX_IAC_ATTEMPTS
 RESPONDENT_HOME_NOTIFY_API_KEY
 RESPONDENT_HOME_NOTIFY_TEMPLATE_ID
+RESPONDENT_HOME_REDIS_HOST
+RESPONDENT_HOME_REDIS_PORT
 ```
 
 The script `/env.sh` can be sourced in development to set these variables with reasonable defaults.

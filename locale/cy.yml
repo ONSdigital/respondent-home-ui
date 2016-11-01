@@ -1,6 +1,7 @@
 # Welsh language strings.
 cy:
   404_not_found: "404 Heb ei ddarganfod"
+  429_too_many_requests: "429 Gormod o geisiadau"
   500_internal_server_error: "500 Gwall gweinydd mewnol"
   alpha: "ALFFA"
   app_name: "Ymatebydd cartref"

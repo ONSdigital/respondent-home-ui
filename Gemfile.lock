@@ -40,6 +40,7 @@ GEM
     rack (1.6.4)
     rack-protection (1.5.3)
       rack
+    redis (3.3.1)
     rest-client (2.0.0)
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
@@ -77,6 +78,7 @@ DEPENDENCIES
   json
   notifications-ruby-client
   ons-jwe
+  redis
   rest-client
   sass
   sinatra

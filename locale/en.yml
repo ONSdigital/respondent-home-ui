@@ -1,6 +1,7 @@
 # English language strings.
 en:
   404_not_found: "404 Not Found"
+  429_too_many_requests: "429 Too Many Requests"
   500_internal_server_error: "500 Internal Server Error"
   alpha: "ALPHA"
   app_name: "Respondent Home"

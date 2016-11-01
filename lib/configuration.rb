@@ -1,3 +1,4 @@
+# Simple class to centralise access to configuration.
 class Configuration
   attr_reader :eq_host, :eq_port, :iac_service_host, :iac_service_port, :locale
 

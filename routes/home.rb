@@ -111,7 +111,7 @@ post '/' do
     flash[:notice] = I18n.t('iac_required')
     redirect '/'
   else
-    iac = canonicalize_iac(params[:iac1], params[:iac2], params[:iac3])
+    iac = canonicalize_iac(form[:iac1], form[:iac2], form[:iac3])
 
     unless InternetAccessCodeValidator.new(iac).valid?
       flash[:notice] = I18n.t('iac_invalid')

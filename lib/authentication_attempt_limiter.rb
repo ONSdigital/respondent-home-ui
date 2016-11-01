@@ -1,6 +1,7 @@
 require 'redis'
 
-#
+# Class to manage the number of IAC authentication attempts. Uses Redis as a
+# backing store.
 class AuthenticationAttemptLimiter
   def initialize(redis_host, redis_port, max_attempts, ip_address)
     @redis_host   = redis_host

@@ -68,6 +68,7 @@ helpers do
       period_str: '2016-01-01',
       ref_p_start_date: '2016-01-01',
       ref_p_end_date: '2016-09-01',
+      region_code: settings.locale == 'cy' ? 'GB-WLS' : 'GB-ENG',
       ru_name: 'Office for National Statistics',
       ru_ref: '12346789012A',
       return_by: '2016-04-30',

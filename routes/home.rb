@@ -10,7 +10,7 @@ require 'openssl'
 require 'json'
 require 'yaml'
 
-require_relative '../lib/authentication_attempt_limiter'
+require_relative '../lib/authentication_policy'
 require_relative '../lib/configuration'
 
 KEY_ID                    = 'EDCRRM'.freeze
@@ -89,10 +89,10 @@ end
 
 before do
   headers 'Content-Type' => 'text/html; charset=utf-8'
-  @attempt_limiter ||= AuthenticationAttemptLimiter.new(settings.redis_host,
-                                                        settings.redis_port,
-                                                        settings.max_iac_attempts,
-                                                        request.ip)
+  @authentication_policy ||= AuthenticationPolicy.new(settings.redis_host,
+                                                      settings.redis_port,
+                                                      settings.max_iac_attempts,
+                                                      request.ip)
   @built  = settings.built
   @commit = settings.commit
 
@@ -110,7 +110,7 @@ get '/' do
 end
 
 post '/' do
-  halt 429 if @attempt_limiter.max_attempts?
+  halt 429 if @authentication_policy.client_blocked?
 
   form do
     field :iac1, present: true
@@ -119,13 +119,14 @@ post '/' do
   end
 
   if form.failed?
+    @authentication_policy.failed_attempt!
     flash[:notice] = I18n.t('iac_required')
     redirect '/'
   else
     iac = canonicalize_iac(form[:iac1], form[:iac2], form[:iac3])
 
     unless InternetAccessCodeValidator.new(iac).valid?
-      @attempt_limiter.attempt!
+      @authentication_policy.failed_attempt!
       flash[:notice] = I18n.t('iac_invalid')
       redirect '/'
     end

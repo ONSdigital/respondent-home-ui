@@ -12,8 +12,8 @@ class AuthenticationPolicy
   end
 
   def client_blocked?
-    count = fetch_count
-    count >= @max_attempts.to_i - 1
+    count = redis.get(@key) || 0
+    count.to_i >= @max_attempts.to_i - 1
   end
 
   def failed_attempt!
@@ -24,12 +24,6 @@ class AuthenticationPolicy
   end
 
   private
-
-  def fetch_count
-    count = redis.get(@key)
-    return 0 if count.nil?
-    count.to_i
-  end
 
   def redis
     @redis ||= Redis.new(host: @redis_host, port: @redis_port)

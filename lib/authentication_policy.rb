@@ -7,9 +7,9 @@ Attempt = Struct.new(:count, :time)
 class AuthenticationPolicy
   KEY_PREFIX = 'respondent.home:auth.attempt:'.freeze
 
-  def initialize(store_host, store_port, max_attempts, ip_address)
-    @store_host   = store_host
-    @store_port   = store_port
+  def initialize(redis_host, redis_port, max_attempts, ip_address)
+    @redis_host   = redis_host
+    @redis_port   = redis_port
     @max_attempts = max_attempts
     @key          = "#{KEY_PREFIX}#{ip_address}"
   end
@@ -29,7 +29,7 @@ class AuthenticationPolicy
   private
 
   def fetch_attempt
-    attempt_json = store.get(@key)
+    attempt_json = redis.get(@key)
 
     if attempt_json.nil?
       attempt = Attempt.new(0, Time.now)
@@ -41,12 +41,12 @@ class AuthenticationPolicy
     Attempt.new(*JSON[attempt_json].values_at('count', 'time'))
   end
 
-  def store
-    @store ||= Redis.new(host: @store_host, port: @store_port)
+  def redis
+    @redis ||= Redis.new(host: @redis_host, port: @redis_port)
   end
 
   def store_attempt(attempt)
     # See http://stackoverflow.com/a/28313500
-    store.set(@key, attempt.to_h.to_json)
+    redis.set(@key, attempt.to_h.to_json)
   end
 end

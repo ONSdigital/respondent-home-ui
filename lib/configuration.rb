@@ -1,7 +1,7 @@
 # Simple class to centralise access to configuration.
 class Configuration
   attr_reader :eq_host, :eq_port, :iac_service_host, :iac_service_port, :locale,
-              :max_iac_attempts, :redis_host, :redis_port
+              :max_iac_attempts, :redis_host, :redis_port, :redis_password
 
   def initialize(env)
     @eq_host          = env['RESPONDENT_HOME_EQ_HOST']
@@ -12,5 +12,6 @@ class Configuration
     @max_iac_attempts = env['RESPONDENT_HOME_MAX_IAC_ATTEMPTS']
     @redis_host       = env['RESPONDENT_HOME_REDIS_HOST']
     @redis_port       = env['RESPONDENT_HOME_REDIS_PORT']
+    @redis_password   = env['RESPONDENT_HOME_REDIS_PASSWORD']
   end
 end

@@ -41,6 +41,7 @@ RESPONDENT_HOME_NOTIFY_API_KEY
 RESPONDENT_HOME_NOTIFY_TEMPLATE_ID
 RESPONDENT_HOME_REDIS_HOST
 RESPONDENT_HOME_REDIS_PORT
+RESPONDENT_HOME_REDIS_PASSWORD
 ```
 
 The script `/env.sh` can be sourced in development to set these variables with reasonable defaults.

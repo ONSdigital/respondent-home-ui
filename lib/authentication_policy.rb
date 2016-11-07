@@ -26,6 +26,7 @@ class AuthenticationPolicy
   private
 
   def redis
-    @redis ||= Redis.new(host: @redis_host, port: @redis_port)
+    @redis ||= Redis.new(host: @redis_host, port: @redis_port,
+                         password: @redis_password)
   end
 end

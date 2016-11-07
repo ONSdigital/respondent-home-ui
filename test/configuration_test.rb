@@ -9,6 +9,10 @@ class ConfigurationTest < Test::Unit::TestCase
     ENV['RESPONDENT_HOME_IAC_SERVICE_HOST'] = 'IAC service host'
     ENV['RESPONDENT_HOME_IAC_SERVICE_PORT'] = 'IAC service port'
     ENV['RESPONDENT_HOME_LOCALE']           = 'Locale'
+    ENV['RESPONDENT_HOME_MAX_IAC_ATTEMPTS'] = 'Max IAC attempts'
+    ENV['RESPONDENT_HOME_REDIS_HOST']       = 'Redis host'
+    ENV['RESPONDENT_HOME_REDIS_PORT']       = 'Redis port'
+    ENV['RESPONDENT_HOME_REDIS_PASSWORD']   = 'Redis password'
     @configuration = Configuration.new(ENV)
   end
 
@@ -30,5 +34,21 @@ class ConfigurationTest < Test::Unit::TestCase
 
   def test_locale
     assert_equal 'Locale', @configuration.locale
+  end
+
+  def test_max_iac_attempts
+    assert_equal 'Max IAC attempts', @configuration.max_iac_attempts
+  end
+
+  def test_redis_host
+    assert_equal 'Redis host', @configuration.redis_host
+  end
+
+  def test_redis_port
+    assert_equal 'Redis port', @configuration.redis_port
+  end
+
+  def test_redis_password
+    assert_equal 'Redis password', @configuration.redis_password
   end
 end

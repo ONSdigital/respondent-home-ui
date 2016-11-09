@@ -32,8 +32,9 @@ set :public_key,             config_file['eq-service']['public_key']
 set :private_key,            config_file['eq-service']['private_key']
 set :private_key_passphrase, config_file['eq-service']['private_key_passphrase']
 
-# Display badges with the built date, environment and commit SHA in
+# Display badges with the host, built date, commit SHA and environment in
 # non-production environments.
+set :host,        `hostname`.strip.gsub(/-/, '--')
 set :built,       config_file['badges']['built']
 set :commit,      config_file['badges']['commit']
 set :environment, config_file['badges']['environment']
@@ -105,9 +106,10 @@ end
 
 get '/' do
   erb :index, locals: { title: I18n.t('welcome'),
+                        host: settings.host,
                         built: @built,
                         commit: @commit,
-                        environment: settings.environment,
+                        environment: settings.environment,                        
                         locale: settings.locale }
 end
 

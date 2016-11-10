@@ -1,7 +1,7 @@
 # English language strings.
 en:
   404_not_found: "404 Not Found"
-  429_too_many_requests: "429 Too Many Requests"
+  429_too_many_requests: "Please Try Later"
   500_internal_server_error: "500 Internal Server Error"
   alpha: "ALPHA"
   app_name: "Respondent Home"
@@ -10,6 +10,7 @@ en:
   iac_invalid: "The questionnaire access code entered is not valid."
   iac_required: "A questionnaire access code is required."
   iac_used: "The questionnaire access code entered has already been used."
+  iac_attempts_exceeded: "You have exceeded the number of allowed attempts to enter your unique access code. Please try again later."
   internal_server_error: "An internal server error has occurred."
   lang: "en-gb"
   not_found: "The page you were looking for cannot be found."

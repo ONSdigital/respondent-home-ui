@@ -1,13 +1,14 @@
 # Welsh language strings.
 cy:
   404_not_found: "404 Heb ei ddarganfod"
-  429_too_many_requests: "429 Gormod o geisiadau"
+  429_too_many_requests: "Os gwelwch yn dda Rhowch gynnig ddiweddarach"
   500_internal_server_error: "500 Gwall gweinydd mewnol"
   alpha: "ALFFA"
   app_name: "Ymatebydd cartref"
   continue: "Parhau"
   enter_your_iac: "Rhowch eich cod mynediad holiadur isod."
   iac_invalid: "Nid yw'r cod mynediad holiadur yn ddilys."
+  iac_attempts_exceeded: "Yr ydych wedi rhagori ar y nifer o ymdrechion cael ymuno â'ch cod mynediad unigryw. Os gwelwch yn dda ceisiwch eto yn nes ymlaen."
   iac_required: "Mae angen cod mynediad holiadur."
   iac_used: "Cod mynediad holiadur a gofnodwyd eisoes wedi cael ei ddefnyddio."
   internal_server_error: "Mae gwall gweinydd mewnol wedi digwydd."

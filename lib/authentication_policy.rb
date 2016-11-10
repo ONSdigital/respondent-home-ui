@@ -4,22 +4,24 @@ require 'redis'
 class AuthenticationPolicy
   KEY_PREFIX = 'respondent.home:auth.attempt:'.freeze
 
-  def initialize(redis_host, redis_port, max_attempts, ip_address)
-    @redis_host   = redis_host
-    @redis_port   = redis_port
-    @max_attempts = max_attempts
-    @key          = "#{KEY_PREFIX}#{ip_address}"
+  def initialize(settings, ip_address)
+    @redis_host                   = settings.redis_host
+    @redis_port                   = settings.redis_port
+    @redis_password               = settings.redis_password
+    @iac_attempts_expiration_secs = settings.iac_attempts_expiration_secs
+    @max_iac_attempts             = settings.max_iac_attempts
+    @key                          = "#{KEY_PREFIX}#{ip_address}"
   end
 
   def client_blocked?
     count = redis.get(@key) || 0
-    count.to_i >= @max_attempts.to_i - 1
+    count.to_i >= @max_iac_attempts.to_i - 1
   end
 
   def failed_attempt!
     redis.multi do |multi|
       multi.incr(@key)
-      multi.expire(@key, 20)
+      multi.expire(@key, @iac_attempts_expiration_secs)
     end
   end
 

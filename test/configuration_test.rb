@@ -4,15 +4,16 @@ require_relative '../lib/configuration'
 
 class ConfigurationTest < Test::Unit::TestCase
   def setup
-    ENV['RESPONDENT_HOME_EQ_HOST']          = 'eQ host'
-    ENV['RESPONDENT_HOME_EQ_PORT']          = 'eQ port'
-    ENV['RESPONDENT_HOME_IAC_SERVICE_HOST'] = 'IAC service host'
-    ENV['RESPONDENT_HOME_IAC_SERVICE_PORT'] = 'IAC service port'
-    ENV['RESPONDENT_HOME_LOCALE']           = 'Locale'
-    ENV['RESPONDENT_HOME_MAX_IAC_ATTEMPTS'] = 'Max IAC attempts'
-    ENV['RESPONDENT_HOME_REDIS_HOST']       = 'Redis host'
-    ENV['RESPONDENT_HOME_REDIS_PORT']       = 'Redis port'
-    ENV['RESPONDENT_HOME_REDIS_PASSWORD']   = 'Redis password'
+    ENV['RESPONDENT_HOME_EQ_HOST']                      = 'eQ host'
+    ENV['RESPONDENT_HOME_EQ_PORT']                      = 'eQ port'
+    ENV['RESPONDENT_HOME_IAC_ATTEMPTS_EXPIRATION_SECS'] = 'IAC attempts expiration secs'
+    ENV['RESPONDENT_HOME_IAC_SERVICE_HOST']             = 'IAC service host'
+    ENV['RESPONDENT_HOME_IAC_SERVICE_PORT']             = 'IAC service port'
+    ENV['RESPONDENT_HOME_LOCALE']                       = 'Locale'
+    ENV['RESPONDENT_HOME_MAX_IAC_ATTEMPTS']             = 'Max IAC attempts'
+    ENV['RESPONDENT_HOME_REDIS_HOST']                   = 'Redis host'
+    ENV['RESPONDENT_HOME_REDIS_PORT']                   = 'Redis port'
+    ENV['RESPONDENT_HOME_REDIS_PASSWORD']               = 'Redis password'
     @configuration = Configuration.new(ENV)
   end
 
@@ -22,6 +23,10 @@ class ConfigurationTest < Test::Unit::TestCase
 
   def test_eq_port
     assert_equal 'eQ port', @configuration.eq_port
+  end
+
+  def test_iac_attempts_expiration_secs
+    assert_equal 'IAC attempts expiration secs', @configuration.iac_attempts_expiration_secs
   end
 
   def test_iac_service_host

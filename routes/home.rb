@@ -102,6 +102,8 @@ before do
 end
 
 get '/' do
+  halt 429 if @authentication_policy.client_blocked?
+  
   erb :index, locals: { title: I18n.t('welcome'),
                         host: settings.host,
                         built: @built,

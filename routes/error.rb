@@ -4,6 +4,7 @@ error 404 do
                             built: @built,
                             commit: @commit,
                             environment: settings.environment,
+                            analytics_account: settings.analytics_account,
                             locale: settings.locale }
 end
 
@@ -13,6 +14,7 @@ error 429 do
                                     built: @built,
                                     commit: @commit,
                                     environment: settings.environment,
+                                    analytics_account: settings.analytics_account,
                                     locale: settings.locale }
 end
 
@@ -22,5 +24,6 @@ error 500 do
                                         built: @built,
                                         commit: @commit,
                                         environment: settings.environment,
+                                        analytics_account: settings.analytics_account,
                                         locale: settings.locale }
 end

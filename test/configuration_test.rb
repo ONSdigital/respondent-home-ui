@@ -4,6 +4,7 @@ require_relative '../lib/configuration'
 
 class ConfigurationTest < Test::Unit::TestCase
   def setup
+    ENV['RESPONDENT_HOME_ANALYTICS_ACCOUNT']            = 'Analytics account'
     ENV['RESPONDENT_HOME_EQ_HOST']                      = 'eQ host'
     ENV['RESPONDENT_HOME_EQ_PORT']                      = 'eQ port'
     ENV['RESPONDENT_HOME_IAC_ATTEMPTS_EXPIRATION_SECS'] = 'IAC attempts expiration secs'
@@ -15,6 +16,10 @@ class ConfigurationTest < Test::Unit::TestCase
     ENV['RESPONDENT_HOME_REDIS_PORT']                   = 'Redis port'
     ENV['RESPONDENT_HOME_REDIS_PASSWORD']               = 'Redis password'
     @configuration = Configuration.new(ENV)
+  end
+
+  def test_analytics_account
+    assert_equal 'Analytics account', @configuration.analytics_account
   end
 
   def test_eq_host

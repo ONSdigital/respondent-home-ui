@@ -17,12 +17,13 @@ KEY_ID                    = 'EDCRRM'.freeze
 SESSION_EXPIRATION_PERIOD = 60 * 60 * 6
 
 config = Configuration.new(ENV)
-set :locale,                       config.locale
+set :analytics_account,            config.analytics_account
 set :eq_host,                      config.eq_host
 set :eq_port,                      config.eq_port
 set :iac_service_host,             config.iac_service_host
 set :iac_service_port,             config.iac_service_port
 set :iac_attempts_expiration_secs, config.iac_attempts_expiration_secs
+set :locale,                       config.locale
 set :max_iac_attempts,             config.max_iac_attempts
 set :redis_host,                   config.redis_host
 set :redis_port,                   config.redis_port
@@ -108,6 +109,7 @@ get '/' do
                         built: @built,
                         commit: @commit,
                         environment: settings.environment,
+                        analytics_account: settings.analytics_account,
                         locale: settings.locale }
 end
 

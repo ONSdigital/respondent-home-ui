@@ -15,7 +15,7 @@ class AuthenticationPolicy
 
   def client_blocked?
     count = redis.get(@key) || 0
-    count.to_i >= @max_iac_attempts.to_i - 1
+    count.to_i >= @max_iac_attempts.to_i
   end
 
   def failed_attempt!

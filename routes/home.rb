@@ -93,7 +93,10 @@ end
 
 before do
   headers 'Content-Type' => 'text/html; charset=utf-8'
-  @authentication_policy ||= AuthenticationPolicy.new(settings, request.ip)
+
+  # Need to get the correct client IP address when behind a load balancer.
+  ip_address = request.env['HTTP_X_FORWARDED_FOR'] || request.ip
+  @authentication_policy ||= AuthenticationPolicy.new(settings, ip_address)
   @built  = settings.built
   @commit = settings.commit
 

@@ -12,6 +12,7 @@ class Configuration
               :redis_port,
               :redis_password
 
+  # rubocop:disable Metrics/AbcSize
   def initialize(env)
     @analytics_account            = env['RESPONDENT_HOME_ANALYTICS_ACCOUNT']
     @eq_host                      = env['RESPONDENT_HOME_EQ_HOST']
@@ -25,4 +26,5 @@ class Configuration
     @redis_port                   = env['RESPONDENT_HOME_REDIS_PORT']
     @redis_password               = env['RESPONDENT_HOME_REDIS_PASSWORD']
   end
+  # rubocop:enable Metrics/AbcSize
 end

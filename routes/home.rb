@@ -145,8 +145,10 @@ post '/' do
 
       if response.code == 404
         flash[:notice] = I18n.t('iac_invalid')
-      elsif case_summary['active'] == false
+      elsif case_summary['active'] == false 
         flash[:notice] = I18n.t('iac_used')
+	  elsif case_summary['code'] == 'RESOURCE_NOT_FOUND'
+		flash[:notice] = I18n.t('iac_invalid')
       else
         public_key  = load_key_from_file(settings.public_key)
         private_key = load_key_from_file(settings.private_key,

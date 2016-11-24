@@ -1,6 +1,10 @@
 # Respondent Home Ruby Web Application
-This Ruby [Sinatra](http://www.sinatrarb.com/) application is the user interface for the Respondent Home product. It allows users to validate their Internet Access Code (IAC) and forwards
+Respondent Home is part of ONS's Survey Data Collection platform. It allows users to validate their Internet Access Code (IAC) and forwards
 them to the [ONS eQ Survey Runner](https://github.com/ONSdigital/eq-survey-runner) upon successful validation.
+
+![The ONS Survey Data Collection platform](/images/sdc_platform.png?raw=true)
+
+This repository contains the Ruby [Sinatra](http://www.sinatrarb.com/) application that is the user interface for the Respondent Home product.
 
 ## Prerequisites
 Install the RubyGems the application depends on by running `bundle install`. Note that this application depends on a private `iac-validator` RubyGem for performing IAC validation. This gem is only used in one place within `routes/home.rb`:

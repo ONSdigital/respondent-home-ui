@@ -51,3 +51,21 @@ RESPONDENT_HOME_REDIS_PASSWORD
 ```
 
 The script `/env.sh` can be sourced in development to set these variables with reasonable defaults.
+
+## Running on Cloud Foundry
+In order to run on Cloud Foundry a Redis service must first be created and then bound to the application:
+
+```
+ cf create-service p-redis dedicated-vm respondent-home-ui-redis
+ cf bind-service respondent-home-ui respondent-home-ui-redis
+```
+
+Before pushing the application bundle, package the gems, this is required as the Cloud Foundry instance cannot see the private RubyGems server where the `iac-validator` gem is hosted:
+
+```
+bundle package --all
+cf push
+```
+
+## Cloud Foundry Troubleshooting
+You may get an error message saying `The host is taken: respondent-home-ui`. This is caused because an instance of the app is already running and using the host name. In this case edit the `manifest.yml` file and change the host value.

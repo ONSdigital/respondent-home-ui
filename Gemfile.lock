@@ -9,7 +9,7 @@ GEM
       tzinfo (~> 1.1)
     bindata (2.3.4)
     concurrent-ruby (1.0.2)
-    domain_name (0.5.20160826)
+    domain_name (0.5.20161021)
       unf (>= 0.0.5, < 1.0.0)
     formkeeper (0.0.15)
       hpricot
@@ -37,10 +37,10 @@ GEM
       jwt (~> 1.5)
     ons-jwe (1.0.0)
       json-jwt (~> 1, >= 1.6.3)
-    rack (1.6.4)
+    rack (1.6.5)
     rack-protection (1.5.3)
       rack
-    redis (3.3.1)
+    redis (3.3.2)
     rest-client (2.0.0)
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
@@ -87,4 +87,4 @@ DEPENDENCIES
   sinatra-formkeeper
 
 BUNDLED WITH
-   1.12.5
+   1.13.6

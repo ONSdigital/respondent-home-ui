@@ -2,8 +2,6 @@
 This Ruby [Sinatra](http://www.sinatrarb.com/) application is the user interface for the Respondent Home product. It allows users to validate their Internet Access Code (IAC) and forwards
 them to the [ONS eQ Survey Runner](https://github.com/ONSdigital/eq-survey-runner) upon successful validation.
 
-[![Build Status](https://travis-ci.org/ONSdigital/respondent-home-ui.svg?branch=master)](https://travis-ci.org/ONSdigital/respondent-home-ui)
-
 ## Prerequisites
 Install the RubyGems the application depends on by running `bundle install`. Note that this application depends on a private `iac-validator` RubyGem for performing IAC validation. This gem is only used in one place within `routes/home.rb`:
 

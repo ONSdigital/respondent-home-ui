@@ -12,7 +12,7 @@ class Configuration
               :redis_port,
               :redis_password
 
-  # rubocop:disable Metrics/AbcSize, Style/GuardClause
+  # rubocop:disable Metrics/AbcSize
   def initialize(env)
     @analytics_account            = env['RESPONDENT_HOME_ANALYTICS_ACCOUNT']
     @eq_host                      = env['RESPONDENT_HOME_EQ_HOST']
@@ -22,16 +22,17 @@ class Configuration
     @iac_service_port             = env['RESPONDENT_HOME_IAC_SERVICE_PORT']
     @locale                       = env['RESPONDENT_HOME_LOCALE']
     @max_iac_attempts             = env['RESPONDENT_HOME_MAX_IAC_ATTEMPTS']
-    @redis_host                   = env['RESPONDENT_HOME_REDIS_HOST']
-    @redis_port                   = env['RESPONDENT_HOME_REDIS_PORT']
-    @redis_password               = env['RESPONDENT_HOME_REDIS_PASSWORD']
 
     if env['VCAP_SERVICES']
       vcap_redis_credentials = JSON.parse(env['VCAP_SERVICES'])['p-redis'].first['credentials']
       @redis_host     = vcap_redis_credentials['host']
       @redis_port     = vcap_redis_credentials['port']
       @redis_password = vcap_redis_credentials['password']
+    else
+      @redis_host     = env['RESPONDENT_HOME_REDIS_HOST']
+      @redis_port     = env['RESPONDENT_HOME_REDIS_PORT']
+      @redis_password = env['RESPONDENT_HOME_REDIS_PASSWORD']
     end
   end
-  # rubocop:enable Metrics/AbcSize, Style/GuardClause
+  # rubocop:enable Metrics/AbcSize
 end

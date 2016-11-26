@@ -7,6 +7,7 @@ class ConfigurationTest < Test::Unit::TestCase
     ENV['RESPONDENT_HOME_ANALYTICS_ACCOUNT']            = 'Analytics account'
     ENV['RESPONDENT_HOME_EQ_HOST']                      = 'eQ host'
     ENV['RESPONDENT_HOME_EQ_PORT']                      = 'eQ port'
+    ENV['RESPONDENT_HOME_EQ_PROTOCOL']                  = 'eQ protocol'
     ENV['RESPONDENT_HOME_IAC_ATTEMPTS_EXPIRATION_SECS'] = 'IAC attempts expiration secs'
     ENV['RESPONDENT_HOME_IAC_SERVICE_HOST']             = 'IAC service host'
     ENV['RESPONDENT_HOME_IAC_SERVICE_PORT']             = 'IAC service port'
@@ -28,6 +29,10 @@ class ConfigurationTest < Test::Unit::TestCase
 
   def test_eq_port
     assert_equal 'eQ port', @configuration.eq_port
+  end
+
+  def test_eq_protocol
+    assert_equal 'eQ protocol', @configuration.eq_protocol
   end
 
   def test_iac_attempts_expiration_secs

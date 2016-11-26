@@ -3,7 +3,6 @@ require 'sinatra/content_for2'
 require 'sinatra/flash'
 require 'sinatra/formkeeper'
 require 'iac-validator'
-require 'securerandom'
 require 'rest_client'
 require 'ons-jwe'
 require 'openssl'
@@ -12,6 +11,7 @@ require 'yaml'
 
 require_relative '../lib/authentication_policy'
 require_relative '../lib/configuration'
+require_relative '../lib/claims'
 
 KEY_ID                    = 'EDCRRM'.freeze
 SESSION_EXPIRATION_PERIOD = 60 * 60 * 6
@@ -58,27 +58,6 @@ helpers do
   # Returns the IAC from its segments and lowercased.
   def canonicalize_iac(*segments)
     segments.join.downcase
-  end
-
-  # Returns the eQ claims for the passed case reference and question set.
-  def claims_for(case_ref, question_set)
-    {
-      collection_exercise_sid: '2017',
-      eq_id: '1',
-      exp: Time.now.to_i + 60 * 60,
-      form_type: question_set,
-      iat: Time.now.to_i,
-      period_id: '1',
-      period_str: '2016-01-01',
-      ref_p_start_date: '2016-01-01',
-      ref_p_end_date: '2016-09-01',
-      region_code: settings.locale == 'cy' ? 'GB-WLS' : 'GB-ENG',
-      ru_name: 'Office for National Statistics',
-      ru_ref: '12346789012A',
-      return_by: '2016-04-30',
-      tx_id: SecureRandom.uuid,
-      user_id: case_ref
-    }
   end
 
   # View helper for escaping HTML output.
@@ -152,8 +131,8 @@ post '/' do
         private_key = load_key_from_file(settings.private_key,
                                          settings.private_key_passphrase)
 
-        claims       = claims_for(case_summary['caseRef'], case_summary['questionSet'])
-        token        = JWEToken.new(KEY_ID, claims, public_key, private_key)
+        claims       = Claims.new(case_summary['caseId'], case_summary['questionSet'], settings.locale)
+        token        = JWEToken.new(KEY_ID, claims.to_hash, public_key, private_key)
         redirect_url = "http://#{settings.eq_host}:#{settings.eq_port}/session?token=#{token.value}"
       end
 

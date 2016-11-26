@@ -3,6 +3,7 @@ class Configuration
   attr_reader :analytics_account,
               :eq_host,
               :eq_port,
+              :eq_protocol,
               :iac_attempts_expiration_secs,
               :iac_service_host,
               :iac_service_port,
@@ -17,6 +18,7 @@ class Configuration
     @analytics_account            = env['RESPONDENT_HOME_ANALYTICS_ACCOUNT']
     @eq_host                      = env['RESPONDENT_HOME_EQ_HOST']
     @eq_port                      = env['RESPONDENT_HOME_EQ_PORT']
+    @eq_protocol                  = env['RESPONDENT_HOME_EQ_PROTOCOL']
     @iac_attempts_expiration_secs = env['RESPONDENT_HOME_IAC_ATTEMPTS_EXPIRATION_SECS']
     @iac_service_host             = env['RESPONDENT_HOME_IAC_SERVICE_HOST']
     @iac_service_port             = env['RESPONDENT_HOME_IAC_SERVICE_PORT']

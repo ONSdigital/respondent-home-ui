@@ -133,7 +133,7 @@ post '/' do
 
         claims = Claims.new(case_summary['caseId'], case_summary['questionSet'], settings.locale)
         token  = JWEToken.new(KEY_ID, claims.to_hash, public_key, private_key)
-        url    = "http://#{settings.eq_host}:#{settings.eq_port}/session?token=#{token.value}"
+        url    = "#{settings.eq_protocol}://#{settings.eq_host}:#{settings.eq_port}/session?token=#{token.value}"
       end
 
       redirect url

@@ -9,7 +9,6 @@ gem 'sinatra-content-for2'
 gem 'sinatra-flash'
 gem 'sinatra-formkeeper'
 gem 'notifications-ruby-client'
-gem 'redis'
 
 source 'http://rubygems.ctpdev.local' do
   gem 'iac-validator'

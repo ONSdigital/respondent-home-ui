@@ -34,7 +34,7 @@ class Claims
       tx_id: SecureRandom.uuid,
       user_id: '',
       variant_flags: {
-        :'sexual-identity' => @question_set.end_with?('s')
+        sexual_identity: @question_set.end_with?('s')
       }
     }
   end

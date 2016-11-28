@@ -7,7 +7,6 @@ cy:
   app_name: "Ymatebydd cartref"
   continue: "Parhau"
   enter_your_iac: "Rhowch eich cod mynediad unigryw isod."
-  iac_attempts_exceeded: "Yr ydych wedi rhagori ar y nifer o ymdrechion cael ymuno â'ch cod mynediad unigryw. Os gwelwch yn dda ceisiwch eto yn nes ymlaen."
   iac_invalid: "Nid yw'r cod mynediad unigryw yn ddilys."
   iac_required: "Mae angen cod mynediad holiadur."
   iac_used: "Cod mynediad unigryw a gofnodwyd eisoes wedi cael ei ddefnyddio."

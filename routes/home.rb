@@ -13,7 +13,7 @@ require_relative '../lib/configuration'
 require_relative '../lib/claims'
 
 KEY_ID                    = 'EDCRRM'.freeze
-SESSION_EXPIRATION_PERIOD = 60 * 60 * 6
+SESSION_EXPIRATION_PERIOD = 60 * 30
 
 config = Configuration.new(ENV)
 set :analytics_account,            config.analytics_account

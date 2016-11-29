@@ -19,6 +19,7 @@ config = Configuration.new(ENV)
 set :analytics_account,            config.analytics_account
 set :eq_host,                      config.eq_host
 set :eq_port,                      config.eq_port
+set :eq_protocol,                  config.eq_protocol
 set :iac_service_host,             config.iac_service_host
 set :iac_service_port,             config.iac_service_port
 set :locale,                       config.locale

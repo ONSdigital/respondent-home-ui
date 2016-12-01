@@ -27,7 +27,7 @@ This project includes a Sinatra application that provide a mock version of the I
 
   `./run.sh` from within the `mock` directory. This is a shell script that starts the mock web service in the background. Use Ctrl + C to terminate it. The output from the background process is written to `mock/nohup.out`. This file can be deleted if not required.
 
-Start the user interface normally as described above. Use **fb74 7cq7 25lj** as a test IAC that is no longer valid because the questionnaire has already been submitted. Use the IACs in the table below as valid test IACs for each question set:
+Start the user interface normally as described above. Use `fb74 7cq7 25lj` as a test IAC that is no longer valid because the questionnaire has already been submitted. Use the IACs in the table below as valid test IACs for each question set:
 
 <table>
   <thead>
@@ -39,47 +39,47 @@ Start the user interface normally as described above. Use **fb74 7cq7 25lj** as 
   </thead>
   <tbody>
     <tr>
-      <td><strong>wsyc yxw9 kn5g</strong></td>
+      <td>`wsyc yxw9 kn5g`</td>
       <td>H1</td>
       <td>Household questionnaire for England without sexual ID</td>
     </tr>
     <tr>
-      <td><strong>h479 nl7y x9w2</strong></td>
+      <td>`h479 nl7y x9w2`</td>
       <td>H1S</td>
       <td>Household questionnaire for England with sexual ID</td>
     </tr>
     <tr>
-      <td><strong>ssn4 bqkg n7gl</strong></td>
+      <td>`ssn4 bqkg n7gl`</td>
       <td>H2</td>
       <td>Household questionnaire for Wales (in English) without sexual ID</td>
     </tr>
     <tr>
-      <td><strong>b55s wlzg w778</strong></td>
+      <td>`b55s wlzg w778`</td>
       <td>H2S</td>
       <td>Household questionnaire for Wales (in English) with sexual ID</td>
     </tr>
     <tr>
-      <td><strong>4kyz nty4 fw3s</strong></td>
+      <td>`4kyz nty4 fw3s`</td>
       <td>I1</td>
       <td>Individual questionnaire for England without sexual ID</td>
     </tr>
     <tr>
-      <td><strong>5p9y 7rdc 3t3q</strong></td>
+      <td>`5p9y 7rdc 3t3q`</td>
       <td>I1S</td>
       <td>Individual questionnaire for England with sexual ID</td>
     </tr>
     <tr>
-      <td><strong>wn9k btyp zth8</strong></td>
+      <td>`wn9k btyp zth8`</td>
       <td>I2</td>
       <td>Individual questionnaire for Wales (in English) without sexual ID</td>
     </tr>
     <tr>
-      <td><strong>xmyv jwjv t5yc</strong></td>
+      <td>`xmyv jwjv t5yc`</td>
       <td>I2S</td>
       <td>Individual questionnaire for Wales (in English) with sexual ID</td>
     </tr>
     <tr>
-      <td><strong>yr94 73ty n7qk</strong></td>
+      <td>`yr94 73ty n7qk`</td>
       <td>HOTEL</td>
       <td>Hotel questionnaire</td>
     </tr>

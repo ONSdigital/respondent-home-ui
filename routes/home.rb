@@ -122,7 +122,7 @@ post '/' do
         private_key = load_key_from_file(settings.private_key,
                                          settings.private_key_passphrase)
 
-        claims = Claims.new(case_summary['caseRef'], case_summary['questionSet'], settings.locale)
+        claims = Claims.new(case_summary['caseRef'], case_summary['questionSet'], @locale)
         token  = JWEToken.new(KEY_ID, claims.to_hash, public_key, private_key)
         url    = "#{settings.eq_protocol}://#{settings.eq_host}:#{settings.eq_port}/session?token=#{token.value}"
       end

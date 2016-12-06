@@ -10,7 +10,6 @@ class ConfigurationTest < Test::Unit::TestCase
     ENV['RESPONDENT_HOME_EQ_PROTOCOL']       = 'eQ protocol'
     ENV['RESPONDENT_HOME_IAC_SERVICE_HOST']  = 'IAC service host'
     ENV['RESPONDENT_HOME_IAC_SERVICE_PORT']  = 'IAC service port'
-    ENV['RESPONDENT_HOME_LOCALE']            = 'Locale'
     @configuration = Configuration.new(ENV)
   end
 
@@ -36,9 +35,5 @@ class ConfigurationTest < Test::Unit::TestCase
 
   def test_iac_service_port
     assert_equal 'IAC service port', @configuration.iac_service_port
-  end
-
-  def test_locale
-    assert_equal 'Locale', @configuration.locale
   end
 end

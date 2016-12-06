@@ -22,7 +22,6 @@ set :eq_port,                      config.eq_port
 set :eq_protocol,                  config.eq_protocol
 set :iac_service_host,             config.iac_service_host
 set :iac_service_port,             config.iac_service_port
-set :locale,                       config.locale
 
 config_file = YAML.load_file(File.join(__dir__, '../config.yml'))
 set :public_key,             config_file['eq-service']['public_key']
@@ -39,8 +38,6 @@ set :environment, config_file['badges']['environment']
 # Configure internationalisation.
 I18n.load_path = Dir['locale/*.yml']
 I18n.backend.load_translations
-I18n.default_locale = settings.locale
-I18n.locale = settings.locale
 
 # Expire sessions after SESSION_EXPIRATION_PERIOD minutes of inactivity.
 use Rack::Session::Cookie, key: 'rack.session', path: '/',
@@ -63,10 +60,18 @@ helpers do
   def load_key_from_file(file, passphrase = nil)
     OpenSSL::PKey::RSA.new(File.read(File.join(__dir__, file)), passphrase)
   end
+
+  def locale_from_url
+    request.url.include?('cyfrifiad') ? 'cy' : 'en'
+  end
 end
 
 before do
   headers 'Content-Type' => 'text/html; charset=utf-8'
+  @locale = locale_from_url
+  I18n.default_locale = @locale
+  I18n.locale         = @locale
+
   @built  = settings.built
   @commit = settings.commit
 
@@ -80,9 +85,9 @@ get '/' do
                         host: settings.host,
                         built: @built,
                         commit: @commit,
+                        locale: @locale,
                         environment: settings.environment,
-                        analytics_account: settings.analytics_account,
-                        locale: settings.locale }
+                        analytics_account: settings.analytics_account }
 end
 
 post '/' do

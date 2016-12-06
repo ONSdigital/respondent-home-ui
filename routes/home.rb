@@ -115,6 +115,11 @@ post '/' do
 
       if response.code == 404
         flash[:notice] = I18n.t('iac_invalid')
+
+      # The IAC has no associated case.
+      elsif response.code == 500 &&
+            case_summary['error']['message'].include?('Case not found')
+        flash[:notice] = I18n.t('iac_invalid')
       elsif case_summary['active'] == false
         flash[:notice] = I18n.t('iac_used')
       else

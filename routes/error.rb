@@ -3,9 +3,9 @@ error 404 do
                             host: settings.host,
                             built: @built,
                             commit: @commit,
+                            locale: @locale,
                             environment: settings.environment,
-                            analytics_account: settings.analytics_account,
-                            locale: settings.locale }
+                            analytics_account: settings.analytics_account }
 end
 
 error 500 do
@@ -13,7 +13,7 @@ error 500 do
                                         host: settings.host,
                                         built: @built,
                                         commit: @commit,
+                                        locale: @locale,
                                         environment: settings.environment,
-                                        analytics_account: settings.analytics_account,
-                                        locale: settings.locale }
+                                        analytics_account: settings.analytics_account }
 end

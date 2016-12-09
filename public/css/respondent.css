@@ -1,0 +1,121 @@
+.census-header__cookie{
+  background-color: #f5f6ff;
+  color: #222;
+}
+.census-header__cookie p{
+  padding: 0.7rem 0;
+  margin: 0;
+  line-height: 1.6;
+    font-size: 16.02px;
+    font-size: 0.89rem;
+    font-weight: 400;
+}
+.census-header__cookie a{
+  cursor: pointer;
+  text-decoration: none;
+}
+.page-header {
+  background: #FFFFFF;
+  border-bottom: 3px solid #6e2585;
+  margin: 0 0 9px;
+  margin: 0 0 0.5rem;
+}
+
+
+.page-header__logo {
+  margin-bottom: 0;
+  margin-right: auto;
+  width: 126px;
+  width: 7rem;
+  -webkit-box-flex: none;
+  -webkit-flex: none;
+      -ms-flex: none;
+          flex: none;
+}
+
+@media only screen and (min-width: 500px) {
+  .page-header__logo {
+    width: 10rem;
+  }
+}
+
+@media only screen and (min-width: 740px) {
+  .page-header__logo {
+    width: 12.3rem;
+  }
+}
+
+.page-header__crest {
+  margin-bottom: 0;
+  margin-right: 0.6rem;
+  width: 3rem;
+}
+
+@media only screen and (min-width: 500px) {
+  .page-header__crest {
+    width: 3.55rem;
+  }
+}
+
+@media only screen and (min-width: 740px) {
+  .page-header__crest {
+    margin-right: 1rem;
+    width: 4.55rem;
+  }
+}
+@media only screen and (min-width: 1300px) {
+  .page-header__crest {
+    position: absolute;
+    left: -86px;
+  }
+}
+
+.page-header__btn {
+  text-align: right;
+  line-height: 1;
+  color: white;
+  margin: 0 0 0 36px;
+  margin: 0 0 0 0.5rem;
+}
+
+.btn--light.btn--border {
+    font-weight: 600;
+    background: transparent;
+    border: 2px solid #6e2585;
+    color: #6e2585;
+    padding: 9px 36px;
+    padding: 0.5rem 2rem;
+}
+.btn--light.btn--border:hover, .btn--light.btn--border:focus {
+    background: #6e2585;
+    color: #fff;
+}
+@media only screen and (max-width: 540px) {
+  .page-header__btn span {
+    display: none;
+  }
+}
+@media only screen and (max-width: 499px) {
+  .page-header__btn {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.5rem !important;
+    margin: 0 0 0 1rem;
+  }
+}
+
+.page-header__help {
+  padding: 0;
+  background: #501b61;
+  overflow: hidden;
+  -webkit-transition: max-height 300ms ease-in;
+  transition: max-height 300ms ease-in;
+  height: auto;
+}
+
+.lock:before {
+  background: #fff url("/img/icons--lock.svg") no-repeat center center;
+}
+
+.external:after {
+  background: url("/img/icons--external-link.svg") no-repeat center center;
+}

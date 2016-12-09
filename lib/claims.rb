@@ -8,7 +8,7 @@ class Claims
     @language       = language
 
     if @question_set == 'hotel'
-      @form_type = 'communal-establishment'
+      @form_type = 'communal'
     else
       @form_type = 'household'  if @question_set.start_with?('h')
       @form_type = 'individual' if @question_set.start_with?('i')

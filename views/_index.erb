@@ -1,0 +1,33 @@
+<p class="u-m-s u-mb-no" style="padding-bottom: 20px;"><%= I18n.t 'enter_your_iac' %></p>
+<% if flash[:notice] %>
+<div class="alert alert--error">
+  <div class="alert__header">
+    <div class="alert__title">
+      <h2 class="alert__title"><%=h flash[:notice] %></h2>
+    </div>
+  </div>
+  <div class="alert__body">
+    <form action="/" method="post">
+      <fieldset class="fieldset">
+        <div class="field">
+          <input type="text" name="iac1" class="iac" size="4" maxlength="4" autocomplete="off" autofocus> <input type="text" name="iac2" class="iac" size="4" maxlength="4" autocomplete="off"> <input type="text" name="iac3" class="iac" size="4" maxlength="4" autocomplete="off">
+        </div>
+      </fieldset>
+      <div class="group" style="margin-top: 40px;">
+        <input type="submit" class="btn btn--secondary qa-btn-submit" value="<%= I18n.t 'continue' %>">
+      </div>
+    </form>
+  </div>
+</div>
+<% else %>
+<form action="/" method="post">
+  <fieldset class="fieldset">
+    <div class="field">
+      <input type="text" name="iac1" class="iac" size="4" maxlength="4" autocomplete="off" autofocus> <input type="text" name="iac2" class="iac" size="4" maxlength="4" autocomplete="off"> <input type="text" name="iac3" class="iac" size="4" maxlength="4" autocomplete="off">
+    </div>
+  </fieldset>
+  <div class="group" style="margin-top: 40px;">
+    <input type="submit" class="btn btn--secondary qa-btn-submit" value="<%= I18n.t 'continue' %>">
+  </div>
+</form>
+<% end %>

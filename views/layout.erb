@@ -4,97 +4,169 @@
 <!--[if IE 8]>         <html lang="<%= I18n.t 'lang' %>" dir="ltr" class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html lang="<%= I18n.t 'lang' %>" dir="ltr" class="no-js"> <!--<![endif]-->
   <head>
-    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title><%=h title %> - <%= I18n.t 'app_name' %></title>
+    <title>2017 Census</title>
     <meta content="" name="description">
     <meta content="width=device-width, initial-scale=1" name="viewport">
-    <link rel="shortcut icon" href="/img/favicon.ico">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,600,700,' rel='stylesheet' type='text/css'>
-    <!--[if lt IE 9]>
-      <script src="/js/vendor/html5shiv.min.js"></script>
-    <![endif]-->
-    <!--[if lte IE 9]>
-      <script src="/js/polyfills.js"></script>
-    <![endif]-->
-    <!--[if gt IE 8]><!-->
+    <link rel="shortcut icon" href="favicon.ico">
+  <!--[if lt IE 9]>
+    <script src="/js/vendor/html5shiv.min.js?q=95ed16e2c89bb26d9c02129271468664828e4cee"></script>
+  <![endif]-->
+  <!--[if lte IE 9]>
+    <script src="/js/polyfills.js?q=95ed16e2c89bb26d9c02129271468664828e4cee"></script>
+  <![endif]-->
+  <!--[if gt IE 8]><!-->
     <script>document.documentElement.className = document.documentElement.className.replace('no-js','has-js')</script>
-    <!--<![endif]-->
-    <!--[if (gt IE 9) | (IEMobile)]><!-->
-    <link href="/css/default/responsive.css" rel="stylesheet">
-    <!--<![endif]-->
-    <!--[if (lte IE 9) & (!IEMobile)]>
-    <link href="/css/default/fixed.css" rel="stylesheet">
-    <![endif]-->
-    <link href="/css/default/respondenthome.css" rel="stylesheet">
+  <!--<![endif]-->
+  <!--[if (gt IE 9) | (IEMobile)]><!-->
+    <link href="/css/responsive.css" rel="stylesheet">
+  <!--<![endif]-->
+  <!--[if (lte IE 9) & (!IEMobile)]>
+    <link href="/css/census/fixed.css?q=95ed16e2c89bb26d9c02129271468664828e4cee" rel="stylesheet">
+  <![endif]-->
   </head>
-  <body>
-    <div class="bar" role="banner">
+  <body class="page">
+    <div class="page__content">
       <div class="skip">
-        <a class="skip__link" href="#main"><%= I18n.t 'skip_to_content' %></a>
+        <a class="skip__link" href="#main">Skip to content</a>
       </div>
-      <div class="bar__inner container">
-        <div class="badge badge--amber u-mr-xs"><%= I18n.t 'alpha' %></div>
-        <div class="bar__title"><%= I18n.t 'app_name' %></div>
-      <% unless environment == 'production' %>
-        <div id="badges">
-          <img src="https://img.shields.io/badge/built-<%=h built %>-blue.svg" alt=""> <img src="https://img.shields.io/badge/environment-<%=h environment %>-yellow.svg" alt=""> <img src="https://img.shields.io/badge/host-<%=h host %>-red.svg" alt=""> <% unless commit.nil? || commit.length.zero? %><img src="https://img.shields.io/badge/commit-<%=h commit %>-orange.svg" alt=""><% end %>
-        </div>
-      <% end %>
-      </div>
-    </div>
-
-    <div class="container">
-      <div class="panel">
-        <div class="panel__header survey-header u-cf">
-          <div class="logo survey-header__logo">
-            <img src="/img/logo.svg" alt="<%= I18n.t 'ons' %>" class="logo__img">
+      <div class="page-header page-header--census">
+        <div class="census-header__cookie">
+          <div class="container">
+            <p class="pluto">Census Test uses cookies. <a href="https://www.ons.gov.uk/help/cookiesandprivacy" rel="ext">Find out more about cookies.</a></p>
           </div>
-          <div class="info survey-header__info" role="contentinfo">
-            <h2 class="info__title"><%= I18n.t 'survey_help' %></h2>
-            <div class="info__tel">
-              0300 1234 931
+        </div>
+        <div class="page-header__help is-closed js-help-body">
+          <div class="page-header__container container">
+            <div class="page-header__title ">Help and support –</div>
+              <ul class="page-header__nav nav nav--horizontal">
+                <li class="nav__item">
+                  <span class="mars" role="presentation">Call </span> <a class="venus nav__link" href="tel:0800123456789"><span class="u-vh">For help call </span>0800 123 456789</a>
+                </li>
+                <li class="nav__item">
+                  <a class="venus nav__link external" href="#" rel="ext">Online Help</a>
+                </li>
+              </ul>
             </div>
+          </div>
+          <div class="page-header__container container">
+            <div class="page-header__crest">
+              <img src="/img/crest.svg" alt="Crown">
+            </div>
+            <div class="page-header__logo">
+              <img src="/img/logo-english-reversed.svg" alt="2017 Census">
+            </div>
+            <button class="page-header__btn btn btn--light btn--border js-help-btn">
+              Help<span> and support</span>
+            </button>
           </div>
         </div>
         <div role="main" class="panel__body" id="main">
-          <div class="header">
-            <h1 class="header__title"><%=h title %></h1>
-            <div class="box">
-              <%= yield %>
+          <div class="container">
+            <div class="grid">
+              <div class="grid__col col-8@m">
+                <div class="header">
+                  <h1 class="saturn">Welcome to the 2017 Census Test.</h1>
+                  <p class="mars">By completing this questionnaire you will be joining others in your local area who are helping us to plan for the next census.</p>
+                  <p class="mars">If anyone aged 16 or over would like to keep their answers private, they can <a href="form-request.htm">request a personal and confidential form</a> or by calling <strong>0300 068 3001</strong>.</p></br>
+                  <form action="" class="form qa-questionnaire-form" role="form" method="POST" novalidate="">
+                    <div class="group" id="household-and-accommodation">
+                      <div class="block" id="census-access-code">
+                        <div class="section" id="census-access-code-section">
+                          <div class="question" id="census-access-code-question">
+                            <div class="alert alert--simple alert--neutral" id="question-guidance-census-access-code-question">
+                              <div class="question__answers">
+                                <div class="question__answer">
+                                  <div class="answer answer--integer " id="census-access-code-answer">
+                                    <div class="answer__fields js-fields">
+                                      <fieldset class="fieldgroup fieldgroup--date">
+                                        <legend class="fieldgroup__title venus">Enter your 12 digit Census access code</legend>
+                                        <div class="fieldgroup__fields">
+                                          <div class="field field--input field--code">
+                                            <label class="label mercury u-vh" for="first-four-lines-of-code" >First four lines of code</label>
+                                            <input pattern="\d*" maxlength="4" data-qa="input-text" id="first-four-lines-of-code" name="first-four-lines-of-code" class="input input--text " value="" type="text">
+                                          </div>
+                                          <div class="field field--select field--code">
+                                            <label class="label mercury u-vh" for="second-four-lines-of-code" >Second four lines of code</label>
+                                            <input pattern="\d*" maxlength="4" data-qa="input-text" id="second-four-lines-of-code" name="second-four-lines-of-code" class="input input--text " value="" type="text">
+                                          </div>
+                                          <div class="field field--input field--code">
+                                            <label class="label mercury u-vh" for="third-four-lines-of-code" >Third four lines of code</label>
+                                            <input pattern="\d*" maxlength="4" data-qa="input-text" id="third-four-lines-of-code" name="third-four-lines-of-code" class="input input--text " value="" type="text">
+                                          </div>
+                                        </div>
+                                      </fieldset>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <br/>
+                              <span class="mars">The census access code is printed on your Census letter.</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <button class="btn btn--lg qa-btn-get-started" type="submit" name="action[save_continue]">Start Census</button>
+                  </form>
+                  <div class="lock u-mb-s u-mb-m@s">
+                    <div class="venus lock__text">Your personal information is protected by law and will be kept confidential.</div>
+                  </div>
+                  <p class="mars">The Census in England and Wales is organised by the <a href="https://www.ons.gov.uk/" rel="ext">Office for National Statistics</a>.</p>
+                </div>
+              </div>
             </div>
-          <% if locale == 'cy' %>
-            <p style="font-size: 80%;"><a href="https://census.gov.uk/">English</a></p>
-          <% end %>
           </div>
         </div>
       </div>
-    </div>
+      <div class="footer footer--census" id="footer" role="contentinfo">
+        <div class="container footer__container">
+          <a class="footer__logo" href="https://www.ons.gov.uk/">
+            <img src="/img/ons-logo.svg" alt="Office for National Statistics" class="">
+          </a>
+          <ul class="footer__nav nav nav--horizontal">
+            <li class="nav__item">
+              <a class="nav__link" rel="ext" href="https://www.ons.gov.uk/help/cookiesandprivacy">Privacy</a>
+            </li>
+            <li class="nav__item">
+              <a class="nav__link" rel="ext" href="#">Copyright</a>
+            </li>
+            <li class="nav__item">
+              <a class="nav__link" rel="ext" href="https://www.ons.gov.uk/help/termsandconditions">Terms &amp; Conditions</a>
+            </li>
+            <li class="nav__item">
+              <a class="nav__link" rel="ext" href="https://www.ons.gov.uk/help/accessibility">Accessibility Statement</a>
+            </li>
+          </ul>
+        </div>
+        <div class="footer__help">
+          <div class="container">
+            <div class="mars">Help and Support –
+              <ul class="footer__helpnav nav nav--horizontal">
+                <li class="nav__item">
+                  <span class="mars" role="presentation">Call </span> <a class="venus nav__link" href="tel:0800123456789"><span class="u-vh">For help call </span>0800 123 456789</a>
+                </li>
+                <li class="nav__item">
+                  <a class="venus nav__link external" href="#" rel="ext">Online Help</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
     <!-- jQuery 1 -->
   	<!--[if lt IE 9]>
-  	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-  	<script>window.jQuery || document.write('<script "/js/vendor/jquery-1.12.0.min.js"><\/script>')</script>
+  	  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  	  <script>window.jQuery || document.write('<script "/js/vendor/jquery-1.12.0.min.js?q=95ed16e2c89bb26d9c02129271468664828e4cee"><\/script>')</script>
   	<![endif]-->
   	<!-- jQuery 2 -->
   	<!--[if gte IE 9]><!-->
-  	<script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
-  	<script>window.jQuery || document.write('<script "/js/vendor/jquery-2.2.0.min.js><\/script>')</script>
+  	  <script src="/js/vendor/jquery-2.2.0.min.js"></script>
+  	  <script>window.jQuery || document.write('<script "/js/vendor/jquery-2.2.0.min.js?q=95ed16e2c89bb26d9c02129271468664828e4cee"><\/script>')</script>
   	<!--<![endif]-->
-
     <!--[if gte IE 9]><!-->
-    <script src="/js/bundle.js"></script>
-    <!--<![endif]-->
-    <script src="/js/vendor/jquery.autotab.min.js"></script>
-    <script src="/js/respondenthome.js"></script>
-  <% unless analytics_account.nil? %>
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-      ga('create', '<%=h analytics_account %>', 'auto');
-      ga('send', 'pageview');
-    </script>
-  <% end %>
+      <script src="/js/bundle.js"></script>
+  	<!--<![endif]-->
   </body>
 </html>

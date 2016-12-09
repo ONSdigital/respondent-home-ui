@@ -113,7 +113,7 @@
 }
 
 .lock:before {
-  background: #fff url("/img/icons--lock.svg") no-repeat center center;
+  background: #fff url("/img/icons/icons--lock.svg") no-repeat center center;
 }
 
 .external:after {

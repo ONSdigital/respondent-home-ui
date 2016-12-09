@@ -61,7 +61,7 @@ class ClaimsTest < Test::Unit::TestCase
 
   def test_hotel_questionnaire
     claims = Claims.new(0, 'HOTEL', nil)
-    assert_equal 'communal-establishment', claims.to_hash[:form_type]
+    assert_equal 'communal', claims.to_hash[:form_type]
     assert_equal 'GB-ENG', claims.to_hash[:region_code]
     assert_false claims.to_hash[:variant_flags][:sexual_identity]
   end

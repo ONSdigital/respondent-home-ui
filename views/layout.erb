@@ -92,6 +92,11 @@
               <a class="nav__link" rel="ext" href="https://www.ons.gov.uk/help/accessibility"><%= I18n.t 'accessibility_statement' %></a>
             </li>
           </ul>
+        <% unless environment == 'production' %>
+          <div id="badges">
+            <img src="https://img.shields.io/badge/built-<%=h built %>-blue.svg" alt=""> <img src="https://img.shields.io/badge/environment-<%=h environment %>-yellow.svg" alt=""> <img src="https://img.shields.io/badge/host-<%=h host %>-red.svg" alt=""> <% unless commit.nil? || commit.length.zero? %><img src="https://img.shields.io/badge/commit-<%=h commit %>-orange.svg" alt=""><% end %>
+          </div>
+        <% end %>
         </div>
         <div class="footer__help">
           <div class="container">

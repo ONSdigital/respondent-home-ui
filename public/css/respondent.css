@@ -119,3 +119,11 @@
 .external:after {
   background: url("/img/icons/icons--external-link.svg") no-repeat center center;
 }
+
+#badges {
+  margin-bottom: 20px;
+}
+
+#badges img {
+  margin-right: 5px;
+}

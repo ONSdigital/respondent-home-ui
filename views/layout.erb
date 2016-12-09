@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>2017 Census</title>
+    <title><%= I18n.t 'title' %></title>
     <meta content="" name="description">
     <meta content="width=device-width, initial-scale=1" name="viewport">
     <link rel="shortcut icon" href="favicon.ico">
@@ -30,23 +30,23 @@
   <body class="page">
     <div class="page__content">
       <div class="skip">
-        <a class="skip__link" href="#main">Skip to content</a>
+        <a class="skip__link" href="#main"><%= I18n.t 'skip_to_content' %></a>
       </div>
       <div class="page-header page-header--census">
         <div class="census-header__cookie">
           <div class="container">
-            <p class="pluto">Census Test uses cookies. <a href="https://www.ons.gov.uk/help/cookiesandprivacy" rel="ext">Find out more about cookies.</a></p>
+            <p class="pluto"><%= I18n.t 'cookie_notice' %></p>
           </div>
         </div>
         <div class="page-header__help is-closed js-help-body">
           <div class="page-header__container container">
-            <div class="page-header__title ">Help and support –</div>
+            <div class="page-header__title"><%= I18n.t 'help_and_support' %></div>
               <ul class="page-header__nav nav nav--horizontal">
                 <li class="nav__item">
-                  <span class="mars" role="presentation">Call </span> <a class="venus nav__link" href="tel:0800123456789"><span class="u-vh">For help call </span>0800 123 456789</a>
+                  <span class="mars" role="presentation"><%= I18n.t 'call' %> </span> <a class="venus nav__link" href="tel:0800123456789"><span class="u-vh"><%= I18n.t 'for_help_call' %> </span><%= I18n.t 'help_telephone_number' %></a>
                 </li>
                 <li class="nav__item">
-                  <a class="venus nav__link external" href="#" rel="ext">Online Help</a>
+                  <a class="venus nav__link external" href="#" rel="ext"></a>
                 </li>
               </ul>
             </div>
@@ -59,7 +59,7 @@
               <img src="/img/logo-english-reversed.svg" alt="2017 Census">
             </div>
             <button class="page-header__btn btn btn--light btn--border js-help-btn">
-              Help<span> and support</span>
+              <%= I18n.t 'help_and_support_button' %>
             </button>
           </div>
         </div>
@@ -68,10 +68,10 @@
             <div class="grid">
               <div class="grid__col col-8@m">
                 <div class="header">
-                  <h1 class="saturn">Welcome to the 2017 Census Test.</h1>
-                  <p class="mars">By completing this questionnaire you will be joining others in your local area who are helping us to plan for the next census.</p>
-                  <p class="mars">If anyone aged 16 or over would like to keep their answers private, they can <a href="form-request.htm">request a personal and confidential form</a> or by calling <strong>0300 068 3001</strong>.</p></br>
-                  <form action="" class="form qa-questionnaire-form" role="form" method="POST" novalidate="">
+                  <h1 class="saturn"><%= I18n.t 'welcome_heading' %></h1>
+                  <p class="mars"><%= I18n.t 'welcome_line_1' %></p>
+                  <p class="mars"><%= I18n.t 'welcome_line_2' %></p></br>
+                  <form action="/" class="form qa-questionnaire-form" role="form" method="post" novalidate="">
                     <div class="group" id="household-and-accommodation">
                       <div class="block" id="census-access-code">
                         <div class="section" id="census-access-code-section">
@@ -82,19 +82,19 @@
                                   <div class="answer answer--integer " id="census-access-code-answer">
                                     <div class="answer__fields js-fields">
                                       <fieldset class="fieldgroup fieldgroup--date">
-                                        <legend class="fieldgroup__title venus">Enter your 12 digit Census access code</legend>
+                                        <legend class="fieldgroup__title venus"><%= I18n.t 'enter_your_iac' %></legend>
                                         <div class="fieldgroup__fields">
                                           <div class="field field--input field--code">
-                                            <label class="label mercury u-vh" for="first-four-lines-of-code" >First four lines of code</label>
-                                            <input pattern="\d*" maxlength="4" data-qa="input-text" id="first-four-lines-of-code" name="first-four-lines-of-code" class="input input--text " value="" type="text">
+                                            <label class="label mercury u-vh" for="iac1"><%= I18n.t 'iac_segment_1' %></label>
+                                            <input pattern="\d*" maxlength="4" data-qa="input-text" id="iac1" name="iac1" class="input input--text " value="" type="text">
                                           </div>
                                           <div class="field field--select field--code">
-                                            <label class="label mercury u-vh" for="second-four-lines-of-code" >Second four lines of code</label>
-                                            <input pattern="\d*" maxlength="4" data-qa="input-text" id="second-four-lines-of-code" name="second-four-lines-of-code" class="input input--text " value="" type="text">
+                                            <label class="label mercury u-vh" for="iac2"><%= I18n.t 'iac_segment_2' %></label>
+                                            <input pattern="\d*" maxlength="4" data-qa="input-text" id="iac2" name="iac2" class="input input--text " value="" type="text">
                                           </div>
                                           <div class="field field--input field--code">
-                                            <label class="label mercury u-vh" for="third-four-lines-of-code" >Third four lines of code</label>
-                                            <input pattern="\d*" maxlength="4" data-qa="input-text" id="third-four-lines-of-code" name="third-four-lines-of-code" class="input input--text " value="" type="text">
+                                            <label class="label mercury u-vh" for="iac3"><%= I18n.t 'iac_segment_3' %></label>
+                                            <input pattern="\d*" maxlength="4" data-qa="input-text" id="iac3" name="iac3" class="input input--text " value="" type="text">
                                           </div>
                                         </div>
                                       </fieldset>
@@ -103,18 +103,18 @@
                                 </div>
                               </div>
                               <br/>
-                              <span class="mars">The census access code is printed on your Census letter.</span>
+                              <span class="mars"><%= I18n.t 'iac_instructions' %></span>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                    <button class="btn btn--lg qa-btn-get-started" type="submit" name="action[save_continue]">Start Census</button>
+                    <button class="btn btn--lg qa-btn-get-started" type="submit" name="action[save_continue]"><%= I18n.t 'start_button' %></button>
                   </form>
                   <div class="lock u-mb-s u-mb-m@s">
-                    <div class="venus lock__text">Your personal information is protected by law and will be kept confidential.</div>
+                    <div class="venus lock__text"><%= I18n.t 'confidentiality_notice' %></div>
                   </div>
-                  <p class="mars">The Census in England and Wales is organised by the <a href="https://www.ons.gov.uk/" rel="ext">Office for National Statistics</a>.</p>
+                  <p class="mars"><%= I18n.t 'about_census' %></p>
                 </div>
               </div>
             </div>
@@ -124,32 +124,32 @@
       <div class="footer footer--census" id="footer" role="contentinfo">
         <div class="container footer__container">
           <a class="footer__logo" href="https://www.ons.gov.uk/">
-            <img src="/img/ons-logo.svg" alt="Office for National Statistics" class="">
+            <img src="/img/ons-logo.svg" alt="<%= I18n.t 'ons' %>" class="">
           </a>
           <ul class="footer__nav nav nav--horizontal">
             <li class="nav__item">
-              <a class="nav__link" rel="ext" href="https://www.ons.gov.uk/help/cookiesandprivacy">Privacy</a>
+              <a class="nav__link" rel="ext" href="https://www.ons.gov.uk/help/cookiesandprivacy"><%= I18n.t 'privacy' %></a>
             </li>
             <li class="nav__item">
-              <a class="nav__link" rel="ext" href="#">Copyright</a>
+              <a class="nav__link" rel="ext" href="#"><%= I18n.t 'copyright' %></a>
             </li>
             <li class="nav__item">
-              <a class="nav__link" rel="ext" href="https://www.ons.gov.uk/help/termsandconditions">Terms &amp; Conditions</a>
+              <a class="nav__link" rel="ext" href="https://www.ons.gov.uk/help/termsandconditions"><%= I18n.t 'terms_and_conditions' %></a>
             </li>
             <li class="nav__item">
-              <a class="nav__link" rel="ext" href="https://www.ons.gov.uk/help/accessibility">Accessibility Statement</a>
+              <a class="nav__link" rel="ext" href="https://www.ons.gov.uk/help/accessibility"><%= I18n.t 'accessibility_statement' %></a>
             </li>
           </ul>
         </div>
         <div class="footer__help">
           <div class="container">
-            <div class="mars">Help and Support –
+            <div class="mars"><%= I18n.t 'help_and_support' %>
               <ul class="footer__helpnav nav nav--horizontal">
                 <li class="nav__item">
-                  <span class="mars" role="presentation">Call </span> <a class="venus nav__link" href="tel:0800123456789"><span class="u-vh">For help call </span>0800 123 456789</a>
+                  <span class="mars" role="presentation"><%= I18n.t 'call' %> </span> <a class="venus nav__link" href="tel:0800123456789"><span class="u-vh"><%= I18n.t 'for_help_call' %> </span>0800 123 456789</a>
                 </li>
                 <li class="nav__item">
-                  <a class="venus nav__link external" href="#" rel="ext">Online Help</a>
+                  <a class="venus nav__link external" href="#" rel="ext"><%= I18n.t 'online_help' %></a>
                 </li>
               </ul>
             </div>

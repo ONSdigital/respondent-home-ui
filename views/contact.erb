@@ -1,3 +1,20 @@
+<% if form.failed? %>
+<div class="u-mt-s">
+  <div class="alert alert--error">
+    <div class="alert__header">
+    <% if form.failed_fields.size == 1 %>
+      <h1 class="alert__title venus"><%= I18n.t 'this_page_has' %> 1 <%= I18n.t 'error' %></h1>
+    <% else %>
+      <h1 class="alert__title venus"><%= I18n.t 'this_page_has' %> <%= form.failed_fields.size %> <%= I18n.t 'errors' %></h1>
+    <% end %>
+    </div>
+    <div class="alert__body">
+      <p class="mars"><%= I18n.t 'these_must_be_corrected' %></p>
+    </div>
+  </div>
+</div>
+<% end %>
+
 <div class="header">
   <h1 class="saturn"><%= I18n.t 'welcome_heading' %></h1>
   <h2 class="venus"><%= I18n.t 'request_an_individual_questionnaire' %></h2>
@@ -12,42 +29,81 @@
               <legend class="fieldgroup__title venus u-vh"><%= I18n.t 'request_an_individual_questionnaire' %></legend>
               <div class="question__answers">
 
-                 <div class="question__answer">
-                   <div class="answer answer--textfield " id="first-name">
-                     <div class="answer__fields js-fields">
+                <div class="question__answer">
+                <% if form.failed_on?(:first_name) %>
+                  <div class="answer answer--textfield js-has-errors" id="first-name">
+                    <div class="alert alert--simple alert--error">
+                      <div class="alert__header">
+                        <li class="list__item mars" data-error-msg="<%= I18n.t 'this_field_is_mandatory' %>" data-error="true" data-error-id="first_name">This field is mandatory.</li>
+                        <ul class="list list--bare list--errors">
+                        </ul>
+                      </div>
+                      <div class="alert__body">
+                <% else %>
+                  <div class="answer answer--textfield" id="first-name">
+                <% end %>
+                    <div class="answer__fields js-fields">
                       <div class="field">
                         <!-- BEGIN TextWidget -->
                         <label id="label-first-name" for="input-first-name" class="label venus">
-                         <div class="label__inner">
-                           <%= I18n.t 'first_name' %>
-                         </div>
+                          <div class="label__inner">
+                            <%= I18n.t 'first_name' %>
+                          </div>
                         </label>
-                        <input name="first-name" type="text" data-qa="input-text" value="" id="input-first-name" class="input input--text">
+                        <input name="first_name" type="text" data-qa="input-text" value="" id="input-first-name" class="input input--text">
                         <!-- END TextWidget -->
                       </div>
                     </div>
                   </div>
                 </div>
+                <% if form.failed_on?(:first_name) %>
+                  </div></div>
+                <% end %>
 
                 <div class="question__answer">
-                  <div class="answer answer--textfield " id="last-name">
+                <% if form.failed_on?(:last_name) %>
+                  <div class="answer answer--textfield js-has-errors" id="last-name">
+                    <div class="alert alert--simple alert--error">
+                      <div class="alert__header">
+                        <ul class="list list--bare list--errors">
+                          <li class="list__item mars" data-error-msg="<%= I18n.t 'this_field_is_mandatory' %>" data-error="true" data-error-id="last_name">This field is mandatory.</li>
+                        </ul>
+                      </div>
+                      <div class="alert__body">
+                <% else %>
+                  <div class="answer answer--textfield" id="last-name">
+                <% end %>
                     <div class="answer__fields js-fields">
-                     <div class="field">
-                       <!-- BEGIN TextWidget -->
-                       <label id="label-last-name" for="input-last-name" class="label venus">
-                        <div class="label__inner">
-                          <%= I18n.t 'last_name' %>
-                        </div>
-                       </label>
-                       <input name="last-name" type="text" data-qa="input-text" value="" id="input-last-name" class="input input--text">
-                       <!-- END TextWidget -->
-                     </div>
-                   </div>
-                 </div>
-               </div>
+                      <div class="field">
+                        <!-- BEGIN TextWidget -->
+                        <label id="label-last-name" for="input-last-name" class="label venus">
+                          <div class="label__inner">
+                            <%= I18n.t 'last_name' %>
+                          </div>
+                        </label>
+                        <input name="last_name" type="text" data-qa="input-text" value="" id="input-last-name" class="input input--text">
+                        <!-- END TextWidget -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <% if form.failed_on?(:last_name) %>
+                  </div></div>
+                <% end %>
 
                 <div class="question__answer">
-                  <div class="answer answer--textfield " id="other-address-answer-building">
+                <% if form.failed_on?(:building) %>
+                  <div class="answer answer--textfield js-has-errors" id="other-address-answer-building">
+                    <div class="alert alert--simple alert--error">
+                      <div class="alert__header">
+                        <ul class="list list--bare list--errors">
+                          <li class="list__item mars" data-error-msg="<%= I18n.t 'this_field_is_mandatory' %>" data-error="true" data-error-id="building">This field is mandatory.</li>
+                        </ul>
+                      </div>
+                      <div class="alert__body">
+                <% else %>
+                  <div class="answer answer--textfield" id="other-address-answer-building">
+                <% end %>
                     <div class="answer__fields js-fields">
                       <div class="field">
                         <!-- BEGIN TextWidget -->
@@ -56,14 +112,29 @@
                             <%= I18n.t 'building' %>
                           </div>
                         </label>
-                        <input name="other-address-answer-building" type="text" data-qa="input-text" value="" id="input-other-address-answer-building" class="input input--text">
+                        <input name="building" type="text" data-qa="input-text" value="" id="input-other-address-answer-building" class="input input--text">
                         <!-- END TextWidget -->
                       </div>
                     </div>
                   </div>
-                 </div>
-                 <div class="question__answer">
-                  <div class="answer answer--textfield " id="other-address-answer-street">
+                </div>
+                <% if form.failed_on?(:building) %>
+                  </div></div>
+                <% end %>
+
+                <div class="question__answer">
+                <% if form.failed_on?(:street) %>
+                  <div class="answer answer--textfield js-has-errors" id="other-address-answer-street">
+                    <div class="alert alert--simple alert--error">
+                      <div class="alert__header">
+                        <ul class="list list--bare list--errors">
+                          <li class="list__item mars" data-error-msg="<%= I18n.t 'this_field_is_mandatory' %>" data-error="true" data-error-id="street">This field is mandatory.</li>
+                        </ul>
+                      </div>
+                      <div class="alert__body">
+                <% else %>
+                  <div class="answer answer--textfield" id="other-address-answer-street">
+                <% end %>
                     <div class="answer__fields js-fields">
                       <div class="field">
                         <!-- BEGIN TextWidget -->
@@ -72,14 +143,29 @@
                             <%= I18n.t 'street' %>
                           </div>
                         </label>
-                        <input name="other-address-answer-street" type="text" data-qa="input-text" value="" id="input-other-address-answer-street" class="input input--text">
+                        <input name="street" type="text" data-qa="input-text" value="" id="input-other-address-answer-street" class="input input--text">
                         <!-- END TextWidget -->
                       </div>
                     </div>
                   </div>
                 </div>
+                <% if form.failed_on?(:street) %>
+                  </div></div>
+                <% end %>
+
                 <div class="question__answer">
-                  <div class="answer answer--textfield " id="other-address-answer-city">
+                <% if form.failed_on?(:town_or_city) %>
+                  <div class="answer answer--textfield js-has-errors" id="other-address-answer-city">
+                    <div class="alert alert--simple alert--error">
+                      <div class="alert__header">
+                        <ul class="list list--bare list--errors">
+                          <li class="list__item mars" data-error-msg="<%= I18n.t 'this_field_is_mandatory' %>" data-error="true" data-error-id="town_or_city">This field is mandatory.</li>
+                        </ul>
+                      </div>
+                      <div class="alert__body">
+                <% else %>
+                  <div class="answer answer--textfield" id="other-address-answer-city">
+                <% end %>
                     <div class="answer__fields js-fields">
                       <div class="field">
                         <!-- BEGIN TextWidget -->
@@ -88,14 +174,18 @@
                             <%= I18n.t 'town_or_city' %>
                           </div>
                         </label>
-                        <input name="other-address-answer-city" type="text" data-qa="input-text" value="" id="input-other-address-answer-city" class="input input--text">
+                        <input name="town_or_city" type="text" data-qa="input-text" value="" id="input-other-address-answer-city" class="input input--text">
                         <!-- END TextWidget -->
                       </div>
                     </div>
                   </div>
                 </div>
+                <% if form.failed_on?(:town_or_city) %>
+                  </div></div>
+                <% end %>
+
                 <div class="question__answer">
-                  <div class="answer answer--textfield " id="other-address-answer-county">
+                  <div class="answer answer--textfield" id="other-address-answer-county">
                     <div class="answer__fields js-fields">
                       <div class="field">
                         <!-- BEGIN TextWidget -->
@@ -104,14 +194,26 @@
                             <%= I18n.t 'county' %>
                           </div>
                         </label>
-                        <input name="other-address-answer-county" type="text" data-qa="input-text" value="" id="input-other-address-answer-county" class="input input--text">
+                        <input name="county" type="text" data-qa="input-text" value="" id="input-other-address-answer-county" class="input input--text">
                         <!-- END TextWidget -->
                       </div>
                     </div>
                   </div>
                 </div>
+
                 <div class="question__answer">
-                  <div class="answer answer--textfield " id="other-address-answer-postcode">
+                <% if form.failed_on?(:postcode) %>
+                  <div class="answer answer--textfield js-has-errors" id="other-address-answer-postcode">
+                    <div class="alert alert--simple alert--error">
+                      <div class="alert__header">
+                        <ul class="list list--bare list--errors">
+                          <li class="list__item mars" data-error-msg="<%= I18n.t 'this_field_is_mandatory' %>" data-error="true" data-error-id="postcode">This field is mandatory.</li>
+                        </ul>
+                      </div>
+                      <div class="alert__body">
+                <% else %>
+                  <div class="answer answer--textfield" id="other-address-answer-postcode">
+                <% end %>
                     <div class="answer__fields js-fields">
                       <div class="field">
                         <!-- BEGIN TextWidget -->
@@ -120,14 +222,29 @@
                             <%= I18n.t 'postcode' %>
                           </div>
                         </label>
-                        <input name="other-address-answer-postcode" type="text" data-qa="input-text" value="" id="input-other-address-answer-postcode" class="input input--text">
+                        <input name="postcode" type="text" data-qa="input-text" value="" id="input-other-address-answer-postcode" class="input input--text">
                         <!-- END TextWidget -->
                       </div>
                     </div>
                   </div>
                 </div>
+                <% if form.failed_on?(:postcode) %>
+                  </div></div>
+                <% end %>
+
                 <div class="question__answer">
-                  <div class="answer answer--textfield " id="mobile-number">
+                <% if form.failed_on?(:mobile) %>
+                  <div class="answer answer--textfield js-has-errors" id="mobile-number">
+                    <div class="alert alert--simple alert--error">
+                      <div class="alert__header">
+                        <ul class="list list--bare list--errors">
+                          <li class="list__item mars" data-error-msg="<%= I18n.t 'this_field_is_mandatory' %>" data-error="true" data-error-id="mobile">This field is mandatory.</li>
+                        </ul>
+                      </div>
+                      <div class="alert__body">
+                <% else %>
+                  <div class="answer answer--textfield" id="mobile-number">
+                <% end %>
                     <div class="answer__fields js-fields">
                       <div class="field">
                         <!-- BEGIN TextWidget -->
@@ -137,12 +254,16 @@
                             <span class="mars"><%= I18n.t 'mobile_note' %></span>
                           </div>
                         </label>
-                        <input name="mobile-number" type="text" data-qa="input-text" value="" id="input-mobile-number" class="input input--text">
+                        <input name="mobile" type="text" data-qa="input-text" value="" id="input-mobile-number" class="input input--text">
                         <!-- END TextWidget -->
                       </div>
                     </div>
                   </div>
                 </div>
+                <% if form.failed_on?(:mobile) %>
+                  </div></div>
+                <% end %>
+
               </div>
             </fieldset>
           </div>

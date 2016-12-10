@@ -1,0 +1,158 @@
+<div class="header">
+  <h1 class="saturn"><%= I18n.t 'welcome_heading' %></h1>
+  <h2 class="venus"><%= I18n.t 'request_an_individual_questionnaire' %></h2>
+  <p class="mars"><%= I18n.t 'individual_questionnaire_line_1' %></p>
+  <p class="mars"><%= I18n.t 'individual_questionnaire_line_2' %></p>
+  <form action="/individualquestionnaire" class="form qa-questionnaire-form" role="form" method="post" novalidate="">
+    <div class="group" id="household-member">
+      <div class="block" id="other-address">
+        <div class="section" id="other-address-section">
+          <div class="question" id="other-address-question">
+            <fieldset class="question__fieldset">
+              <legend class="fieldgroup__title venus u-vh"><%= I18n.t 'request_an_individual_questionnaire' %></legend>
+              <div class="question__answers">
+
+                 <div class="question__answer">
+                   <div class="answer answer--textfield " id="first-name">
+                     <div class="answer__fields js-fields">
+                      <div class="field">
+                        <!-- BEGIN TextWidget -->
+                        <label id="label-first-name" for="input-first-name" class="label venus">
+                         <div class="label__inner">
+                           <%= I18n.t 'first_name' %>
+                         </div>
+                        </label>
+                        <input name="first-name" type="text" data-qa="input-text" value="" id="input-first-name" class="input input--text">
+                        <!-- END TextWidget -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="question__answer">
+                  <div class="answer answer--textfield " id="last-name">
+                    <div class="answer__fields js-fields">
+                     <div class="field">
+                       <!-- BEGIN TextWidget -->
+                       <label id="label-last-name" for="input-last-name" class="label venus">
+                        <div class="label__inner">
+                          <%= I18n.t 'last_name' %>
+                        </div>
+                       </label>
+                       <input name="last-name" type="text" data-qa="input-text" value="" id="input-last-name" class="input input--text">
+                       <!-- END TextWidget -->
+                     </div>
+                   </div>
+                 </div>
+               </div>
+
+                <div class="question__answer">
+                  <div class="answer answer--textfield " id="other-address-answer-building">
+                    <div class="answer__fields js-fields">
+                      <div class="field">
+                        <!-- BEGIN TextWidget -->
+                        <label id="label-other-address-answer-building" for="input-other-address-answer-building" class="label venus">
+                          <div class="label__inner">
+                            <%= I18n.t 'building' %>
+                          </div>
+                        </label>
+                        <input name="other-address-answer-building" type="text" data-qa="input-text" value="" id="input-other-address-answer-building" class="input input--text">
+                        <!-- END TextWidget -->
+                      </div>
+                    </div>
+                  </div>
+                 </div>
+                 <div class="question__answer">
+                  <div class="answer answer--textfield " id="other-address-answer-street">
+                    <div class="answer__fields js-fields">
+                      <div class="field">
+                        <!-- BEGIN TextWidget -->
+                        <label id="label-other-address-answer-street" for="input-other-address-answer-street" class="label venus">
+                          <div class="label__inner">
+                            <%= I18n.t 'street' %>
+                          </div>
+                        </label>
+                        <input name="other-address-answer-street" type="text" data-qa="input-text" value="" id="input-other-address-answer-street" class="input input--text">
+                        <!-- END TextWidget -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="question__answer">
+                  <div class="answer answer--textfield " id="other-address-answer-city">
+                    <div class="answer__fields js-fields">
+                      <div class="field">
+                        <!-- BEGIN TextWidget -->
+                        <label id="label-other-address-answer-city" for="input-other-address-answer-city" class="label venus">
+                          <div class="label__inner">
+                            <%= I18n.t 'town_or_city' %>
+                          </div>
+                        </label>
+                        <input name="other-address-answer-city" type="text" data-qa="input-text" value="" id="input-other-address-answer-city" class="input input--text">
+                        <!-- END TextWidget -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="question__answer">
+                  <div class="answer answer--textfield " id="other-address-answer-county">
+                    <div class="answer__fields js-fields">
+                      <div class="field">
+                        <!-- BEGIN TextWidget -->
+                        <label id="label-other-address-answer-county" for="input-other-address-answer-county" class="label venus">
+                          <div class="label__inner">
+                            <%= I18n.t 'county' %>
+                          </div>
+                        </label>
+                        <input name="other-address-answer-county" type="text" data-qa="input-text" value="" id="input-other-address-answer-county" class="input input--text">
+                        <!-- END TextWidget -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="question__answer">
+                  <div class="answer answer--textfield " id="other-address-answer-postcode">
+                    <div class="answer__fields js-fields">
+                      <div class="field">
+                        <!-- BEGIN TextWidget -->
+                        <label id="label-other-address-answer-postcode" for="input-other-address-answer-postcode" class="label venus">
+                          <div class="label__inner">
+                            <%= I18n.t 'postcode' %>
+                          </div>
+                        </label>
+                        <input name="other-address-answer-postcode" type="text" data-qa="input-text" value="" id="input-other-address-answer-postcode" class="input input--text">
+                        <!-- END TextWidget -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="question__answer">
+                  <div class="answer answer--textfield " id="mobile-number">
+                    <div class="answer__fields js-fields">
+                      <div class="field">
+                        <!-- BEGIN TextWidget -->
+                        <label id="label-mobile-number" for="input-mobile-number" class="label venus">
+                          <div class="label__inner">
+                            <%= I18n.t 'mobile' %><br/>
+                            <span class="mars"><%= I18n.t 'mobile_note' %></span>
+                          </div>
+                        </label>
+                        <input name="mobile-number" type="text" data-qa="input-text" value="" id="input-mobile-number" class="input input--text">
+                        <!-- END TextWidget -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn--primary qa-btn-submit venus" type="submit" name="action[save_continue]"><%= I18n.t 'send_request_button' %></button>
+  </form>
+  <div class="lock u-mb-s u-mb-m@s">
+    <div class="venus lock__text"><%= I18n.t 'confidentiality_notice' %></div>
+  </div>
+  <p class="mars"><%= I18n.t 'about_census' %></p>
+</div>

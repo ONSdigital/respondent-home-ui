@@ -81,7 +81,7 @@ before do
 end
 
 get '/' do
-  erb :index, locals: { title: I18n.t('welcome'),
+  erb :index, locals: { title: I18n.t('title'),
                         host: settings.host,
                         built: @built,
                         commit: @commit,

@@ -6,7 +6,7 @@ them to the [ONS eQ Survey Runner](https://github.com/ONSdigital/eq-survey-runne
 
 This repository contains the Ruby [Sinatra](http://www.sinatrarb.com/) application that is the user interface for the Respondent Home product.
 
-## Prerequisites
+## Installation
 Install the RubyGems the application depends on by running `bundle install`. Note that this application depends on a private `iac-validator` RubyGem for performing IAC validation. This gem is only used in one place within `routes/home.rb`:
 
 ```ruby
@@ -20,7 +20,9 @@ To run this application in development using its [Rackup](http://rack.github.io/
 
   `bundle exec rackup config.ru` (the `config.ru` may be omitted as Rack looks for this file by default)
 
-and access using [http://localhost:9292](http://localhost:9292)
+and access using [http://localhost:9292](http://localhost:9292). To reload the application using the [Rerun](https://github.com/alexch/rerun) RubyGem every time a file changes uses:
+
+  `bundle exec rerun rackup`
 
 ## Running Using the Mock Backend
 This project includes a Sinatra application that provide a mock version of the Internet Access Code web service. To run it, edit your hosts file so that `collect-server` uses 127.0.0.1. Then run:

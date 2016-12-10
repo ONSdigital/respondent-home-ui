@@ -15,5 +15,6 @@ source 'http://rubygems.ctpdev.local' do
 end
 
 group :development do
+  gem 'rerun'
   gem 'sass'
 end

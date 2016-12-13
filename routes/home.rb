@@ -22,6 +22,7 @@ set :eq_port,                      config.eq_port
 set :eq_protocol,                  config.eq_protocol
 set :iac_service_host,             config.iac_service_host
 set :iac_service_port,             config.iac_service_port
+set :iac_service_protocol,         config.iac_service_protocol
 
 config_file = YAML.load_file(File.join(__dir__, '../config.yml'))
 set :public_key,             config_file['eq-service']['public_key']
@@ -109,7 +110,7 @@ post '/' do
     end
 
     case_summary = []
-    RestClient.get("http://#{settings.iac_service_host}:#{settings.iac_service_port}/iacs/#{iac}") do |response, _request, _result, &_block|
+    RestClient.get("#{settings.iac_service_protocol}://#{settings.iac_service_host}:#{settings.iac_service_port}/iacs/#{iac}") do |response, _request, _result, &_block|
       case_summary = JSON.parse(response)
       url = '/'
 

@@ -10,6 +10,13 @@
     </div>
     <div class="alert__body">
       <p class="mars"><%= I18n.t 'these_must_be_corrected' %></p>
+      <ul class="list list--bare">
+      <% form.failed_fields.each_with_index do |field_name, i| %>
+        <li class="list__item mars">
+        <%= i + 1 %>) <a class="js-inpagelink" href="#<%= field_name %>">This field is mandatory.</a>
+        </li>
+      <% end %>
+      </ul>
     </div>
   </div>
 </div>
@@ -31,7 +38,7 @@
 
                 <div class="question__answer">
                 <% if form.failed_on?(:first_name) %>
-                  <div class="answer answer--textfield js-has-errors" id="first-name">
+                  <div class="answer answer--textfield js-has-errors" id="first_name">
                     <div class="alert alert--simple alert--error">
                       <div class="alert__header">
                         <ul class="list list--bare list--errors">
@@ -40,7 +47,7 @@
                       </div>
                       <div class="alert__body">
                 <% else %>
-                  <div class="answer answer--textfield" id="first-name">
+                  <div class="answer answer--textfield" id="first_name">
                 <% end %>
                     <div class="answer__fields js-fields">
                       <div class="field">
@@ -62,7 +69,7 @@
 
                 <div class="question__answer">
                 <% if form.failed_on?(:last_name) %>
-                  <div class="answer answer--textfield js-has-errors" id="last-name">
+                  <div class="answer answer--textfield js-has-errors" id="last_name">
                     <div class="alert alert--simple alert--error">
                       <div class="alert__header">
                         <ul class="list list--bare list--errors">
@@ -71,7 +78,7 @@
                       </div>
                       <div class="alert__body">
                 <% else %>
-                  <div class="answer answer--textfield" id="last-name">
+                  <div class="answer answer--textfield" id="last_name">
                 <% end %>
                     <div class="answer__fields js-fields">
                       <div class="field">
@@ -93,7 +100,7 @@
 
                 <div class="question__answer">
                 <% if form.failed_on?(:building) %>
-                  <div class="answer answer--textfield js-has-errors" id="other-address-answer-building">
+                  <div class="answer answer--textfield js-has-errors" id="building">
                     <div class="alert alert--simple alert--error">
                       <div class="alert__header">
                         <ul class="list list--bare list--errors">
@@ -102,7 +109,7 @@
                       </div>
                       <div class="alert__body">
                 <% else %>
-                  <div class="answer answer--textfield" id="other-address-answer-building">
+                  <div class="answer answer--textfield" id="building">
                 <% end %>
                     <div class="answer__fields js-fields">
                       <div class="field">
@@ -124,7 +131,7 @@
 
                 <div class="question__answer">
                 <% if form.failed_on?(:street) %>
-                  <div class="answer answer--textfield js-has-errors" id="other-address-answer-street">
+                  <div class="answer answer--textfield js-has-errors" id="street">
                     <div class="alert alert--simple alert--error">
                       <div class="alert__header">
                         <ul class="list list--bare list--errors">
@@ -133,7 +140,7 @@
                       </div>
                       <div class="alert__body">
                 <% else %>
-                  <div class="answer answer--textfield" id="other-address-answer-street">
+                  <div class="answer answer--textfield" id="street">
                 <% end %>
                     <div class="answer__fields js-fields">
                       <div class="field">
@@ -155,7 +162,7 @@
 
                 <div class="question__answer">
                 <% if form.failed_on?(:town_or_city) %>
-                  <div class="answer answer--textfield js-has-errors" id="other-address-answer-city">
+                  <div class="answer answer--textfield js-has-errors" id="town_or_city">
                     <div class="alert alert--simple alert--error">
                       <div class="alert__header">
                         <ul class="list list--bare list--errors">
@@ -164,7 +171,7 @@
                       </div>
                       <div class="alert__body">
                 <% else %>
-                  <div class="answer answer--textfield" id="other-address-answer-city">
+                  <div class="answer answer--textfield" id="town_or_city">
                 <% end %>
                     <div class="answer__fields js-fields">
                       <div class="field">
@@ -185,7 +192,7 @@
                 <% end %>
 
                 <div class="question__answer">
-                  <div class="answer answer--textfield" id="other-address-answer-county">
+                  <div class="answer answer--textfield" id="county">
                     <div class="answer__fields js-fields">
                       <div class="field">
                         <!-- BEGIN TextWidget -->
@@ -203,7 +210,7 @@
 
                 <div class="question__answer">
                 <% if form.failed_on?(:postcode) %>
-                  <div class="answer answer--textfield js-has-errors" id="other-address-answer-postcode">
+                  <div class="answer answer--textfield js-has-errors" id="postcode">
                     <div class="alert alert--simple alert--error">
                       <div class="alert__header">
                         <ul class="list list--bare list--errors">
@@ -212,7 +219,7 @@
                       </div>
                       <div class="alert__body">
                 <% else %>
-                  <div class="answer answer--textfield" id="other-address-answer-postcode">
+                  <div class="answer answer--textfield" id="postcode">
                 <% end %>
                     <div class="answer__fields js-fields">
                       <div class="field">
@@ -234,7 +241,7 @@
 
                 <div class="question__answer">
                 <% if form.failed_on?(:mobile) %>
-                  <div class="answer answer--textfield js-has-errors" id="mobile-number">
+                  <div class="answer answer--textfield js-has-errors" id="mobile">
                     <div class="alert alert--simple alert--error">
                       <div class="alert__header">
                         <ul class="list list--bare list--errors">
@@ -243,7 +250,7 @@
                       </div>
                       <div class="alert__body">
                 <% else %>
-                  <div class="answer answer--textfield" id="mobile-number">
+                  <div class="answer answer--textfield" id="mobile">
                 <% end %>
                     <div class="answer__fields js-fields">
                       <div class="field">

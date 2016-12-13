@@ -16,7 +16,9 @@ post '/individualquestionnaire' do
     field :street,       present: true
     field :town_or_city, present: true
     field :postcode,     present: true, filters: :upcase
-    field :mobile,       present: true, length: 7..14
+
+    # See http://regexlib.com/REDetails.aspx?regexp_id=592
+    field :mobile,       present: true, regexp: %r{^(\+44\s?7\d{3}|\(?07\d{3}\)?)\s?\d{3}\s?\d{3}$}
   end
 
   if form.failed?

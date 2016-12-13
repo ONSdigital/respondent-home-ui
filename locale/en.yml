@@ -27,6 +27,7 @@ en:
   iac_used: "The unique access code entered has already been used."
   individual_questionnaire_line_1: "The individual questionnaire is a way for you to keep your answers private from the rest of your household. It is personal and confidential."
   individual_questionnaire_line_2: "Fill in your details to have a unique access code sent to you by text message. You can then use that code to access a private, online questionnaire. Your details will not be shared with the person who completed your household form, and they will not be told that an individual questionnaire has been requested."
+  individual_questionnaire_success_line_1: "Thank you for requesting an individual questionnaire by providing your details. You will receive a text message containing your unique access code within the next 24 hours."
   internal_server_error: "An internal server error has occurred."
   lang: "en-gb"
   last_name: "Last name"

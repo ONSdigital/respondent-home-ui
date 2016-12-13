@@ -32,6 +32,7 @@ en:
   lang: "en-gb"
   last_name: "Last name"
   mobile: "Mobile number"
+  mobile_invalid: "The mobile number entered is not valid. Please provide a valid UK mobile number."
   mobile_note: "Your unique access code will be sent by text message to this phone number"
   not_found: "The page you were looking for cannot be found."
   online_help: "Online Help"

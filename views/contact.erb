@@ -12,8 +12,16 @@
       <p class="mars"><%= I18n.t 'these_must_be_corrected' %></p>
       <ul class="list list--bare">
       <% form.failed_fields.each_with_index do |field_name, i| %>
-        <li class="list__item mars">
-        <%= i + 1 %>) <a class="js-inpagelink" href="#<%= field_name %>">This field is mandatory.</a>
+        <li class="list__item mars"><%= i + 1 %>)
+        <% if field_name == :mobile %>
+          <% if form.failed_on?(:mobile, :present) %>
+          <a class="js-inpagelink" href="#<%= field_name %>"><%= I18n.t 'this_field_is_mandatory' %></a>
+          <% elsif form.failed_on?(:mobile, :regexp) %>
+          <a class="js-inpagelink" href="#<%= field_name %>"><%= I18n.t 'mobile_invalid' %></a>
+          <% end %>
+        <% else %>
+        <a class="js-inpagelink" href="#<%= field_name %>"><%= I18n.t 'this_field_is_mandatory' %></a>
+        <% end %>
         </li>
       <% end %>
       </ul>
@@ -42,7 +50,7 @@
                     <div class="alert alert--simple alert--error">
                       <div class="alert__header">
                         <ul class="list list--bare list--errors">
-                          <li class="list__item mars" data-error-msg="<%= I18n.t 'this_field_is_mandatory' %>" data-error="true" data-error-id="first_name">This field is mandatory.</li>
+                          <li class="list__item mars" data-error-msg="<%= I18n.t 'this_field_is_mandatory' %>" data-error="true" data-error-id="first_name"><%= I18n.t 'this_field_is_mandatory' %></li>
                         </ul>
                       </div>
                       <div class="alert__body">
@@ -73,7 +81,7 @@
                     <div class="alert alert--simple alert--error">
                       <div class="alert__header">
                         <ul class="list list--bare list--errors">
-                          <li class="list__item mars" data-error-msg="<%= I18n.t 'this_field_is_mandatory' %>" data-error="true" data-error-id="last_name">This field is mandatory.</li>
+                          <li class="list__item mars" data-error-msg="<%= I18n.t 'this_field_is_mandatory' %>" data-error="true" data-error-id="last_name"><%= I18n.t 'this_field_is_mandatory' %></li>
                         </ul>
                       </div>
                       <div class="alert__body">
@@ -104,7 +112,7 @@
                     <div class="alert alert--simple alert--error">
                       <div class="alert__header">
                         <ul class="list list--bare list--errors">
-                          <li class="list__item mars" data-error-msg="<%= I18n.t 'this_field_is_mandatory' %>" data-error="true" data-error-id="building">This field is mandatory.</li>
+                          <li class="list__item mars" data-error-msg="<%= I18n.t 'this_field_is_mandatory' %>" data-error="true" data-error-id="building"><%= I18n.t 'this_field_is_mandatory' %></li>
                         </ul>
                       </div>
                       <div class="alert__body">
@@ -135,7 +143,7 @@
                     <div class="alert alert--simple alert--error">
                       <div class="alert__header">
                         <ul class="list list--bare list--errors">
-                          <li class="list__item mars" data-error-msg="<%= I18n.t 'this_field_is_mandatory' %>" data-error="true" data-error-id="street">This field is mandatory.</li>
+                          <li class="list__item mars" data-error-msg="<%= I18n.t 'this_field_is_mandatory' %>" data-error="true" data-error-id="street"><%= I18n.t 'this_field_is_mandatory' %></li>
                         </ul>
                       </div>
                       <div class="alert__body">
@@ -166,7 +174,7 @@
                     <div class="alert alert--simple alert--error">
                       <div class="alert__header">
                         <ul class="list list--bare list--errors">
-                          <li class="list__item mars" data-error-msg="<%= I18n.t 'this_field_is_mandatory' %>" data-error="true" data-error-id="town_or_city">This field is mandatory.</li>
+                          <li class="list__item mars" data-error-msg="<%= I18n.t 'this_field_is_mandatory' %>" data-error="true" data-error-id="town_or_city"><%= I18n.t 'this_field_is_mandatory' %></li>
                         </ul>
                       </div>
                       <div class="alert__body">
@@ -214,7 +222,7 @@
                     <div class="alert alert--simple alert--error">
                       <div class="alert__header">
                         <ul class="list list--bare list--errors">
-                          <li class="list__item mars" data-error-msg="<%= I18n.t 'this_field_is_mandatory' %>" data-error="true" data-error-id="postcode">This field is mandatory.</li>
+                          <li class="list__item mars" data-error-msg="<%= I18n.t 'this_field_is_mandatory' %>" data-error="true" data-error-id="postcode"><%= I18n.t 'this_field_is_mandatory' %></li>
                         </ul>
                       </div>
                       <div class="alert__body">
@@ -245,13 +253,17 @@
                     <div class="alert alert--simple alert--error">
                       <div class="alert__header">
                         <ul class="list list--bare list--errors">
-                          <li class="list__item mars" data-error-msg="<%= I18n.t 'this_field_is_mandatory' %>" data-error="true" data-error-id="mobile">This field is mandatory.</li>
+                        <% if form.failed_on?(:mobile, :present) %>
+                          <li class="list__item mars" data-error-msg="<%= I18n.t 'this_field_is_mandatory' %>" data-error="true" data-error-id="mobile"><%= I18n.t 'this_field_is_mandatory' %></li>
+                        <% elsif form.failed_on?(:mobile, :regexp) %>
+                          <li class="list__item mars" data-error-msg="<%= I18n.t 'mobile_invalid' %>" data-error="true" data-error-id="mobile"><%= I18n.t 'mobile_invalid' %></li>
+                        <% end %>
                         </ul>
                       </div>
                       <div class="alert__body">
                 <% else %>
-                  <div class="answer answer--textfield" id="mobile">
                 <% end %>
+                  <div class="answer answer--textfield" id="mobile">
                     <div class="answer__fields js-fields">
                       <div class="field">
                         <!-- BEGIN TextWidget -->

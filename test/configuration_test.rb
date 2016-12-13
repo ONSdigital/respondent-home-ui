@@ -4,12 +4,13 @@ require_relative '../lib/configuration'
 
 class ConfigurationTest < Test::Unit::TestCase
   def setup
-    ENV['RESPONDENT_HOME_ANALYTICS_ACCOUNT'] = 'Analytics account'
-    ENV['RESPONDENT_HOME_EQ_HOST']           = 'eQ host'
-    ENV['RESPONDENT_HOME_EQ_PORT']           = 'eQ port'
-    ENV['RESPONDENT_HOME_EQ_PROTOCOL']       = 'eQ protocol'
-    ENV['RESPONDENT_HOME_IAC_SERVICE_HOST']  = 'IAC service host'
-    ENV['RESPONDENT_HOME_IAC_SERVICE_PORT']  = 'IAC service port'
+    ENV['RESPONDENT_HOME_ANALYTICS_ACCOUNT']    = 'Analytics account'
+    ENV['RESPONDENT_HOME_EQ_HOST']              = 'eQ host'
+    ENV['RESPONDENT_HOME_EQ_PORT']              = 'eQ port'
+    ENV['RESPONDENT_HOME_EQ_PROTOCOL']          = 'eQ protocol'
+    ENV['RESPONDENT_HOME_IAC_SERVICE_HOST']     = 'IAC service host'
+    ENV['RESPONDENT_HOME_IAC_SERVICE_PORT']     = 'IAC service port'
+    ENV['RESPONDENT_HOME_IAC_SERVICE_PROTOCOL'] = 'IAC service protocol'
     @configuration = Configuration.new(ENV)
   end
 
@@ -35,5 +36,9 @@ class ConfigurationTest < Test::Unit::TestCase
 
   def test_iac_service_port
     assert_equal 'IAC service port', @configuration.iac_service_port
+  end
+
+  def test_iac_service_protocol
+    assert_equal 'IAC service protocol', @configuration.iac_service_protocol
   end
 end

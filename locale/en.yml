@@ -18,6 +18,7 @@ en:
   help_and_support: "Help and Support –"
   help_and_support_button: "Help<span> and support</span>"
   help_telephone_number: "0800 123 456789"
+  home: "Home"
   iac_instructions: "The census access code is printed on your Census letter."
   iac_invalid: "The unique access code entered is not valid."
   iac_required: "Your unique access code is required."

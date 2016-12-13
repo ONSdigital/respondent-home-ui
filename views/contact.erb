@@ -11,19 +11,19 @@
     <div class="alert__body">
       <p class="mars"><%= I18n.t 'these_must_be_corrected' %></p>
       <ul class="list list--bare">
-      <% form.failed_fields.each_with_index do |field_name, i| %>
+    <% form.failed_fields.each_with_index do |field_name, i| %>
         <li class="list__item mars"><%= i + 1 %>)
-        <% if field_name == :mobile %>
-          <% if form.failed_on?(:mobile, :present) %>
+      <% if field_name == :mobile %>
+        <% if form.failed_on?(:mobile, :present) %>
           <a class="js-inpagelink" href="#<%= field_name %>"><%= I18n.t 'this_field_is_mandatory' %></a>
-          <% elsif form.failed_on?(:mobile, :regexp) %>
+        <% elsif form.failed_on?(:mobile, :regexp) %>
           <a class="js-inpagelink" href="#<%= field_name %>"><%= I18n.t 'mobile_invalid' %></a>
-          <% end %>
-        <% else %>
-        <a class="js-inpagelink" href="#<%= field_name %>"><%= I18n.t 'this_field_is_mandatory' %></a>
         <% end %>
-        </li>
+      <% else %>
+        <a class="js-inpagelink" href="#<%= field_name %>"><%= I18n.t 'this_field_is_mandatory' %></a>
       <% end %>
+        </li>
+    <% end %>
       </ul>
     </div>
   </div>

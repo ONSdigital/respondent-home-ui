@@ -18,7 +18,7 @@ post '/individualquestionnaire' do
     field :postcode,     present: true, filters: :upcase
 
     # See http://regexlib.com/REDetails.aspx?regexp_id=592
-    field :mobile,       present: true, regexp: %r{^(\+44\s?7\d{3}|\(?07\d{3}\)?)\s?\d{3}\s?\d{3}$}
+    field :mobile,       present: true, regexp: /^(\+44\s?7\d{3}|\(?07\d{3}\)?)\s?\d{3}\s?\d{3}$/
   end
 
   if form.failed?

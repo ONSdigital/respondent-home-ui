@@ -127,3 +127,7 @@
 #badges img {
   margin-right: 5px;
 }
+
+#census-access-code-answer legend {
+  float: none;
+}

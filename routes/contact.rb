@@ -20,7 +20,6 @@ post '/individualquestionnaire' do
   end
 
   if form.failed?
-    puts form.failed_fields.class
     output = erb :contact, locals: { title: I18n.t('request_an_individual_questionnaire'),
                                      host: settings.host,
                                      built: @built,
@@ -30,5 +29,12 @@ post '/individualquestionnaire' do
                                      analytics_account: settings.analytics_account }
     fill_in_form(output)
   else
+    erb :contact_success, locals: { title: I18n.t('request_an_individual_questionnaire'),
+                                    host: settings.host,
+                                    built: @built,
+                                    commit: @commit,
+                                    locale: @locale,
+                                    environment: settings.environment,
+                                    analytics_account: settings.analytics_account }
   end
 end

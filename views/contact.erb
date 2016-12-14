@@ -11,9 +11,15 @@
     <div class="alert__body">
       <p class="mars"><%= I18n.t 'these_must_be_corrected' %></p>
       <ul class="list list--bare">
-    <% form.failed_fields.each_with_index do |field_name, i| %>
-        <li class="list__item mars"><%= i + 1 %>)
-      <% if field_name == :mobile %>
+    <% form.failed_fields.each.with_index(1) do |field_name, i| %>
+        <li class="list__item mars"><%= i %>)
+      <% if field_name == :postcode %>
+        <% if form.failed_on?(:postcode, :present) %>
+          <a class="js-inpagelink" href="#<%= field_name %>"><%= I18n.t 'this_field_is_mandatory' %></a>
+        <% elsif form.failed_on?(:postcode, :regexp) %>
+          <a class="js-inpagelink" href="#<%= field_name %>"><%= I18n.t 'postcode_invalid' %></a>
+        <% end %>
+      <% elsif field_name == :mobile %>
         <% if form.failed_on?(:mobile, :present) %>
           <a class="js-inpagelink" href="#<%= field_name %>"><%= I18n.t 'this_field_is_mandatory' %></a>
         <% elsif form.failed_on?(:mobile, :regexp) %>
@@ -222,7 +228,11 @@
                     <div class="alert alert--simple alert--error">
                       <div class="alert__header">
                         <ul class="list list--bare list--errors">
+                        <% if form.failed_on?(:postcode, :present) %>
                           <li class="list__item mars" data-error-msg="<%= I18n.t 'this_field_is_mandatory' %>" data-error="true" data-error-id="postcode"><%= I18n.t 'this_field_is_mandatory' %></li>
+                        <% elsif form.failed_on?(:postcode, :regexp) %>
+                          <li class="list__item mars" data-error-msg="<%= I18n.t 'postcode_invalid' %>" data-error="true" data-error-id="postcode"><%= I18n.t 'postcode_invalid' %></li>
+                        <% end %>
                         </ul>
                       </div>
                       <div class="alert__body">

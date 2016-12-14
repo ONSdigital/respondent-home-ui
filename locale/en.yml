@@ -39,6 +39,7 @@ en:
   online_help: "Online Help"
   ons: "Office for National Statistics"
   postcode: "Postcode"
+  postcode_invalid: "The postcode entered is not valid. Please provide a valid UK postcode."
   previous: "Previous"
   privacy: "Privacy"
   request_an_individual_questionnaire: "Request an Individual Questionnaire"

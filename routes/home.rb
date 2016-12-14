@@ -82,13 +82,13 @@ before do
 end
 
 get '/' do
-  erb :index, locals: { title: I18n.t('title'),
-                        host: settings.host,
-                        built: @built,
-                        commit: @commit,
-                        locale: @locale,
-                        environment: settings.environment,
-                        analytics_account: settings.analytics_account }
+  erb :home, locals: { title: I18n.t('home_heading1'),
+                       host: settings.host,
+                       built: @built,
+                       commit: @commit,
+                       locale: @locale,
+                       environment: settings.environment,
+                       analytics_account: settings.analytics_account }
 end
 
 post '/' do

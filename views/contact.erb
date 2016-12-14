@@ -3,30 +3,30 @@
   <div class="alert alert--error">
     <div class="alert__header">
     <% if form.failed_fields.size == 1 %>
-      <h1 class="alert__title venus"><%= I18n.t 'this_page_has' %> 1 <%= I18n.t 'error' %></h1>
+      <h1 class="alert__title venus"><%= I18n.t 'contact_alert_heading1a' %> 1 <%= I18n.t 'contact_alert_heading1b' %></h1>
     <% else %>
-      <h1 class="alert__title venus"><%= I18n.t 'this_page_has' %> <%= form.failed_fields.size %> <%= I18n.t 'errors' %></h1>
+      <h1 class="alert__title venus"><%= I18n.t 'contact_alert_heading1a' %> <%= form.failed_fields.size %> <%= I18n.t 'contact_alert_heading1c' %></h1>
     <% end %>
     </div>
     <div class="alert__body">
-      <p class="mars"><%= I18n.t 'these_must_be_corrected' %></p>
+      <p class="mars"><%= I18n.t 'contact_alert_paragraph1' %></p>
       <ul class="list list--bare">
     <% form.failed_fields.each.with_index(1) do |field_name, i| %>
         <li class="list__item mars"><%= i %>)
       <% if field_name == :postcode %>
         <% if form.failed_on?(:postcode, :present) %>
-          <a class="js-inpagelink" href="#<%= field_name %>"><%= I18n.t 'this_field_is_mandatory' %></a>
+          <a class="js-inpagelink" href="#<%= field_name %>"><%= I18n.t 'contact_field_mandatory' %></a>
         <% elsif form.failed_on?(:postcode, :regexp) %>
-          <a class="js-inpagelink" href="#<%= field_name %>"><%= I18n.t 'postcode_invalid' %></a>
+          <a class="js-inpagelink" href="#<%= field_name %>"><%= I18n.t 'contact_field_postcode_invalid' %></a>
         <% end %>
       <% elsif field_name == :mobile %>
         <% if form.failed_on?(:mobile, :present) %>
-          <a class="js-inpagelink" href="#<%= field_name %>"><%= I18n.t 'this_field_is_mandatory' %></a>
+          <a class="js-inpagelink" href="#<%= field_name %>"><%= I18n.t 'contact_field_mandatory' %></a>
         <% elsif form.failed_on?(:mobile, :regexp) %>
-          <a class="js-inpagelink" href="#<%= field_name %>"><%= I18n.t 'mobile_invalid' %></a>
+          <a class="js-inpagelink" href="#<%= field_name %>"><%= I18n.t 'contact_field_mobile_invalid' %></a>
         <% end %>
       <% else %>
-        <a class="js-inpagelink" href="#<%= field_name %>"><%= I18n.t 'this_field_is_mandatory' %></a>
+        <a class="js-inpagelink" href="#<%= field_name %>"><%= I18n.t 'contact_field_mandatory' %></a>
       <% end %>
         </li>
     <% end %>
@@ -37,17 +37,17 @@
 <% end %>
 
 <div class="header">
-  <h1 class="saturn"><%= I18n.t 'welcome_heading' %></h1>
-  <h2 class="venus"><%= I18n.t 'request_an_individual_questionnaire' %></h2>
-  <p class="mars"><%= I18n.t 'individual_questionnaire_line_1' %></p>
-  <p class="mars"><%= I18n.t 'individual_questionnaire_line_2' %></p>
+  <h1 class="saturn"><%= I18n.t 'contact_heading1' %></h1>
+  <h2 class="venus"><%= I18n.t 'contact_heading2' %></h2>
+  <p class="mars"><%= I18n.t 'contact_paragraph1' %></p>
+  <p class="mars"><%= I18n.t 'contact_paragraph2' %></p>
   <form action="/individualquestionnaire" class="form qa-questionnaire-form" role="form" method="post" novalidate="">
     <div class="group" id="household-member">
       <div class="block" id="other-address">
         <div class="section" id="other-address-section">
           <div class="question" id="other-address-question">
             <fieldset class="question__fieldset">
-              <legend class="fieldgroup__title venus u-vh"><%= I18n.t 'request_an_individual_questionnaire' %></legend>
+              <legend class="fieldgroup__title venus u-vh"><%= I18n.t 'contact_legend' %></legend>
               <div class="question__answers">
 
                 <div class="question__answer">
@@ -56,7 +56,7 @@
                     <div class="alert alert--simple alert--error">
                       <div class="alert__header">
                         <ul class="list list--bare list--errors">
-                          <li class="list__item mars" data-error-msg="<%= I18n.t 'this_field_is_mandatory' %>" data-error="true" data-error-id="first_name"><%= I18n.t 'this_field_is_mandatory' %></li>
+                          <li class="list__item mars" data-error-msg="<%= I18n.t 'contact_field_mandatory' %>" data-error="true" data-error-id="first_name"><%= I18n.t 'contact_field_mandatory' %></li>
                         </ul>
                       </div>
                       <div class="alert__body">
@@ -68,7 +68,7 @@
                         <!-- BEGIN TextWidget -->
                         <label id="label-first-name" for="input-first-name" class="label venus">
                           <div class="label__inner">
-                            <%= I18n.t 'first_name' %>
+                            <%= I18n.t 'contact_field_first_name' %>
                           </div>
                         </label>
                         <input name="first_name" type="text" data-qa="input-text" value="" id="input-first-name" class="input input--text">
@@ -87,7 +87,7 @@
                     <div class="alert alert--simple alert--error">
                       <div class="alert__header">
                         <ul class="list list--bare list--errors">
-                          <li class="list__item mars" data-error-msg="<%= I18n.t 'this_field_is_mandatory' %>" data-error="true" data-error-id="last_name"><%= I18n.t 'this_field_is_mandatory' %></li>
+                          <li class="list__item mars" data-error-msg="<%= I18n.t 'contact_field_mandatory' %>" data-error="true" data-error-id="last_name"><%= I18n.t 'contact_field_mandatory' %></li>
                         </ul>
                       </div>
                       <div class="alert__body">
@@ -99,7 +99,7 @@
                         <!-- BEGIN TextWidget -->
                         <label id="label-last-name" for="input-last-name" class="label venus">
                           <div class="label__inner">
-                            <%= I18n.t 'last_name' %>
+                            <%= I18n.t 'contact_field_last_name' %>
                           </div>
                         </label>
                         <input name="last_name" type="text" data-qa="input-text" value="" id="input-last-name" class="input input--text">
@@ -118,7 +118,7 @@
                     <div class="alert alert--simple alert--error">
                       <div class="alert__header">
                         <ul class="list list--bare list--errors">
-                          <li class="list__item mars" data-error-msg="<%= I18n.t 'this_field_is_mandatory' %>" data-error="true" data-error-id="building"><%= I18n.t 'this_field_is_mandatory' %></li>
+                          <li class="list__item mars" data-error-msg="<%= I18n.t 'contact_field_mandatory' %>" data-error="true" data-error-id="building"><%= I18n.t 'contact_field_mandatory' %></li>
                         </ul>
                       </div>
                       <div class="alert__body">
@@ -130,7 +130,7 @@
                         <!-- BEGIN TextWidget -->
                         <label id="label-other-address-answer-building" for="input-other-address-answer-building" class="label venus">
                           <div class="label__inner">
-                            <%= I18n.t 'building' %>
+                            <%= I18n.t 'contact_field_building' %>
                           </div>
                         </label>
                         <input name="building" type="text" data-qa="input-text" value="" id="input-other-address-answer-building" class="input input--text">
@@ -149,7 +149,7 @@
                     <div class="alert alert--simple alert--error">
                       <div class="alert__header">
                         <ul class="list list--bare list--errors">
-                          <li class="list__item mars" data-error-msg="<%= I18n.t 'this_field_is_mandatory' %>" data-error="true" data-error-id="street"><%= I18n.t 'this_field_is_mandatory' %></li>
+                          <li class="list__item mars" data-error-msg="<%= I18n.t 'contact_field_mandatory' %>" data-error="true" data-error-id="street"><%= I18n.t 'contact_field_mandatory' %></li>
                         </ul>
                       </div>
                       <div class="alert__body">
@@ -161,7 +161,7 @@
                         <!-- BEGIN TextWidget -->
                         <label id="label-other-address-answer-street" for="input-other-address-answer-street" class="label venus">
                           <div class="label__inner">
-                            <%= I18n.t 'street' %>
+                            <%= I18n.t 'contact_field_street' %>
                           </div>
                         </label>
                         <input name="street" type="text" data-qa="input-text" value="" id="input-other-address-answer-street" class="input input--text">
@@ -180,7 +180,7 @@
                     <div class="alert alert--simple alert--error">
                       <div class="alert__header">
                         <ul class="list list--bare list--errors">
-                          <li class="list__item mars" data-error-msg="<%= I18n.t 'this_field_is_mandatory' %>" data-error="true" data-error-id="town_or_city"><%= I18n.t 'this_field_is_mandatory' %></li>
+                          <li class="list__item mars" data-error-msg="<%= I18n.t 'contact_field_mandatory' %>" data-error="true" data-error-id="town_or_city"><%= I18n.t 'contact_field_mandatory' %></li>
                         </ul>
                       </div>
                       <div class="alert__body">
@@ -192,7 +192,7 @@
                         <!-- BEGIN TextWidget -->
                         <label id="label-other-address-answer-city" for="input-other-address-answer-city" class="label venus">
                           <div class="label__inner">
-                            <%= I18n.t 'town_or_city' %>
+                            <%= I18n.t 'contact_field_town' %>
                           </div>
                         </label>
                         <input name="town_or_city" type="text" data-qa="input-text" value="" id="input-other-address-answer-city" class="input input--text">
@@ -212,7 +212,7 @@
                         <!-- BEGIN TextWidget -->
                         <label id="label-other-address-answer-county" for="input-other-address-answer-county" class="label venus">
                           <div class="label__inner">
-                            <%= I18n.t 'county' %>
+                            <%= I18n.t 'contact_field_county' %>
                           </div>
                         </label>
                         <input name="county" type="text" data-qa="input-text" value="" id="input-other-address-answer-county" class="input input--text">
@@ -229,9 +229,9 @@
                       <div class="alert__header">
                         <ul class="list list--bare list--errors">
                         <% if form.failed_on?(:postcode, :present) %>
-                          <li class="list__item mars" data-error-msg="<%= I18n.t 'this_field_is_mandatory' %>" data-error="true" data-error-id="postcode"><%= I18n.t 'this_field_is_mandatory' %></li>
+                          <li class="list__item mars" data-error-msg="<%= I18n.t 'contact_field_mandatory' %>" data-error="true" data-error-id="postcode"><%= I18n.t 'contact_field_mandatory' %></li>
                         <% elsif form.failed_on?(:postcode, :regexp) %>
-                          <li class="list__item mars" data-error-msg="<%= I18n.t 'postcode_invalid' %>" data-error="true" data-error-id="postcode"><%= I18n.t 'postcode_invalid' %></li>
+                          <li class="list__item mars" data-error-msg="<%= I18n.t 'contact_field_postcode_invalid' %>" data-error="true" data-error-id="postcode"><%= I18n.t 'contact_field_postcode_invalid' %></li>
                         <% end %>
                         </ul>
                       </div>
@@ -244,7 +244,7 @@
                         <!-- BEGIN TextWidget -->
                         <label id="label-other-address-answer-postcode" for="input-other-address-answer-postcode" class="label venus">
                           <div class="label__inner">
-                            <%= I18n.t 'postcode' %>
+                            <%= I18n.t 'contact_field_postcode' %>
                           </div>
                         </label>
                         <input name="postcode" type="text" data-qa="input-text" value="" id="input-other-address-answer-postcode" class="input input--text">
@@ -264,9 +264,9 @@
                       <div class="alert__header">
                         <ul class="list list--bare list--errors">
                         <% if form.failed_on?(:mobile, :present) %>
-                          <li class="list__item mars" data-error-msg="<%= I18n.t 'this_field_is_mandatory' %>" data-error="true" data-error-id="mobile"><%= I18n.t 'this_field_is_mandatory' %></li>
+                          <li class="list__item mars" data-error-msg="<%= I18n.t 'contact_field_mandatory' %>" data-error="true" data-error-id="mobile"><%= I18n.t 'contact_field_mandatory' %></li>
                         <% elsif form.failed_on?(:mobile, :regexp) %>
-                          <li class="list__item mars" data-error-msg="<%= I18n.t 'mobile_invalid' %>" data-error="true" data-error-id="mobile"><%= I18n.t 'mobile_invalid' %></li>
+                          <li class="list__item mars" data-error-msg="<%= I18n.t 'contact_field_mobile_invalid' %>" data-error="true" data-error-id="mobile"><%= I18n.t 'contact_field_mobile_invalid' %></li>
                         <% end %>
                         </ul>
                       </div>
@@ -279,8 +279,8 @@
                         <!-- BEGIN TextWidget -->
                         <label id="label-mobile-number" for="input-mobile-number" class="label venus">
                           <div class="label__inner">
-                            <%= I18n.t 'mobile' %><br/>
-                            <span class="mars"><%= I18n.t 'mobile_note' %></span>
+                            <%= I18n.t 'contact_field_mobile1' %><br/>
+                            <span class="mars"><%= I18n.t 'contact_field_mobile2' %></span>
                           </div>
                         </label>
                         <input name="mobile" type="text" data-qa="input-text" value="" id="input-mobile-number" class="input input--text">
@@ -299,13 +299,13 @@
         </div>
       </div>
     </div>
-    <button class="btn btn--primary qa-btn-submit venus" type="submit" name="action[save_continue]"><%= I18n.t 'send_request_button' %></button>
+    <button class="btn btn--primary qa-btn-submit venus" type="submit" name="action[save_continue]"><%= I18n.t 'contact_send_button' %></button>
     <div class="u-mt-xs">
-      <a id="bottom-previous" class="mars" href="/"><%= I18n.t 'previous' %></a>
+      <a id="bottom-previous" class="mars" href="/"><%= I18n.t 'home_link' %></a>
     </div>
   </form>
   <div class="lock u-mb-s u-mb-m@s">
-    <div class="venus lock__text"><%= I18n.t 'confidentiality_notice' %></div>
+    <div class="venus lock__text"><%= I18n.t 'confidentiality_statement' %></div>
   </div>
   <p class="mars"><%= I18n.t 'about_census' %></p>
 </div>

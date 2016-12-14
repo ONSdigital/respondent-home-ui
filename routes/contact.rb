@@ -1,5 +1,5 @@
 get '/individualquestionnaire' do
-  erb :contact, locals: { title: I18n.t('request_an_individual_questionnaire'),
+  erb :contact, locals: { title: I18n.t('contact_heading1'),
                           host: settings.host,
                           built: @built,
                           commit: @commit,
@@ -24,7 +24,7 @@ post '/individualquestionnaire' do
   end
 
   if form.failed?
-    output = erb :contact, locals: { title: I18n.t('request_an_individual_questionnaire'),
+    output = erb :contact, locals: { title: I18n.t('contact_heading1'),
                                      host: settings.host,
                                      built: @built,
                                      commit: @commit,
@@ -33,7 +33,7 @@ post '/individualquestionnaire' do
                                      analytics_account: settings.analytics_account }
     fill_in_form(output)
   else
-    erb :contact_success, locals: { title: I18n.t('request_an_individual_questionnaire'),
+    erb :contact_success, locals: { title: I18n.t('contact_success_heading1'),
                                     host: settings.host,
                                     built: @built,
                                     commit: @commit,

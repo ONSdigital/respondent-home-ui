@@ -1,12 +1,12 @@
 <!doctype html>
-<!--[if lt IE 7]>      <html lang="<%= I18n.t 'lang' %>" dir="ltr" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html lang="<%= I18n.t 'lang' %>" dir="ltr" class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html lang="<%= I18n.t 'lang' %>" dir="ltr" class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html lang="<%= I18n.t 'lang' %>" dir="ltr" class="no-js"> <!--<![endif]-->
+<!--[if lt IE 7]>      <html lang="<%= I18n.t 'layout_lang' %>" dir="ltr" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="<%= I18n.t 'layout_lang' %>" dir="ltr" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="<%= I18n.t 'layout_lang' %>" dir="ltr" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="<%= I18n.t 'layout_lang' %>" dir="ltr" class="no-js"> <!--<![endif]-->
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title><%= I18n.t 'title' %></title>
+    <title><%=h title %></title>
     <meta content="" name="description">
     <meta content="width=device-width, initial-scale=1" name="viewport">
     <link rel="shortcut icon" href="favicon.ico">
@@ -30,36 +30,36 @@
   <body class="page">
     <div class="page__content">
       <div class="skip">
-        <a class="skip__link" href="#main"><%= I18n.t 'skip_to_content' %></a>
+        <a class="skip__link" href="#main"><%= I18n.t 'layout_skip_content' %></a>
       </div>
       <div class="page-header page-header--census">
         <div class="census-header__cookie">
           <div class="container">
-            <p class="pluto"><%= I18n.t 'cookie_notice' %></p>
+            <p class="pluto"><%= I18n.t 'layout_cookie_notice' %></p>
           </div>
         </div>
         <div class="page-header__help is-closed js-help-body">
           <div class="page-header__container container">
-            <div class="page-header__title"><%= I18n.t 'help_and_support' %></div>
+            <div class="page-header__title"><%= I18n.t 'layout_help' %></div>
               <ul class="page-header__nav nav nav--horizontal">
                 <li class="nav__item">
-                  <span class="mars" role="presentation"><%= I18n.t 'call' %> </span> <a class="venus nav__link" href="tel:0800123456789"><span class="u-vh"><%= I18n.t 'for_help_call' %> </span><%= I18n.t 'help_telephone_number' %></a>
+                  <span class="mars" role="presentation"><%= I18n.t 'layout_call' %> </span> <a class="venus nav__link" href="tel:<%= I18n.t 'layout_help_number' %>"><span class="u-vh"><%= I18n.t 'layout_help_call' %> </span><%= I18n.t 'layout_help_number' %></a>
                 </li>
                 <li class="nav__item">
-                  <a class="venus nav__link external" href="#" rel="ext"><%= I18n.t 'online_help' %></a>
+                  <a class="venus nav__link external" href="#" rel="ext"><%= I18n.t 'layout_online_help' %></a>
                 </li>
               </ul>
             </div>
           </div>
           <div class="page-header__container container">
             <div class="page-header__crest">
-              <img src="/img/crest.svg" alt="Crown">
+              <img src="/img/crest.svg" alt="<%= I18n.t 'layout_image_crown_alt' %>">
             </div>
             <div class="page-header__logo">
-              <img src="/img/logo-english-reversed.svg" alt="2017 Census">
+              <img src="/img/logo-english-reversed.svg" alt="<%= I18n.t 'layout_image_census_alt' %>">
             </div>
             <button class="page-header__btn btn btn--light btn--border js-help-btn">
-              <%= I18n.t 'help_and_support_button' %>
+              <%= I18n.t 'layout_help_button' %>
             </button>
           </div>
         </div>
@@ -76,32 +76,32 @@
       <div class="footer footer--census" id="footer" role="contentinfo">
         <div class="container footer__container">
           <a class="footer__logo" href="https://www.ons.gov.uk/">
-            <img src="/img/ons-logo.svg" alt="<%= I18n.t 'ons' %>" class="">
+            <img src="/img/ons-logo.svg" alt="<%= I18n.t 'layout_ons' %>" class="">
           </a>
           <ul class="footer__nav nav nav--horizontal">
             <li class="nav__item">
-              <a class="nav__link" rel="ext" href="https://www.ons.gov.uk/help/cookiesandprivacy"><%= I18n.t 'privacy' %></a>
+              <a class="nav__link" rel="ext" href="https://www.ons.gov.uk/help/cookiesandprivacy"><%= I18n.t 'layout_link_privacy' %></a>
             </li>
             <li class="nav__item">
-              <a class="nav__link" rel="ext" href="#"><%= I18n.t 'copyright' %></a>
+              <a class="nav__link" rel="ext" href="#"><%= I18n.t 'layout_copyright' %></a>
             </li>
             <li class="nav__item">
-              <a class="nav__link" rel="ext" href="https://www.ons.gov.uk/help/termsandconditions"><%= I18n.t 'terms_and_conditions' %></a>
+              <a class="nav__link" rel="ext" href="https://www.ons.gov.uk/help/termsandconditions"><%= I18n.t 'layout_link_terms' %></a>
             </li>
             <li class="nav__item">
-              <a class="nav__link" rel="ext" href="https://www.ons.gov.uk/help/accessibility"><%= I18n.t 'accessibility_statement' %></a>
+              <a class="nav__link" rel="ext" href="https://www.ons.gov.uk/help/accessibility"><%= I18n.t 'layout_link_accessibility' %></a>
             </li>
           </ul>
         </div>
         <div class="footer__help">
           <div class="container">
-            <div class="mars"><%= I18n.t 'help_and_support' %>
+            <div class="mars"><%= I18n.t 'layout_help' %>
               <ul class="footer__helpnav nav nav--horizontal">
                 <li class="nav__item">
-                  <span class="mars" role="presentation"><%= I18n.t 'call' %> </span> <a class="venus nav__link" href="tel:0800123456789"><span class="u-vh"><%= I18n.t 'for_help_call' %> </span>0800 123 456789</a>
+                  <span class="mars" role="presentation"><%= I18n.t 'layout_call' %> </span> <a class="venus nav__link" href="tel:<%= I18n.t 'layout_help_number' %>"><span class="u-vh"><%= I18n.t 'layout_help_call' %> </span><%= I18n.t 'layout_help_number' %></a>
                 </li>
                 <li class="nav__item">
-                  <a class="venus nav__link external" href="#" rel="ext"><%= I18n.t 'online_help' %></a>
+                  <a class="venus nav__link external" href="#" rel="ext"><%= I18n.t 'layout_online_help' %></a>
                 </li>
               </ul>
             </div>

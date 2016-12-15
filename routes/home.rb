@@ -25,6 +25,8 @@ set :eq_protocol,                  config.eq_protocol
 set :iac_service_host,             config.iac_service_host
 set :iac_service_port,             config.iac_service_port
 set :iac_service_protocol,         config.iac_service_protocol
+set :iac_service_user,             config.iac_service_user
+set :iac_service_password,         config.iac_service_password
 set :notify_api_key,               config.notify_api_key
 set :notify_email_address,         config.notify_email_address
 set :notify_template_id,           config.notify_template_id

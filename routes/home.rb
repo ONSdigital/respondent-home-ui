@@ -65,20 +65,6 @@ helpers do
   def locale_from_url
     request.url.include?('cyfrifiad') ? 'cy' : 'en'
   end
-
-  # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-  def validate_iac_fields(form)
-    if form.failed_on?(:iac1, :present) && form.failed_on?(:iac2, :present) &&
-       form.failed_on?(:iac3, :present)
-      flash[:notice] = I18n.t('home_iac_required')
-    elsif (form.failed_on?(:iac1, :present) || form.failed_on?(:iac2, :present) ||
-           form.failed_on?(:iac3, :present)) ||
-          (form.failed_on?(:iac1, :regexp) || form.failed_on?(:iac2, :regexp) ||
-           form.failed_on?(:iac3, :regexp))
-      flash[:notice] = I18n.t('home_iac_invalid')
-    end
-  end
-  # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 end
 
 before do
@@ -113,7 +99,7 @@ post '/' do
   end
 
   if form.failed?
-    validate_iac_fields(form)
+    flash[:notice] = I18n.t('home_iac_invalid')
     redirect '/'
   else
     iac = canonicalize_iac(form[:iac1], form[:iac2], form[:iac3])

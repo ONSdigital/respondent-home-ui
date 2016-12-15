@@ -175,17 +175,17 @@
                 <% end %>
 
                 <div class="question__answer">
-                <% if form.failed_on?(:town_or_city) %>
-                  <div class="answer answer--textfield js-has-errors" id="town_or_city">
+                <% if form.failed_on?(:town) %>
+                  <div class="answer answer--textfield js-has-errors" id="town">
                     <div class="alert alert--simple alert--error">
                       <div class="alert__header">
                         <ul class="list list--bare list--errors">
-                          <li class="list__item mars" data-error-msg="<%= I18n.t 'contact_field_mandatory' %>" data-error="true" data-error-id="town_or_city"><%= I18n.t 'contact_field_mandatory' %></li>
+                          <li class="list__item mars" data-error-msg="<%= I18n.t 'contact_field_mandatory' %>" data-error="true" data-error-id="town"><%= I18n.t 'contact_field_mandatory' %></li>
                         </ul>
                       </div>
                       <div class="alert__body">
                 <% else %>
-                  <div class="answer answer--textfield" id="town_or_city">
+                  <div class="answer answer--textfield" id="town">
                 <% end %>
                     <div class="answer__fields js-fields">
                       <div class="field">
@@ -195,13 +195,13 @@
                             <%= I18n.t 'contact_field_town' %>
                           </div>
                         </label>
-                        <input name="town_or_city" type="text" data-qa="input-text" value="" id="input-other-address-answer-city" class="input input--text">
+                        <input name="town" type="text" data-qa="input-text" value="" id="input-other-address-answer-city" class="input input--text">
                         <!-- END TextWidget -->
                       </div>
                     </div>
                   </div>
                 </div>
-                <% if form.failed_on?(:town_or_city) %>
+                <% if form.failed_on?(:town) %>
                   </div></div>
                 <% end %>
 

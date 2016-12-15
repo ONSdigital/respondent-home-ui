@@ -3,6 +3,22 @@
 <script src="/js/respondenthome.js"></script>
 <% end %>
 
+<% if flash[:notice] %>
+<div class="u-mt-s">
+  <div class="alert alert--error">
+    <div class="alert__header">
+      <h1 class="alert__title venus"><%= I18n.t 'home_alert_heading_1' %></h1>
+    </div>
+    <div class="alert__body">
+      <p class="mars"><%= I18n.t 'home_alert_paragraph1' %></p>
+      <ul class="list list--bare">
+        <li class="list__item mars">1) <%=h flash[:notice] %></li>
+      </ul>
+    </div>
+  </div>
+</div>
+<% end %>
+
 <div class="header">
   <h1 class="saturn"><%= I18n.t 'home_heading1' %></h1>
   <p class="mars"><%= I18n.t 'home_paragraph1' %></p>

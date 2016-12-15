@@ -65,6 +65,20 @@ helpers do
   def locale_from_url
     request.url.include?('cyfrifiad') ? 'cy' : 'en'
   end
+
+  # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+  def validate_iac_fields(form)
+    if form.failed_on?(:iac1, :present) && form.failed_on?(:iac2, :present) &&
+       form.failed_on?(:iac3, :present)
+      flash[:notice] = I18n.t('home_iac_required')
+    elsif (form.failed_on?(:iac1, :present) || form.failed_on?(:iac2, :present) ||
+           form.failed_on?(:iac3, :present)) ||
+          (form.failed_on?(:iac1, :regexp) || form.failed_on?(:iac2, :regexp) ||
+           form.failed_on?(:iac3, :regexp))
+      flash[:notice] = I18n.t('home_iac_invalid')
+    end
+  end
+  # rubocop:enable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 end
 
 before do
@@ -93,19 +107,19 @@ end
 
 post '/' do
   form do
-    field :iac1, present: true
-    field :iac2, present: true
-    field :iac3, present: true
+    field :iac1, present: true, regexp: /^[a-zA-Z0-9]{4}$/
+    field :iac2, present: true, regexp: /^[a-zA-Z0-9]{4}$/
+    field :iac3, present: true, regexp: /^[a-zA-Z0-9]{4}$/
   end
 
   if form.failed?
-    flash[:notice] = I18n.t('iac_required')
+    validate_iac_fields(form)
     redirect '/'
   else
     iac = canonicalize_iac(form[:iac1], form[:iac2], form[:iac3])
 
     unless InternetAccessCodeValidator.new(iac).valid?
-      flash[:notice] = I18n.t('iac_invalid')
+      flash[:notice] = I18n.t('home_iac_invalid')
       redirect '/'
     end
 
@@ -115,14 +129,14 @@ post '/' do
       url = '/'
 
       if response.code == 404
-        flash[:notice] = I18n.t('iac_invalid')
+        flash[:notice] = I18n.t('home_iac_invalid')
 
       # The IAC has no associated case.
       elsif response.code == 500 &&
             case_summary['error']['message'].include?('Case not found')
-        flash[:notice] = I18n.t('iac_invalid')
+        flash[:notice] = I18n.t('home_iac_invalid')
       elsif case_summary['active'] == false
-        flash[:notice] = I18n.t('iac_used')
+        flash[:notice] = I18n.t('home_iac_used')
       else
         public_key  = load_key_from_file(settings.public_key)
         private_key = load_key_from_file(settings.private_key,

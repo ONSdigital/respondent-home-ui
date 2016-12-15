@@ -35,14 +35,19 @@ en:
   contact_success_paragraph1: "Thank you for requesting an individual questionnaire by providing your details. You will receive a text message containing your unique access code within the next 24 hours."
 
   # Home page.
+  home_alert_heading_1: "This page has 1 error"
+  home_alert_paragraph1: "This <strong>must be corrected</strong> to continue."
   home_heading1: "Welcome to the 2017 Census Test"
   home_paragraph1: "By completing this questionnaire you will be joining others in your local area who are helping us to plan for the next census."
   home_paragraph2: "If anyone aged 16 or over would like to keep their answers private, they can <a href=\"/individualquestionnaire\">request a personal and confidential form</a> or by calling <strong>0300 068 3001</strong>."
   home_iac_instructions: "The unique access code is printed on your invitation letter."
+  home_iac_invalid: "The unique access code entered is not valid. Please provide the unique access code printed on your invitation letter."
   home_iac_legend: "Enter your unique access code below:"
+  home_iac_required: "The unique access code is mandatory."
   home_iac_segment1: "First four characters of code"
   home_iac_segment2: "Second four characters of code"
   home_iac_segment3: "Third four characters of code"
+  home_iac_used: "The unique access code entered has already been used."
   home_start_button: "Start"
 
   # HTTP 500 error page.

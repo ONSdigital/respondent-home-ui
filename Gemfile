@@ -9,6 +9,7 @@ gem 'sinatra-content-for2'
 gem 'sinatra-flash'
 gem 'sinatra-formkeeper'
 gem 'notifications-ruby-client'
+gem 'sucker_punch', '~> 2.0'
 
 source 'http://rubygems.ctpdev.local' do
   gem 'iac-validator'

@@ -6,7 +6,10 @@ class Configuration
               :eq_protocol,
               :iac_service_host,
               :iac_service_port,
-              :iac_service_protocol
+              :iac_service_protocol,
+              :notify_api_key,
+              :notify_email_address,
+              :notify_template_id
 
   def initialize(env)
     @analytics_account    = env['RESPONDENT_HOME_ANALYTICS_ACCOUNT']
@@ -16,5 +19,8 @@ class Configuration
     @iac_service_host     = env['RESPONDENT_HOME_IAC_SERVICE_HOST']
     @iac_service_port     = env['RESPONDENT_HOME_IAC_SERVICE_PORT']
     @iac_service_protocol = env['RESPONDENT_HOME_IAC_SERVICE_PROTOCOL']
+    @notify_api_key       = env['RESPONDENT_HOME_NOTIFY_API_KEY']
+    @notify_email_address = env['RESPONDENT_HOME_NOTIFY_EMAIL_ADDRESS']
+    @notify_template_id   = env['RESPONDENT_HOME_NOTIFY_TEMPLATE_ID']
   end
 end

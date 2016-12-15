@@ -70,6 +70,8 @@ GEM
       hpricot
       rack
       sinatra
+    sucker_punch (2.0.2)
+      concurrent-ruby (~> 1.0.0)
     thread_safe (0.3.5)
     tilt (2.0.5)
     tzinfo (1.2.2)
@@ -95,6 +97,7 @@ DEPENDENCIES
   sinatra-content-for2
   sinatra-flash
   sinatra-formkeeper
+  sucker_punch (~> 2.0)
 
 BUNDLED WITH
    1.13.6

@@ -10,11 +10,13 @@ require 'json'
 require 'yaml'
 
 require_relative '../lib/configuration'
+require_relative '../lib/email_job'
 require_relative '../lib/claims'
 
 KEY_ID                    = 'EDCRRM'.freeze
 SESSION_EXPIRATION_PERIOD = 60 * 30
 
+# Load configuration from environment variables and configuration file.
 config = Configuration.new(ENV)
 set :analytics_account,            config.analytics_account
 set :eq_host,                      config.eq_host
@@ -23,11 +25,17 @@ set :eq_protocol,                  config.eq_protocol
 set :iac_service_host,             config.iac_service_host
 set :iac_service_port,             config.iac_service_port
 set :iac_service_protocol,         config.iac_service_protocol
+set :notify_api_key,               config.notify_api_key
+set :notify_email_address,         config.notify_email_address
+set :notify_template_id,           config.notify_template_id
 
 config_file = YAML.load_file(File.join(__dir__, '../config.yml'))
 set :public_key,             config_file['eq-service']['public_key']
 set :private_key,            config_file['eq-service']['private_key']
 set :private_key_passphrase, config_file['eq-service']['private_key_passphrase']
+
+# Configure logging.
+SuckerPunch.logger = Logger.new($stdout)
 
 # Display badges with the host, built date, commit SHA and environment in
 # non-production environments.

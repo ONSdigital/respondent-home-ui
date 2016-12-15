@@ -11,6 +11,9 @@ class ConfigurationTest < Test::Unit::TestCase
     ENV['RESPONDENT_HOME_IAC_SERVICE_HOST']     = 'IAC service host'
     ENV['RESPONDENT_HOME_IAC_SERVICE_PORT']     = 'IAC service port'
     ENV['RESPONDENT_HOME_IAC_SERVICE_PROTOCOL'] = 'IAC service protocol'
+    ENV['RESPONDENT_HOME_NOTIFY_API_KEY']       = 'Notify API key'
+    ENV['RESPONDENT_HOME_NOTIFY_EMAIL_ADDRESS'] = 'Notify email address'
+    ENV['RESPONDENT_HOME_NOTIFY_TEMPLATE_ID']   = 'Notify template ID'
     @configuration = Configuration.new(ENV)
   end
 
@@ -40,5 +43,17 @@ class ConfigurationTest < Test::Unit::TestCase
 
   def test_iac_service_protocol
     assert_equal 'IAC service protocol', @configuration.iac_service_protocol
+  end
+
+  def test_notify_api_key
+    assert_equal 'Notify API key', @configuration.notify_api_key
+  end
+
+  def test_notify_email_address
+    assert_equal 'Notify email address', @configuration.notify_email_address
+  end
+
+  def test_notify_template_id
+    assert_equal 'Notify template ID', @configuration.notify_template_id
   end
 end

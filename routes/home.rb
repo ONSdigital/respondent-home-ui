@@ -120,7 +120,12 @@ post '/' do
     end
 
     case_summary = []
-    RestClient.get("#{settings.iac_service_protocol}://#{settings.iac_service_host}:#{settings.iac_service_port}/iacs/#{iac}") do |response, _request, _result, &_block|
+
+    # See https://www.krautcomputing.com/blog/2015/06/21/how-to-use-basic-authentication-with-the-ruby-rest-client-gem/
+    RestClient::Request.execute(method: :get,
+                                url: "#{settings.iac_service_protocol}://#{settings.iac_service_host}:#{settings.iac_service_port}/iacs/#{iac}",
+                                user: settings.iac_service_user,
+                                password: settings.iac_service_password) do |response, _request, _result, &_block|
       case_summary = JSON.parse(response)
       url = '/'
 

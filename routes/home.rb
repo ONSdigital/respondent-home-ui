@@ -2,6 +2,7 @@ require 'sinatra'
 require 'sinatra/content_for2'
 require 'sinatra/flash'
 require 'sinatra/formkeeper'
+require 'user_agent_parser'
 require 'iac-validator'
 require 'rest_client'
 require 'ons-jwe'
@@ -74,6 +75,10 @@ helpers do
 
   def locale_from_url
     request.url.include?('cyfrifiad') ? 'cy' : 'en'
+  end
+
+  def parse_user_agent
+    UserAgentParser.parse(request.env['HTTP_USER_AGENT'])
   end
 end
 

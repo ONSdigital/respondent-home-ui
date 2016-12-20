@@ -1,0 +1,12 @@
+<div class="header">
+  <h1 class="saturn"><%= title %></h1>
+  <div class="panel alert--simple alert--error alert--spacious">
+    <p><%= I18n.t 'error_paragraph1' %></p>
+    <p><%= I18n.t 'error_paragraph2' %></p>
+  </div>
+  <div class="u-mt-m u-mb-s">
+    <div class="u-fw-b"><%= I18n.t 'error_system_info' %></div>
+    <div><%=h user_agent.family %> (<%=h user_agent.version.to_s %>)</div>
+    <div><%=h user_agent.os.family %><% if user_agent.os.version.nil? %> <%= I18n.t 'error_system_info_unknown_os_version' %><% else %>(<%=h user_agent.os.version.to_s %>)<% end %></div>
+  </div>
+</div>

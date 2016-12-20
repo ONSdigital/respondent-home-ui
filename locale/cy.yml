@@ -34,6 +34,12 @@ cy:
   contact_success_heading2: "translation pending"
   contact_success_paragraph1: "translation pending"
 
+  # System error page.
+  error_paragraph1: "translation pending"
+  error_paragraph2: "translation pending"
+  error_system_info: "translation pending"
+  error_system_info_unknown_os_version: "translation pending"
+
   # Home page.
   home_alert_heading1: "Mae gan y dudalen hon 1 gwall"
   home_alert_paragraph1: "Mae angen cywiro hyn i parhau"

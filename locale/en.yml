@@ -34,6 +34,12 @@ en:
   contact_success_heading2: "Request a Personal and Confidential Form"
   contact_success_paragraph1: "Thank you for requesting an individual questionnaire by providing your details. You will receive a text message containing your unique access code within the next 24 hours."
 
+  # System error page.
+  error_paragraph1: "<strong>Sorry, something has gone wrong.</strong>"
+  error_paragraph2: "If the problem persists please call the number above."
+  error_system_info: "Your system information"
+  error_system_info_unknown_os_version: "(unknown version)"
+
   # Home page.
   home_alert_heading1: "This page has 1 error"
   home_alert_paragraph1: "This <strong>must be corrected</strong> to continue."

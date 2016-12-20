@@ -54,7 +54,7 @@ cy:
 
   # Layout view template.
   layout_call: "Galwch"
-  layout_cookie_notice: "Mae Cyfrifiad Prawf yn defnyddio cwcis. <a href=\"https://www.ons.gov.uk/help/cookiesandprivacy\" rel=\"ext\">Darganfyddwch mwy o wybodaeth am cwcis.</a>"
+  layout_cookie_notice: "Mae Cyfrifiad Prawf yn defnyddio cwcis. <a href=\"https://www.ons.gov.uk/help/cookiesandprivacy\" target=\"blank\" rel=\"noopener noreferrer\">Darganfyddwch mwy o wybodaeth am cwcis.</a>"
   layout_help: "Cymorth -"
   layout_help_button: "Cymorth"
   layout_help_call: "Am cymorth galwch"

@@ -34,9 +34,7 @@ post '/individualquestionnaire' do
     fill_in_form(output)
   else
     contact_data = {
-
-      # Need to get the correct client IP address when behind a load balancer.
-      client_ip:  request.env['HTTP_X_FORWARDED_FOR'] || request.ip,
+      client_ip:  @client_ip,
       first_name: h(form[:first_name]),
       last_name:  h(form[:last_name]),
       building:   h(form[:building]),

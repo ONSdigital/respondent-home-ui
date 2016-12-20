@@ -79,7 +79,10 @@ end
 
 before do
   headers 'Content-Type' => 'text/html; charset=utf-8'
-  @locale = locale_from_url
+
+  # Need to get the correct client IP address when behind a load balancer.
+  @client_ip = request.env['HTTP_X_FORWARDED_FOR'] || request.ip
+  @locale    = locale_from_url
   I18n.default_locale = @locale
   I18n.locale         = @locale
 
@@ -144,6 +147,7 @@ post '/' do
                                          settings.private_key_passphrase)
 
         claims = Claims.new(case_summary['caseRef'], case_summary['questionSet'], @locale)
+        logger.info "Redirecting #{@client_ip} to eQ, tx_id='#{claims.transaction_id}'"
         token  = JWEToken.new(KEY_ID, claims.to_hash, public_key, private_key)
         url    = "#{settings.eq_protocol}://#{settings.eq_host}:#{settings.eq_port}/session?token=#{token.value}"
       end

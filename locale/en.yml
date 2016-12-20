@@ -1,7 +1,7 @@
 ---
 # English language strings.
 en:
-  about_census: "The Census in England and Wales is organised by the <a href=\"https://www.ons.gov.uk/\" rel=\"ext\">Office for National Statistics</a>."
+  about_census: "The Census in England and Wales is organised by the <a href=\"https://www.ons.gov.uk/\" target=\"blank\" rel=\"noopener noreferrer\">Office for National Statistics</a>."
   confidentiality_statement: "Your personal information is protected by law and will be kept confidential."
   home_link: "Home"
 

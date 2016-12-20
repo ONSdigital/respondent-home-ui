@@ -1,7 +1,7 @@
 ---
 # Welsh language strings.
 cy:
-  about_census: "Mae&rsquo;r Cyfrifiad yn Lloegr a Chymru yn chael eu drefnu gan y <a href=\"https://www.ons.gov.uk/\" rel=\"ext\"> Swyddfa Ystadegau Gwladol</a>."
+  about_census: "Mae&rsquo;r Cyfrifiad yn Lloegr a Chymru yn chael eu drefnu gan y <a href=\"https://www.ons.gov.uk/\" target=\"blank\" rel=\"noopener noreferrer\"> Swyddfa Ystadegau Gwladol</a>."
   confidentiality_statement: "Mae eich gwybodaeth bersonol wedi eu diogelu gan y gyfraith ac mi fydd yn cael eu cadw’n cyfrinachol."
   home_link: "Hafan"
 

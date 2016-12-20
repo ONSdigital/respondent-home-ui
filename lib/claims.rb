@@ -1,11 +1,12 @@
 require 'securerandom'
 
-# Class to generate a hash of claims from a case reference, question set and language.
+# Class to generate a hash of claims from a case reference, question set and
+# language code.
 class Claims
-  def initialize(case_reference, question_set, language)
+  def initialize(case_reference, question_set, language_code)
     @case_reference = case_reference.to_s
     @question_set   = question_set.downcase
-    @language       = language
+    @language_code  = language_code
 
     if @question_set == 'hotel'
       @form_type = 'communal'
@@ -22,7 +23,7 @@ class Claims
       exp: Time.now.to_i + 60 * 60,
       form_type: @form_type,
       iat: Time.now.to_i,
-      language: @language,
+      language_code: @language_code,
       period_id: '',
       period_str: '',
       ref_p_start_date: '2000-01-01',

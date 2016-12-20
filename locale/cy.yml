@@ -35,7 +35,7 @@ cy:
   contact_success_paragraph1: "translation pending"
 
   # Home page.
-  home_alert_heading_1: "Mae gan y dudalen hon 1 gwall"
+  home_alert_heading1: "Mae gan y dudalen hon 1 gwall"
   home_alert_paragraph1: "Mae angen cywiro hyn i parhau"
   home_heading1: "Croeso i&rsquo;r Cyfrifiad Prawf 2017"
   home_paragraph1: "Wrth cyflawni&rsquo;r holiadur hwn byddwch yn ymuno ag eraill yn eich ardal lleol i helpu cynllunio ar gyfer y cyfridiad nesaf."

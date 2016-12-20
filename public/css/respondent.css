@@ -1,7 +1,3 @@
-#census-access-code-answer legend {
-  float: none;
-}
-
 .census-header__cookie{
   background-color: #f5f6ff;
   color: #222;
@@ -138,4 +134,15 @@
 
 .external:after {
   background: url(img/icons--external-link.svg) no-repeat center center;
+}
+
+#census-access-code-answer legend {
+  float: none;
+}
+
+#census-access-code .fieldgroup__fields {
+
+}
+#census-access-code .field--input {
+  -ms-flex: 0 1 auto;
 }

@@ -55,7 +55,6 @@ en:
   # Layout view template.
   layout_call: "Call"
   layout_cookie_notice: "Census Test uses cookies. <a href=\"https://www.ons.gov.uk/help/cookiesandprivacy\" rel=\"ext\">Find out more about cookies.</a>"
-  layout_copyright: "Copyright"
   layout_help: "Help and Support –"
   layout_help_button: "Help<span> and support</span>"
   layout_help_call: "For help call"

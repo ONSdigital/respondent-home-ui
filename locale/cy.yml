@@ -1,7 +1,7 @@
 ---
 # Welsh language strings.
 cy:
-  about_census: "Mae’r Cyfrifiad yn Lloegr a Chymru yn chael eu drefnu gan y <a href=\"https://www.ons.gov.uk/\" rel=\"ext\"> Swyddfa Ystadegau Gwladol</a>."
+  about_census: "Mae&rsquo;r Cyfrifiad yn Lloegr a Chymru yn chael eu drefnu gan y <a href=\"https://www.ons.gov.uk/\" rel=\"ext\"> Swyddfa Ystadegau Gwladol</a>."
   confidentiality_statement: "Mae eich gwybodaeth bersonol wedi eu diogelu gan y gyfraith ac mi fydd yn cael eu cadw’n cyfrinachol."
   home_link: "Hafan"
 
@@ -37,7 +37,7 @@ cy:
   # Home page.
   home_alert_heading_1: "Mae gan y dudalen hon 1 gwall"
   home_alert_paragraph1: "Mae angen cywiro hyn i parhau"
-  home_heading1: "translation pending"
+  home_heading1: "Croeso i&rsquo;r Cyfrifiad Prawf 2017"
   home_paragraph1: "Wrth cyflawni&rsquo;r holiadur hwn byddwch yn ymuno ag eraill yn eich ardal lleol i helpu cynllunio ar gyfer y cyfridiad nesaf."
   home_paragraph2: "Os oes unrhywun yn hun nag 16 mlwydd oed am cadw eu atebion yn dirgel, gallwn cyflawni <a href=\"/individualquestionnaire\">cais am ffurflen bersonol ac cyfrinachol</a> neu trwy galw <strong>0300 068 3001</strong>."
   home_iac_instructions: "Mae&rsquo;r c&ocirc;d mynediad unigryw wedi argraffu ar eich llythr gwahoddiad."

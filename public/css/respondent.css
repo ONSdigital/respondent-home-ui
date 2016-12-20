@@ -1,3 +1,7 @@
+#census-access-code-answer legend {
+  float: none;
+}
+
 .census-header__cookie{
   background-color: #f5f6ff;
   color: #222;
@@ -35,38 +39,51 @@
 
 @media only screen and (min-width: 500px) {
   .page-header__logo {
+    width: 8px;
     width: 10rem;
   }
 }
 
 @media only screen and (min-width: 740px) {
   .page-header__logo {
+    width: 98.4px;
     width: 12.3rem;
   }
 }
-
-.page-header__crest {
+.page-header__logo img {
+  height: 100%;
+}
+.page-header__crest img {
+  height: 100%;
+}
+.page-header__crest img{
   margin-bottom: 0;
-  margin-right: 0.6rem;
+  margin-right: 8px;
+  margin-right: 1rem;
+  width: 24px;
   width: 3rem;
 }
 
 @media only screen and (min-width: 500px) {
-  .page-header__crest {
+  .page-header__crest img{
+    margin-right: 12px;
+    margin-right: 1.5rem;
+    width: 28.4px;
     width: 3.55rem;
   }
 }
 
 @media only screen and (min-width: 740px) {
-  .page-header__crest {
-    margin-right: 1rem;
+  .page-header__crest img{
+    margin-right: 16px;
+    margin-right: 2rem;
+    width: 36.4px;
     width: 4.55rem;
   }
 }
 @media only screen and (min-width: 1300px) {
   .page-header__crest {
-    position: absolute;
-    left: -86px;
+    margin-left: -118px;
   }
 }
 
@@ -97,8 +114,11 @@
 }
 @media only screen and (max-width: 499px) {
   .page-header__btn {
+    font-size: 6.4px;
     font-size: 0.8rem;
+    padding: 2.4px 4px !important;
     padding: 0.3rem 0.5rem !important;
+    margin: 0 0 0 8px;
     margin: 0 0 0 1rem;
   }
 }
@@ -113,21 +133,9 @@
 }
 
 .lock:before {
-  background: #fff url("/img/icons/icons--lock.svg") no-repeat center center;
+  background: #fff url(img/icons--lock.svg) no-repeat center center;
 }
 
 .external:after {
-  background: url("/img/icons/icons--external-link.svg") no-repeat center center;
-}
-
-#badges {
-  margin-bottom: 20px;
-}
-
-#badges img {
-  margin-right: 5px;
-}
-
-#census-access-code-answer legend {
-  float: none;
+  background: url(img/icons--external-link.svg) no-repeat center center;
 }

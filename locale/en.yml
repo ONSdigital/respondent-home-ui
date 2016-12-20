@@ -35,7 +35,7 @@ en:
   contact_success_paragraph1: "Thank you for requesting an individual questionnaire by providing your details. You will receive a text message containing your unique access code within the next 24 hours."
 
   # Home page.
-  home_alert_heading_1: "This page has 1 error"
+  home_alert_heading1: "This page has 1 error"
   home_alert_paragraph1: "This <strong>must be corrected</strong> to continue."
   home_heading1: "Welcome to the 2017 Census Test"
   home_paragraph1: "By completing this questionnaire you will be joining others in your local area who are helping us to plan for the next census."

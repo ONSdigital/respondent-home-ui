@@ -1,10 +1,6 @@
 get '/individualquestionnaire' do
   erb :contact, locals: { title: I18n.t('contact_heading1'),
-                          host: settings.host,
-                          built: @built,
-                          commit: @commit,
                           locale: @locale,
-                          environment: settings.environment,
                           analytics_account: settings.analytics_account }
 end
 
@@ -25,11 +21,7 @@ post '/individualquestionnaire' do
 
   if form.failed?
     output = erb :contact, locals: { title: I18n.t('contact_heading1'),
-                                     host: settings.host,
-                                     built: @built,
-                                     commit: @commit,
                                      locale: @locale,
-                                     environment: settings.environment,
                                      analytics_account: settings.analytics_account }
     fill_in_form(output)
   else
@@ -49,11 +41,7 @@ post '/individualquestionnaire' do
                            settings.notify_template_id, settings.notify_api_key)
 
     erb :contact_success, locals: { title: I18n.t('contact_success_heading1'),
-                                    host: settings.host,
-                                    built: @built,
-                                    commit: @commit,
                                     locale: @locale,
-                                    environment: settings.environment,
                                     analytics_account: settings.analytics_account }
   end
 end

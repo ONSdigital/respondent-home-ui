@@ -43,7 +43,6 @@ en:
   home_alert_heading1: "This page has 1 error"
   home_alert_paragraph1: "This <strong>must be corrected</strong> to continue."
   home_heading1: "Welcome to the 2017 Census Test"
-  home_paragraph1: "Request a personal and confidential form"
   home_iac_instructions: "The unique access code is printed on your invitation letter."
   home_iac_invalid: "Please provide the unique access code printed on your invitation letter."
   home_iac_legend: "Enter your unique access code below"

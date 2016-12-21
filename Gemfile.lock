@@ -16,6 +16,7 @@ GEM
       hpricot
       rack
     hpricot (0.8.6)
+    http-accept (1.6.0)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     i18n (0.7.0)
@@ -86,6 +87,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  http-accept
   i18n
   iac-validator!
   json

@@ -30,7 +30,6 @@ cy:
 
   # Personal and Confidential Form confirmation page.
   contact_success_heading1: "Diolch yn fawr"
-  contact_success_heading2: "translation pending"
   contact_success_paragraph1: "translation pending"
 
   # System error page.

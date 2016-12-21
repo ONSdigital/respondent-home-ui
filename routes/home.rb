@@ -1,7 +1,8 @@
 require 'sinatra'
+require 'http/accept/languages'
 require 'sinatra/content_for2'
-require 'sinatra/flash'
 require 'sinatra/formkeeper'
+require 'sinatra/flash'
 require 'user_agent_parser'
 require 'iac-validator'
 require 'rest_client'
@@ -66,7 +67,9 @@ helpers do
     OpenSSL::PKey::RSA.new(File.read(File.join(__dir__, file)), passphrase)
   end
 
-  def locale_from_url
+  def locale_from_request
+    languages = HTTP::Accept::Languages.parse(request.env['HTTP_ACCEPT_LANGUAGE'])
+    return 'cy' if languages.first.locale.include?('cy')
     request.url.include?('cyfrifiad') ? 'cy' : 'en'
   end
 
@@ -80,7 +83,7 @@ before do
 
   # Need to get the correct client IP address when behind a load balancer.
   @client_ip = request.env['HTTP_X_FORWARDED_FOR'] || request.ip
-  @locale    = locale_from_url
+  @locale    = locale_from_request
   I18n.default_locale = @locale
   I18n.locale         = @locale
 end

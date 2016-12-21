@@ -35,10 +35,10 @@ cy:
   contact_success_paragraph1: "translation pending"
 
   # System error page.
-  error_paragraph1: "translation pending"
-  error_paragraph2: "translation pending"
-  error_system_info: "translation pending"
-  error_system_info_unknown_os_version: "translation pending"
+  error_paragraph1: "<strong>Ymddiheuriadau, yn anffodus mae rhywbeth wedi mynd o le.</strong>"
+  error_paragraph2: "Os yw&rsqou;r gwall yn parhau galwch y rhif ff&ocirc;n isod os gwelwch yn dda."
+  error_system_info: "Manylion eich system"
+  error_system_info_unknown_os_version: "(fersiwn anadnabyddus)"
 
   # Home page.
   home_alert_heading1: "Mae gan y dudalen hon 1 gwall"

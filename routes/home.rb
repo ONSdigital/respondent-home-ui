@@ -40,13 +40,6 @@ set :private_key_passphrase, config_file['eq-service']['private_key_passphrase']
 # Configure logging.
 SuckerPunch.logger = Logger.new($stdout)
 
-# Display badges with the host, built date, commit SHA and environment in
-# non-production environments.
-set :host,        `hostname`.strip.gsub(/-/, '--')
-set :built,       config_file['badges']['built']
-set :commit,      config_file['badges']['commit']
-set :environment, config_file['badges']['environment']
-
 # Configure internationalisation.
 I18n.load_path = Dir['locale/*.yml']
 I18n.backend.load_translations
@@ -90,22 +83,11 @@ before do
   @locale    = locale_from_url
   I18n.default_locale = @locale
   I18n.locale         = @locale
-
-  @built  = settings.built
-  @commit = settings.commit
-
-  # Display the correct built date and commit SHA when running locally.
-  @built = Date.today.strftime('%d_%b_%Y') if @built == '01_Jan_1970'
-  @commit = `git rev-parse --short HEAD` if @commit == 'commit'
 end
 
 get '/' do
   erb :home, locals: { title: I18n.t('home_heading1'),
-                       host: settings.host,
-                       built: @built,
-                       commit: @commit,
                        locale: @locale,
-                       environment: settings.environment,
                        analytics_account: settings.analytics_account }
 end
 

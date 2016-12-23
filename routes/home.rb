@@ -123,13 +123,16 @@ post '/' do
       url = '/'
 
       if response.code == 404
+        logger.info "Attempt to use an invalid access code from #{@client_ip}"
         flash[:notice] = I18n.t('home_iac_invalid')
 
       # The IAC has no associated case.
       elsif response.code == 500 &&
             case_summary['error']['message'].include?('Case not found')
+        logger.info "Attempt to use an access code with no associated case from #{@client_ip}"
         flash[:notice] = I18n.t('home_iac_invalid')
       elsif case_summary['active'] == false
+        logger.info "Attempt to use an inactive access code from #{@client_ip}"
         flash[:notice] = I18n.t('home_iac_used')
       else
         public_key  = load_key_from_file(settings.public_key)
@@ -137,7 +140,7 @@ post '/' do
                                          settings.private_key_passphrase)
 
         claims = Claims.new(case_summary['caseRef'], case_summary['questionSet'], @locale)
-        logger.info "Redirecting #{@client_ip} to eQ, tx_id='#{claims.transaction_id}'"
+        logger.info "Access code valid; redirecting #{@client_ip} to eQ, tx_id='#{claims.transaction_id}'"
         token  = JWEToken.new(KEY_ID, claims.to_hash, public_key, private_key)
         url    = "#{settings.eq_protocol}://#{settings.eq_host}:#{settings.eq_port}/session?token=#{token.value}"
       end

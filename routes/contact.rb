@@ -40,8 +40,12 @@ post '/individualquestionnaire' do
     EmailJob.perform_async(settings.notify_email_address, contact_data,
                            settings.notify_template_id, settings.notify_api_key)
 
-    erb :contact_success, locals: { title: I18n.t('contact_success_heading1'),
-                                    locale: @locale,
-                                    analytics_account: settings.analytics_account }
+    redirect '/thankyou'
   end
+end
+
+get '/thankyou' do
+  erb :contact_success, locals: { title: I18n.t('contact_success_heading1'),
+                                  locale: @locale,
+                                  analytics_account: settings.analytics_account }
 end

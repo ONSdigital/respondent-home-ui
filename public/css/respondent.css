@@ -142,4 +142,19 @@
 
 #census-access-code .field input{
   -ms-flex: 0 1 auto;
+  font-size: 1rem;
+  text-align: center;
+  letter-spacing: 0.2rem;
+  padding-left: 0.7rem;
+  font-family: monaco, Consolas, "Lucida Console", monospace;
+}
+@media only screen and (min-width: 500px) {
+  #census-access-code .field input{
+    font-size: 1.5rem;
+    letter-spacing: 0.5rem;
+    padding-left: 1rem;
+  }
+}
+.input {
+  border-color: #999999;
 }

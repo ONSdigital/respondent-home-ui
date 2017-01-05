@@ -45,9 +45,9 @@ en:
   home_iac_instructions: "The unique access code is printed on your invitation letter."
   home_iac_invalid: "Please provide the unique access code printed on your invitation letter."
   home_iac_legend: "Enter your unique access code below"
-  home_iac_segment1: "First four characters of code"
-  home_iac_segment2: "Second four characters of code"
-  home_iac_segment3: "Third four characters of code"
+  home_iac_segment1: "Enter the first four characters of the access code"
+  home_iac_segment2: "Enter the next four characters of the access code"
+  home_iac_segment3: "Enter the last four characters of the access code"
   home_iac_used: "The unique access code entered has already been used."
   home_start_button: "Start"
 

@@ -68,8 +68,10 @@ helpers do
   end
 
   def locale_from_request
-    languages = HTTP::Accept::Languages.parse(request.env['HTTP_ACCEPT_LANGUAGE'])
-    return 'cy' if languages.first.locale.include?('cy')
+    if request.env['HTTP_ACCEPT_LANGUAGE']
+      languages = HTTP::Accept::Languages.parse(request.env['HTTP_ACCEPT_LANGUAGE'])
+      return 'cy' if languages.first.locale.include?('cy')
+    end
     request.url.include?('cyfrifiad') ? 'cy' : 'en'
   end
 

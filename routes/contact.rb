@@ -37,9 +37,7 @@ post '/individualquestionnaire' do
       mobile:     h(form[:mobile])
     }
 
-    EmailJob.perform_async(settings.notify_email_address, contact_data,
-                           settings.notify_template_id, settings.notify_api_key)
-
+    S3Job.perform_async(settings.aws_s3_bucket, contact_data)
     redirect '/thankyou'
   end
 end

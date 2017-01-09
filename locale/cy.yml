@@ -1,76 +1,76 @@
 ---
 # Welsh language strings.
 cy:
-  about_census: "Mae&rsquo;r Cyfrifiad yn Lloegr a Chymru yn chael eu drefnu gan y <a href=\"https://www.ons.gov.uk/\" target=\"blank\" rel=\"noopener noreferrer\"> Swyddfa Ystadegau Gwladol</a>."
-  confidentiality_statement: "Mae eich gwybodaeth bersonol wedi eu diogelu gan y gyfraith ac mi fydd yn cael eu cadw’n cyfrinachol."
+  about_census: "<a href=\"https://www.ons.gov.uk/\" target=\"blank\" rel=\"noopener noreferrer\">Y Swyddfa Ystadegau Gwladol (SYG)</a> sy&rsquo;n trefnu&rsquo;r Cyfrifiad yng Nghymru a Lloegr."
+  confidentiality_statement: "Mae eich gwybodaeth bersonol yn cael ei warchod gan y gyfraith a bydd yn cael ei gadw&rsquo;n gyfrinachol"
   home_link: "Hafan"
 
-  # Personal and Confidential Form page.
+  # Personal and Confidential Form page. / Tudalen Ffurflen bersonol a chyfrinachol.
   contact_alert_heading1a: "Mae gan y dudalen hon"
-  contact_alert_heading1b: "gwall"
-  contact_alert_heading1c: "gwallau"
-  contact_alert_paragraph1: "<strong>Mae angen i rhain cael eu cywiro</strong> i parhau"
+  contact_alert_heading1b: "wall"
+  contact_alert_heading1c: "wallau"
+  contact_alert_paragraph1: "Cywirwch y rhain i barhau"
   contact_field_building: "Adeilad"
   contact_field_county: "Sir (dewisol)"
   contact_field_first_name: "Enw cyntaf"
-  contact_field_last_name: "Enw olaf"
-  contact_field_mandatory: "Mae&rsquo;r maes yma yn gorfodol"
+  contact_field_last_name: "Cyfenw"
+  contact_field_mandatory: "Rhaid cwblhau&rsquo;r maes yma"
   contact_field_mobile1: "Rhif ff&ocirc;n symudol"
-  contact_field_mobile2: "Bydd eich c&ocirc;d mynediad unigryw yn cael eu danfon i&rsquo;r rhif ff&ocirc;n yma."
-  contact_field_mobile_invalid: "Nid yw&rsquo;r rhif ff&ocirc;n symudol yma yn un ddilys."
-  contact_field_postcode: "C&ocirc;d post"
-  contact_field_postcode_invalid: "Nid yw&rsquo;r c&ocirc;d post yn un ddilys."
+  contact_field_mobile2: "Bydd eich cod mynediad unigryw yn cael ei ddanfon gan neges destun i&rsquo;r rhif ff&ocirc;n yma"
+  contact_field_mobile_invalid: "Nid yw&rsquo;r rhif ff&ocirc;n symudol hwn yn ddilys. Darparwch rif ff&ocirc;n symudol DU ddilys os gwelwch yn dda."
+  contact_field_postcode: "Cod post"
+  contact_field_postcode_invalid: "Nid yw&rsquo;r cod post hwn yn ddilys. Darparwch god post DU dilys os gwelwch yn dda."
   contact_field_street: "Stryd"
   contact_field_town: "Tref neu ddinas"
-  contact_heading1: "Ceisiwch am Ffurflen Bersonol ac Cyfrinachol"
-  contact_legend: "Ceisiwch am Ffurflen Unigol"
-  contact_paragraph1: "translation pending"
-  contact_paragraph2: "translation pending"
-  contact_send_button: "Danfonwch Cais"
+  contact_heading1: "Ceisiwch am Ffurflen Bersonol a Chyfrinachol"
+  contact_legend: "Ceisiwch am Holiadur i Unigolyn"
+  contact_paragraph1: "Mae&rsquo;r ffurflen bersonol yn ffordd i chi gadw eich atebion yn gyfrinachol rhag gweddill eich cartref."
+  contact_paragraph2: "Llenwch eich manylion i dderbyn cod mynediad gan neges destun (text message). Defnyddiwch y cod hwn i gymryd rhan. Ni fydd eich manylion yn cael eu rhannu gyda&rsquo;r person a gwblhaodd eich ffurflen gartref. Ni fyddwn ni&rsquo;n dweud wrthynt eich bod wedi gofyn am ffurflen bersonol."
+  contact_send_button: "Danfonwch Gais"
 
-  # Personal and Confidential Form confirmation page.
+  # Personal and Confidential Form confirmation page. / Tudalen cadarnhad Ffurflen Bersonol a Chyfrinachol.
   contact_success_heading1: "Diolch yn fawr"
-  contact_success_paragraph1: "translation pending"
+  contact_success_paragraph1: "Diolch am geisio am ffurflen bersonol gan ddarparu&rsquo;ch manylion. Byddwch yn derbyn neges destun yn cynnwys eich cod mynediad o fewn y 24 awr nesaf."
 
-  # System error page.
-  error_paragraph1: "<strong>Ymddiheuriadau, yn anffodus mae rhywbeth wedi mynd o le.</strong>"
-  error_paragraph2: "Os yw&rsqou;r gwall yn parhau galwch y rhif ff&ocirc;n isod os gwelwch yn dda."
+  # System error page. / Tudalen gwall system.
+  error_paragraph1: "<strong>Ymddiheuriadau, mae rhywbeth wedi mynd o le.</strong>"
+  error_paragraph2: "Os yw&rsquo;r broblem yn parhau ffoniwch y rhif ff&ocirc;n isod os gwelwch yn dda."
   error_system_info: "Manylion eich system"
   error_system_info_unknown_os_version: "(fersiwn anadnabyddus)"
 
-  # Home page.
-  home_alert_heading1: "Mae gan y dudalen hon 1 gwall"
-  home_alert_paragraph1: "Mae angen cywiro hyn i parhau"
-  home_heading1: "Croeso i&rsquo;r Cyfrifiad Prawf 2017"
-  home_iac_instructions: "Mae&rsquo;r c&ocirc;d mynediad unigryw wedi argraffu ar eich llythr gwahoddiad."
-  home_iac_invalid: "Cofnodwch eich c&ocirc;d mynediad unigryw argraffwyd ar eich llythr gwahoddiad."
-  home_iac_legend: "Cofnodwch eich c&ocirc;d mynediad unigryw isod"
-  home_iac_segment1: "Pedwar llythyren gyntaf o&rsquo;r c&ocirc;d"
-  home_iac_segment2: "Ail bedwar llythyren o&rsquo;r c&ocirc;d"
-  home_iac_segment3: "Trydedd bedwar llythyren o&rsquo;r c&ocirc;d"
-  home_iac_used: "Mae&rsquo;r c&ocirc;d unigryw a cofnodwyd wedi&rsquo;u ddefnyddio yn barod."
+  # Home page. / Hafan.
+  home_alert_heading1: "Mae un gwall ar y dudalen hon"
+  home_alert_paragraph1: "Cywirwch hwn i barhau."
+  home_heading1: "Croeso i&rsquo;r Prawf Cyfrifiad 2017"
+  home_iac_instructions: "Mae&rsquo;r cod mynediad unigryw wedi&rsquo;i hargraffu ar eich llythyr gwahoddiad."
+  home_iac_invalid: "Darparwch y cod mynediad unigryw sydd wedi&rsquo;i hargraffu ar eith llythyr gwahoddiad."
+  home_iac_legend: "Cofnodwch eich cod mynediad unigryw isod"
+  home_iac_segment1: "Cofnodwch bedair llythyren gyntaf y cod"
+  home_iac_segment2: "Cofnodwch bedair llythyren nesaf y cod"
+  home_iac_segment3: "Cofnodwch bedair llythyren olaf y cod"
+  home_iac_used: "Mae&rsquo;r cod mynediad unigryw rydych chi wedi&rsquo;i gofnodi wedi ei ddefnyddio yn barod."
   home_start_button: "Dechrau"
 
-  # HTTP 500 error page.
+  # HTTP 500 error page. / Tudalen gwall HTTP 500
   internal_server_error_heading1: "Gwall 500"
 
-  # Layout view template.
-  layout_call: "Galwch"
-  layout_cookie_notice: "Mae Cyfrifiad Prawf yn defnyddio cwcis. <a href=\"https://www.ons.gov.uk/help/cookiesandprivacy\" target=\"blank\" rel=\"noopener noreferrer\">Darganfyddwch mwy o wybodaeth am cwcis.</a>"
-  layout_help: "Cymorth -"
-  layout_help_button: "Cymorth"
-  layout_help_call: "Am cymorth galwch"
+  # Layout view template. / Templed golwg llunwedd
+  layout_call: "Ffoniwch"
+  layout_cookie_notice: "Mae'r Prawf Cyfrifiad yn defnyddio cwcis. <a href=\"https://www.ons.gov.uk/help/cookiesandprivacy\" target=\"blank\" rel=\"noopener noreferrer\">Darganfyddwch mwy am gwcis.</a>"
+  layout_help: "Help a Chymorth -"
+  layout_help_button: "Help<span> a chymorth</span>"
+  layout_help_call: "I gael help ffoniwch"
   layout_help_number: "0300 068 3001"
   layout_help_tel_url: "tel:03000683001"
   layout_image_census_alt: "Cyfrifiad Prawf 2017"
   layout_image_crown_alt: "Coron"
   layout_lang: "cy-gb"
-  layout_online_help: "Cymorth arlein"
+  layout_online_help: "Cymorth ar lein"
   layout_ons: "Swyddfa Ystadegau Gwladol"
   layout_link_accessibility: "Datganiad hygyrchedd"
   layout_link_privacy: "Preifatrwydd"
-  layout_link_terms: "Termau &amp; Amodau"
-  layout_skip_content: "Neidiwch at cynnwys"
+  layout_link_terms: "Termau ac Amodau"
+  layout_skip_content: "Ymlaen at y cynnwys"
 
-  # HTTP 404 error page.
+  # HTTP 404 error page. / # Tudalen gwall HTTP 404
   not_found_heading1: "Gwall 404"

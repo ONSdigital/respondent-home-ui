@@ -67,9 +67,9 @@ en:
   layout_lang: "en-gb"
   layout_online_help: "Online Help"
   layout_ons: "Office for National Statistics"
-  layout_link_accessibility: "Accessibility Statement"
+  layout_link_accessibility: "Accessibility"
   layout_link_privacy: "Privacy"
-  layout_link_terms: "Terms &amp; Conditions"
+  layout_link_terms: "Terms and Conditions"
   layout_skip_content: "Skip to content"
 
   # HTTP 404 error page.

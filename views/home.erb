@@ -5,11 +5,11 @@
 
 <% if flash[:notice] %>
 <div class="u-mt-s">
-  <div class="alert alert--error">
-    <div class="alert__header">
-      <h1 class="alert__title venus"><%= I18n.t 'home_alert_heading1' %></h1>
+  <div class="panel panel--error">
+    <div class="panel__header">
+      <h1 class="panel__title venus"><%= I18n.t 'home_alert_heading1' %></h1>
     </div>
-    <div class="alert__body">
+    <div class="panel__body">
       <p class="mars"><%= I18n.t 'home_alert_paragraph1' %></p>
       <ul class="list list--bare">
         <li class="list__item mars">1) <%= flash[:notice] %></li>
@@ -19,14 +19,14 @@
 </div>
 <% end %>
 
-<div class="header">
+<div>
   <h1 class="saturn"><%= I18n.t 'home_heading1' %></h1>
   <form action="/" class="form qa-questionnaire-form" role="form" method="post" novalidate="">
     <div class="group" id="household-and-accommodation">
       <div class="block" id="census-access-code">
         <div class="section" id="census-access-code-section">
           <div class="question" id="census-access-code-question">
-            <div class="alert alert--simple alert--neutral" id="question-guidance-census-access-code-question">
+            <div class="panel panel--simple panel--neutral" id="question-guidance-census-access-code-question">
               <div class="question__answers">
                 <div class="question__answer">
                   <div class="answer answer--integer " id="census-access-code-answer">

@@ -4,6 +4,7 @@ require_relative '../lib/configuration'
 
 class ConfigurationTest < Test::Unit::TestCase
   def setup
+    ENV['AWS_S3_BUCKET']                        = 'AWS S3 bucket'
     ENV['RESPONDENT_HOME_ANALYTICS_ACCOUNT']    = 'Analytics account'
     ENV['RESPONDENT_HOME_EQ_HOST']              = 'eQ host'
     ENV['RESPONDENT_HOME_EQ_PORT']              = 'eQ port'
@@ -13,14 +14,15 @@ class ConfigurationTest < Test::Unit::TestCase
     ENV['RESPONDENT_HOME_IAC_SERVICE_PROTOCOL'] = 'IAC service protocol'
     ENV['RESPONDENT_HOME_IAC_SERVICE_USER']     = 'IAC service user'
     ENV['RESPONDENT_HOME_IAC_SERVICE_PASSWORD'] = 'IAC service password'
-    ENV['RESPONDENT_HOME_NOTIFY_API_KEY']       = 'Notify API key'
-    ENV['RESPONDENT_HOME_NOTIFY_EMAIL_ADDRESS'] = 'Notify email address'
-    ENV['RESPONDENT_HOME_NOTIFY_TEMPLATE_ID']   = 'Notify template ID'
     @configuration = Configuration.new(ENV)
   end
 
   def test_analytics_account
     assert_equal 'Analytics account', @configuration.analytics_account
+  end
+
+  def test_aws_s3_bucket
+    assert_equal 'AWS S3 bucket', @configuration.aws_s3_bucket
   end
 
   def test_eq_host
@@ -53,17 +55,5 @@ class ConfigurationTest < Test::Unit::TestCase
 
   def test_iac_service_password
     assert_equal 'IAC service password', @configuration.iac_service_password
-  end
-
-  def test_notify_api_key
-    assert_equal 'Notify API key', @configuration.notify_api_key
-  end
-
-  def test_notify_email_address
-    assert_equal 'Notify email address', @configuration.notify_email_address
-  end
-
-  def test_notify_template_id
-    assert_equal 'Notify template ID', @configuration.notify_template_id
   end
 end

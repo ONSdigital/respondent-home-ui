@@ -21,7 +21,7 @@ SESSION_EXPIRATION_PERIOD = 60 * 30
 # Load configuration from environment variables and configuration file.
 config = Configuration.new(ENV)
 set :analytics_account,            config.analytics_account
-set :aws_bucket,                   config.aws_bucket
+set :aws_s3_bucket,                config.aws_s3_bucket
 set :eq_host,                      config.eq_host
 set :eq_port,                      config.eq_port
 set :eq_protocol,                  config.eq_protocol

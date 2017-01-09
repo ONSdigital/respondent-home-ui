@@ -4,8 +4,8 @@ require_relative '../lib/configuration'
 
 class ConfigurationTest < Test::Unit::TestCase
   def setup
+    ENV['AWS_S3_BUCKET']                        = 'AWS S3 bucket'
     ENV['RESPONDENT_HOME_ANALYTICS_ACCOUNT']    = 'Analytics account'
-    ENV['RESPONDENT_HOME_AWS_BUCKET']           = 'AWS bucket'
     ENV['RESPONDENT_HOME_EQ_HOST']              = 'eQ host'
     ENV['RESPONDENT_HOME_EQ_PORT']              = 'eQ port'
     ENV['RESPONDENT_HOME_EQ_PROTOCOL']          = 'eQ protocol'
@@ -21,8 +21,8 @@ class ConfigurationTest < Test::Unit::TestCase
     assert_equal 'Analytics account', @configuration.analytics_account
   end
 
-  def test_aws_bucket
-    assert_equal 'AWS bucket', @configuration.aws_bucket
+  def test_aws_s3_bucket
+    assert_equal 'AWS S3 bucket', @configuration.aws_s3_bucket
   end
 
   def test_eq_host

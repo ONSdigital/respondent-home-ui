@@ -37,7 +37,7 @@ post '/individualquestionnaire' do
       mobile:     h(form[:mobile])
     }
 
-    S3Job.perform_async(settings.aws_bucket, contact_data)
+    S3Job.perform_async(settings.aws_s3_bucket, contact_data)
     redirect '/thankyou'
   end
 end

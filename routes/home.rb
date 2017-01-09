@@ -3,6 +3,7 @@ require 'http/accept/languages'
 require 'sinatra/content_for2'
 require 'sinatra/formkeeper'
 require 'sinatra/flash'
+require 'syslog/logger'
 require 'user_agent_parser'
 require 'iac-validator'
 require 'rest_client'
@@ -16,6 +17,7 @@ require_relative '../lib/s3_job'
 require_relative '../lib/claims'
 
 KEY_ID                    = 'EDCRRM'.freeze
+PROGRAM                   = 'respondenthome'.freeze
 SESSION_EXPIRATION_PERIOD = 60 * 30
 
 # Load configuration from environment variables and configuration file.
@@ -37,7 +39,8 @@ set :private_key,            config_file['eq-service']['private_key']
 set :private_key_passphrase, config_file['eq-service']['private_key_passphrase']
 
 # Configure logging.
-SuckerPunch.logger = Logger.new($stdout)
+logger = Syslog::Logger.new(PROGRAM, Syslog::LOG_AUTHPRIV)
+SuckerPunch.logger = Syslog::Logger.new(PROGRAM)
 
 # Configure internationalisation.
 I18n.load_path = Dir['locale/*.yml']

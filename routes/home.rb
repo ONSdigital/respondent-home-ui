@@ -40,7 +40,7 @@ set :private_key_passphrase, config_file['eq-service']['private_key_passphrase']
 
 # Configure logging.
 logger = Syslog::Logger.new(PROGRAM, Syslog::LOG_AUTHPRIV)
-SuckerPunch.logger = Syslog::Logger.new(PROGRAM)
+SuckerPunch.logger = Syslog::Logger.new(PROGRAM, Syslog::LOG_USER)
 
 # Configure internationalisation.
 I18n.load_path = Dir['locale/*.yml']

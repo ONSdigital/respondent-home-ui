@@ -12,7 +12,7 @@ require 'json'
 require 'yaml'
 
 require_relative '../lib/configuration'
-require_relative '../lib/email_job'
+require_relative '../lib/s3_job'
 require_relative '../lib/claims'
 
 KEY_ID                    = 'EDCRRM'.freeze
@@ -21,6 +21,7 @@ SESSION_EXPIRATION_PERIOD = 60 * 30
 # Load configuration from environment variables and configuration file.
 config = Configuration.new(ENV)
 set :analytics_account,            config.analytics_account
+set :aws_s3_bucket,                config.aws_s3_bucket
 set :eq_host,                      config.eq_host
 set :eq_port,                      config.eq_port
 set :eq_protocol,                  config.eq_protocol
@@ -29,9 +30,6 @@ set :iac_service_port,             config.iac_service_port
 set :iac_service_protocol,         config.iac_service_protocol
 set :iac_service_user,             config.iac_service_user
 set :iac_service_password,         config.iac_service_password
-set :notify_api_key,               config.notify_api_key
-set :notify_email_address,         config.notify_email_address
-set :notify_template_id,           config.notify_template_id
 
 config_file = YAML.load_file(File.join(__dir__, '../config.yml'))
 set :public_key,             config_file['eq-service']['public_key']
@@ -68,8 +66,10 @@ helpers do
   end
 
   def locale_from_request
-    languages = HTTP::Accept::Languages.parse(request.env['HTTP_ACCEPT_LANGUAGE'])
-    return 'cy' if languages.first.locale.include?('cy')
+    if request.env['HTTP_ACCEPT_LANGUAGE']
+      languages = HTTP::Accept::Languages.parse(request.env['HTTP_ACCEPT_LANGUAGE'])
+      return 'cy' if languages.first.locale.include?('cy')
+    end
     request.url.include?('cyfrifiad') ? 'cy' : 'en'
   end
 

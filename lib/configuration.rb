@@ -1,6 +1,7 @@
 # Simple class to centralise access to configuration.
 class Configuration
   attr_reader :analytics_account,
+              :aws_s3_bucket,
               :eq_host,
               :eq_port,
               :eq_protocol,
@@ -8,14 +9,11 @@ class Configuration
               :iac_service_port,
               :iac_service_protocol,
               :iac_service_user,
-              :iac_service_password,
-              :notify_api_key,
-              :notify_email_address,
-              :notify_template_id
+              :iac_service_password
 
-  # rubocop:disable Metrics/AbcSize
   def initialize(env)
     @analytics_account    = env['RESPONDENT_HOME_ANALYTICS_ACCOUNT']
+    @aws_s3_bucket        = env['AWS_S3_BUCKET']
     @eq_host              = env['RESPONDENT_HOME_EQ_HOST']
     @eq_port              = env['RESPONDENT_HOME_EQ_PORT']
     @eq_protocol          = env['RESPONDENT_HOME_EQ_PROTOCOL']
@@ -24,9 +22,5 @@ class Configuration
     @iac_service_protocol = env['RESPONDENT_HOME_IAC_SERVICE_PROTOCOL']
     @iac_service_user     = env['RESPONDENT_HOME_IAC_SERVICE_USER']
     @iac_service_password = env['RESPONDENT_HOME_IAC_SERVICE_PASSWORD']
-    @notify_api_key       = env['RESPONDENT_HOME_NOTIFY_API_KEY']
-    @notify_email_address = env['RESPONDENT_HOME_NOTIFY_EMAIL_ADDRESS']
-    @notify_template_id   = env['RESPONDENT_HOME_NOTIFY_TEMPLATE_ID']
   end
-  # rubocop:enable Metrics/AbcSize
 end

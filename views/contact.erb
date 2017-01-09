@@ -1,14 +1,14 @@
 <% if form.failed? %>
 <div class="u-mt-s">
-  <div class="alert alert--error">
-    <div class="alert__header">
+  <div class="panel panel--error">
+    <div class="panel__header">
     <% if form.failed_fields.size == 1 %>
-      <h1 class="alert__title venus"><%= I18n.t 'contact_alert_heading1a' %> 1 <%= I18n.t 'contact_alert_heading1b' %></h1>
+      <h1 class="panel__title venus"><%= I18n.t 'contact_alert_heading1a' %> 1 <%= I18n.t 'contact_alert_heading1b' %></h1>
     <% else %>
-      <h1 class="alert__title venus"><%= I18n.t 'contact_alert_heading1a' %> <%= form.failed_fields.size %> <%= I18n.t 'contact_alert_heading1c' %></h1>
+      <h1 class="panel__title venus"><%= I18n.t 'contact_alert_heading1a' %> <%= form.failed_fields.size %> <%= I18n.t 'contact_alert_heading1c' %></h1>
     <% end %>
     </div>
-    <div class="alert__body">
+    <div class="panel__body">
       <p class="mars"><%= I18n.t 'contact_alert_paragraph1' %></p>
       <ul class="list list--bare">
     <% form.failed_fields.each.with_index(1) do |field_name, i| %>
@@ -36,7 +36,7 @@
 </div>
 <% end %>
 
-<div class="header">
+<div>
   <h1 class="saturn"><%= I18n.t 'contact_heading1' %></h1>
   <p class="mars"><%= I18n.t 'contact_paragraph1' %></p>
   <p class="mars"><%= I18n.t 'contact_paragraph2' %></p>
@@ -52,13 +52,13 @@
                 <div class="question__answer">
                 <% if form.failed_on?(:first_name) %>
                   <div class="answer answer--textfield js-has-errors" id="first_name">
-                    <div class="alert alert--simple alert--error">
-                      <div class="alert__header">
+                    <div class="panel panel--simple panel--error">
+                      <div class="panel__header">
                         <ul class="list list--bare list--errors">
                           <li class="list__item mars" data-error-msg="<%= I18n.t 'contact_field_mandatory' %>" data-error="true" data-error-id="first_name"><%= I18n.t 'contact_field_mandatory' %></li>
                         </ul>
                       </div>
-                      <div class="alert__body">
+                      <div class="panel__body">
                 <% else %>
                   <div class="answer answer--textfield" id="first_name">
                 <% end %>
@@ -83,13 +83,13 @@
                 <div class="question__answer">
                 <% if form.failed_on?(:last_name) %>
                   <div class="answer answer--textfield js-has-errors" id="last_name">
-                    <div class="alert alert--simple alert--error">
-                      <div class="alert__header">
+                    <div class="panel panel--simple panel--error">
+                      <div class="panel__header">
                         <ul class="list list--bare list--errors">
                           <li class="list__item mars" data-error-msg="<%= I18n.t 'contact_field_mandatory' %>" data-error="true" data-error-id="last_name"><%= I18n.t 'contact_field_mandatory' %></li>
                         </ul>
                       </div>
-                      <div class="alert__body">
+                      <div class="panel__body">
                 <% else %>
                   <div class="answer answer--textfield" id="last_name">
                 <% end %>
@@ -114,13 +114,13 @@
                 <div class="question__answer">
                 <% if form.failed_on?(:building) %>
                   <div class="answer answer--textfield js-has-errors" id="building">
-                    <div class="alert alert--simple alert--error">
-                      <div class="alert__header">
+                    <div class="panel panel--simple panel--error">
+                      <div class="panel__header">
                         <ul class="list list--bare list--errors">
                           <li class="list__item mars" data-error-msg="<%= I18n.t 'contact_field_mandatory' %>" data-error="true" data-error-id="building"><%= I18n.t 'contact_field_mandatory' %></li>
                         </ul>
                       </div>
-                      <div class="alert__body">
+                      <div class="panel__body">
                 <% else %>
                   <div class="answer answer--textfield" id="building">
                 <% end %>
@@ -145,13 +145,13 @@
                 <div class="question__answer">
                 <% if form.failed_on?(:street) %>
                   <div class="answer answer--textfield js-has-errors" id="street">
-                    <div class="alert alert--simple alert--error">
-                      <div class="alert__header">
+                    <div class="panel panel--simple panel--error">
+                      <div class="panel__header">
                         <ul class="list list--bare list--errors">
                           <li class="list__item mars" data-error-msg="<%= I18n.t 'contact_field_mandatory' %>" data-error="true" data-error-id="street"><%= I18n.t 'contact_field_mandatory' %></li>
                         </ul>
                       </div>
-                      <div class="alert__body">
+                      <div class="panel__body">
                 <% else %>
                   <div class="answer answer--textfield" id="street">
                 <% end %>
@@ -176,13 +176,13 @@
                 <div class="question__answer">
                 <% if form.failed_on?(:town) %>
                   <div class="answer answer--textfield js-has-errors" id="town">
-                    <div class="alert alert--simple alert--error">
-                      <div class="alert__header">
+                    <div class="panel panel--simple panel--error">
+                      <div class="panel__header">
                         <ul class="list list--bare list--errors">
                           <li class="list__item mars" data-error-msg="<%= I18n.t 'contact_field_mandatory' %>" data-error="true" data-error-id="town"><%= I18n.t 'contact_field_mandatory' %></li>
                         </ul>
                       </div>
-                      <div class="alert__body">
+                      <div class="panel__body">
                 <% else %>
                   <div class="answer answer--textfield" id="town">
                 <% end %>
@@ -224,8 +224,8 @@
                 <div class="question__answer">
                 <% if form.failed_on?(:postcode) %>
                   <div class="answer answer--textfield js-has-errors" id="postcode">
-                    <div class="alert alert--simple alert--error">
-                      <div class="alert__header">
+                    <div class="panel panel--simple panel--error">
+                      <div class="panel__header">
                         <ul class="list list--bare list--errors">
                         <% if form.failed_on?(:postcode, :present) %>
                           <li class="list__item mars" data-error-msg="<%= I18n.t 'contact_field_mandatory' %>" data-error="true" data-error-id="postcode"><%= I18n.t 'contact_field_mandatory' %></li>
@@ -234,7 +234,7 @@
                         <% end %>
                         </ul>
                       </div>
-                      <div class="alert__body">
+                      <div class="panel__body">
                 <% else %>
                   <div class="answer answer--textfield" id="postcode">
                 <% end %>
@@ -259,8 +259,8 @@
                 <div class="question__answer">
                 <% if form.failed_on?(:mobile) %>
                   <div class="answer answer--textfield js-has-errors" id="mobile">
-                    <div class="alert alert--simple alert--error">
-                      <div class="alert__header">
+                    <div class="panel panel--simple panel--error">
+                      <div class="panel__header">
                         <ul class="list list--bare list--errors">
                         <% if form.failed_on?(:mobile, :present) %>
                           <li class="list__item mars" data-error-msg="<%= I18n.t 'contact_field_mandatory' %>" data-error="true" data-error-id="mobile"><%= I18n.t 'contact_field_mandatory' %></li>
@@ -269,7 +269,7 @@
                         <% end %>
                         </ul>
                       </div>
-                      <div class="alert__body">
+                      <div class="panel__body">
                 <% else %>
                 <% end %>
                   <div class="answer answer--textfield" id="mobile">

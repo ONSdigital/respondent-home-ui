@@ -170,3 +170,6 @@
 .input {
   border-color: #999999;
 }
+.page__content{
+  overflow-x: visible;
+}

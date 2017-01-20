@@ -620,7 +620,7 @@ legend {
 }
 
 .svg-icons--caret-bottom, .svg-icons--caret-left, .svg-icons--caret-right, .svg-icons--caret-top, .svg-icons--check, .svg-icons--check-green, .svg-icons--chevron-bottom, .svg-icons--chevron-down, .svg-icons--chevron-left, .svg-icons--chevron-right, .svg-icons--chevron-top, .svg-icons--circle-check, .svg-icons--circle-x, .svg-icons--external-link, .svg-icons--guidance, .svg-icons--guidance-white, .svg-icons--info, .svg-icons--info-circle, .svg-icons--lock, .svg-icons--logo, .svg-icons--phone, .svg-icons--right-arrow, .svg-logo {
-  background: url("static/img/sprite.svg") no-repeat;
+  background: url("/s/img/sprite.svg") no-repeat;
 }
 
 .svg-icons--caret-bottom {

@@ -1,13 +1,13 @@
 @font-face {
   font-family: "Lato";
   font-weight: 400;
-  src: url("/fonts/lato/latolatin-regular-webfont.eot?") format("eot"), url("/fonts/lato/latolatin-regular-webfont.woff2") format("woff2"), url("/fonts/lato/latolatin-regular-webfont.woff") format("woff"), url("/fonts/lato/latolatin-regular-webfont.ttf") format("truetype"), url("/fonts/lato/latolatin-regular-webfont.svg#Lato") format("svg");
+  src: url("/s/fonts/lato/latolatin-regular-webfont.eot?") format("eot"), url("/s/fonts/lato/latolatin-regular-webfont.woff2") format("woff2"), url("/fonts/lato/latolatin-regular-webfont.woff") format("woff"), url("/fonts/lato/latolatin-regular-webfont.ttf") format("truetype"), url("/fonts/lato/latolatin-regular-webfont.svg#Lato") format("svg");
 }
 
 @font-face {
   font-family: "Lato";
   font-weight: 600;
-  src: url("/fonts/lato/latolatin-bold-webfont.eot?") format("eot"), url("/fonts/lato/latolatin-bold-webfont.woff2") format("woff2"), url("/fonts/lato/latolatin-bold-webfont.woff") format("woff"), url("/fonts/lato/latolatin-bold-webfont.ttf") format("truetype"), url("/fonts/lato/latolatin-bold-webfont.svg#Lato") format("svg");
+  src: url("/s/fonts/lato/latolatin-bold-webfont.eot?") format("eot"), url("/s/fonts/lato/latolatin-bold-webfont.woff2") format("woff2"), url("/fonts/lato/latolatin-bold-webfont.woff") format("woff"), url("/fonts/lato/latolatin-bold-webfont.ttf") format("truetype"), url("/fonts/lato/latolatin-bold-webfont.svg#Lato") format("svg");
 }
 
 .census-header__cookie{
@@ -141,11 +141,11 @@
 }
 
 .lock:before {
-  background: #fff url(/img/icons/icons--lock.svg) no-repeat center center;
+  background: #fff url(/s/img/icons/icons--lock.svg) no-repeat center center;
 }
 
 .external:after {
-  background: url(/img/icons/icons--external-link.svg) no-repeat center center;
+  background: url(/s/img/icons/icons--external-link.svg) no-repeat center center;
 }
 
 #census-access-code-answer legend {

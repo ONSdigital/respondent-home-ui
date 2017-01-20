@@ -6,10 +6,12 @@ class Claims
   attr_reader :transaction_id
 
   def initialize(case_reference, question_set, language_code)
-    @case_reference = case_reference.to_s
-    @question_set   = question_set.downcase
-    @language_code  = language_code
-    @transaction_id = SecureRandom.uuid
+    @case_reference  = case_reference.to_s
+    @question_set    = question_set.downcase
+    @language_code   = language_code
+    @region_code     = @question_set.include?('2') ? 'GB-WLS' : 'GB-ENG'
+    @sexual_identity = @question_set.end_with?('s')
+    @transaction_id  = SecureRandom.uuid
 
     if @question_set == 'hotel'
       @form_type = 'communal'
@@ -31,15 +33,19 @@ class Claims
       period_str: '',
       ref_p_start_date: '2000-01-01',
       ref_p_end_date: '2000-01-01',
-      region_code: @question_set.include?('2') ? 'GB-WLS' : 'GB-ENG',
+      region_code: @region_code,
       ru_name: '',
       ru_ref: @case_reference,
       return_by: '2000-01-01',
       tx_id: @transaction_id,
       user_id: '',
       variant_flags: {
-        sexual_identity: @question_set.end_with?('s')
+        sexual_identity: @sexual_identity
       }
     }
+  end
+
+  def to_s
+    "form_type=#{@form_type}, language_code=#{@language_code}, region_code=#{@region_code}, si=#{@sexual_identity}, tx_id=#{@transaction_id}"
   end
 end

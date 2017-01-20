@@ -143,7 +143,7 @@ post '/' do
                                          settings.private_key_passphrase)
 
         claims = Claims.new(case_summary['caseRef'], case_summary['questionSet'], @locale)
-        logger.info "Access code valid; redirecting #{@client_ip} to eQ, tx_id='#{claims.transaction_id}'"
+        logger.info "Access code valid; redirecting #{@client_ip} to eQ, #{claims}"
         token  = JWEToken.new(KEY_ID, claims.to_hash, public_key, private_key)
         url    = "#{settings.eq_protocol}://#{settings.eq_host}:#{settings.eq_port}/session?token=#{token.value}"
       end

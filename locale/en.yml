@@ -25,7 +25,7 @@ en:
   contact_heading1: "Request a Personal and Confidential Form"
   contact_legend: "Request an Individual Questionnaire"
   contact_paragraph1: "The personal form is a way for you to keep your answers private from the rest of your household."
-  contact_paragraph2: "Fill in your details to have an access code sent to you by text. You can then use that code to take part. Your details will not be shared with the person who completed your household form. They will not be told that you have requested a personal form."
+  contact_paragraph2: "If you're 16 or over, fill in your details and we'll send you an access code by text. You can then use that code to take part. Your details will not be shared with the person who completed your household form. They will not be told that you have requested a personal form."
   contact_send_button: "Send request"
 
   # Personal and Confidential Form confirmation page.
@@ -41,9 +41,10 @@ en:
   # Home page.
   home_alert_heading1: "This page has 1 error"
   home_alert_paragraph1: "This <strong>must be corrected</strong> to continue."
+  home_contact_link: "If you'd like to keep your answers private from the rest of your household, you can get a <a href=\"/individualquestionnaire\">personal form</a>."
   home_heading1: "Welcome to the 2017 Census Test"
-  home_iac_instructions: "The unique access code is printed on your invitation letter."
-  home_iac_invalid: "Please provide the unique access code printed on your invitation letter."
+  home_iac_instructions: "The unique access code is printed on your invitation letter or form."
+  home_iac_invalid: "Please provide the unique access code printed on your invitation letter or form."
   home_iac_legend: "Enter your unique access code below"
   home_iac_segment1: "Enter the first four characters of the access code"
   home_iac_segment2: "Enter the next four characters of the access code"

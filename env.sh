@@ -7,6 +7,10 @@
 #
 # Author: John Topley (john.topley@ons.gov.uk)
 #
+export AWS_ACCESS_KEY_ID=
+export AWS_REGION=
+export AWS_S3_BUCKET=
+export AWS_SECRET_ACCESS_KEY=
 export RESPONDENT_HOME_ANALYTICS_ACCOUNT="UA-56892037-7"
 export RESPONDENT_HOME_EQ_HOST="eq-server"
 export RESPONDENT_HOME_EQ_PORT="5000"

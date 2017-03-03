@@ -19,13 +19,13 @@ cy:
   contact_field_mobile2: "Bydd eich cod mynediad unigryw yn cael ei ddanfon gan neges destun i&rsquo;r rhif ff&ocirc;n yma"
   contact_field_mobile_invalid: "Nid yw&rsquo;r rhif ff&ocirc;n symudol hwn yn ddilys. Darparwch rif ff&ocirc;n symudol DU ddilys os gwelwch yn dda."
   contact_field_postcode: "Cod post"
-  contact_field_postcode_invalid: "Nid yw&rsquo;r cod post hwn yn ddilys. Darparwch god post DU dilys os gwelwch yn dda."
+  contact_field_postcode_invalid: "Nid yw&rsquo;r cod post hwn yn ddilys. Darparwch g&ocirc;d post DU dilys os gwelwch yn dda."
   contact_field_street: "Stryd"
   contact_field_town: "Tref neu ddinas"
   contact_heading1: "Ceisiwch am Ffurflen Bersonol a Chyfrinachol"
   contact_legend: "Ceisiwch am Holiadur i Unigolyn"
   contact_paragraph1: "Mae&rsquo;r ffurflen bersonol yn ffordd i chi gadw eich atebion yn gyfrinachol rhag gweddill eich cartref."
-  contact_paragraph2: "Llenwch eich manylion i dderbyn cod mynediad gan neges destun (text message). Defnyddiwch y cod hwn i gymryd rhan. Ni fydd eich manylion yn cael eu rhannu gyda&rsquo;r person a gwblhaodd eich ffurflen gartref. Ni fyddwn ni&rsquo;n dweud wrthynt eich bod wedi gofyn am ffurflen bersonol."
+  contact_paragraph2: "Os ydych yn 16 oed neu&rsquo;n h&ycirc;n, llenwch eich manylion a byddwn yn anfon cod mynediad atoch drwy neges destun. Yna gallwch ddefnyddio&rsquo;r cod hwnnw i gymryd rhan. Ni chaiff eich manylion eu rhannu &acirc;&rsquo;r person a gwblhaodd ffurflen eich cartref. Ni fydd yn cael gwybod eich bod wedi gwneud cais am ffurflen bersonol."
   contact_send_button: "Danfonwch Gais"
 
   # Personal and Confidential Form confirmation page. / Tudalen cadarnhad Ffurflen Bersonol a Chyfrinachol.
@@ -41,9 +41,10 @@ cy:
   # Home page. / Hafan.
   home_alert_heading1: "Mae un gwall ar y dudalen hon"
   home_alert_paragraph1: "Cywirwch hwn i barhau."
+  home_contact_link: "Os byddai&rsquo;n well gennych gadw eich atebion yn breifat oddi wrth weddill aelodau&rsquo;r cartref, gallwch gael <a href=\"/individualquestionnaire\">ffurflen bersonol</a>."
   home_heading1: "Croeso i&rsquo;r Prawf Cyfrifiad 2017"
-  home_iac_instructions: "Mae&rsquo;r cod mynediad unigryw wedi&rsquo;i hargraffu ar eich llythyr gwahoddiad."
-  home_iac_invalid: "Darparwch y cod mynediad unigryw sydd wedi&rsquo;i hargraffu ar eith llythyr gwahoddiad."
+  home_iac_instructions: "Mae&rsquo;r cod mynediad unigryw wedi&rsquo;i argraffu ar eich llythyr gwahoddiad neu&rsquo;ch ffurflen."
+  home_iac_invalid: "Rhowch y cod mynediad unigryw sydd wedi&rsquo;i argraffu ar eich llythyr gwahoddiad neu&rsquo;ch ffurflen"
   home_iac_legend: "Cofnodwch eich cod mynediad unigryw isod"
   home_iac_segment1: "Cofnodwch bedair llythyren gyntaf y cod"
   home_iac_segment2: "Cofnodwch bedair llythyren nesaf y cod"
@@ -56,7 +57,7 @@ cy:
 
   # Layout view template. / Templed golwg llunwedd
   layout_call: "Ffoniwch"
-  layout_cookie_notice: "Mae'r Prawf Cyfrifiad yn defnyddio cwcis. <a href=\"https://www.ons.gov.uk/help/cookiesandprivacy\" target=\"blank\" rel=\"noopener noreferrer\">Darganfyddwch mwy am gwcis.</a>"
+  layout_cookie_notice: "Mae&rsquo;r Prawf Cyfrifiad yn defnyddio cwcis. <a href=\"https://www.ons.gov.uk/help/cookiesandprivacy\" target=\"blank\" rel=\"noopener noreferrer\">Darganfyddwch mwy am gwcis.</a>"
   layout_help: "Help a Chymorth -"
   layout_help_button: "Help<span> a chymorth</span>"
   layout_help_call: "I gael help ffoniwch"

@@ -25,9 +25,9 @@ class Claims
     {
       collection_exercise_sid: '0',
       eq_id: 'census',
-      exp: Time.now.to_i + 60 * 60,
+      exp: Time.now.utc.to_i + 60 * 60,
       form_type: @form_type,
-      iat: Time.now.to_i,
+      iat: Time.now.utc.to_i,
       jti: SecureRandom.uuid,
       language_code: @language_code,
       period_id: '',

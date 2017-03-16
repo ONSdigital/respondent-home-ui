@@ -4,6 +4,7 @@ require 'securerandom'
 # language code.
 class Claims
   attr_reader :transaction_id
+  TEN_MINUTES = 60 * 10
 
   def initialize(case_reference, question_set, language_code)
     @case_reference  = case_reference.to_s
@@ -25,7 +26,7 @@ class Claims
     {
       collection_exercise_sid: '0',
       eq_id: 'census',
-      exp: Time.now.utc.to_i + 60 * 60,
+      exp: Time.now.utc.to_i + TEN_MINUTES,
       form_type: @form_type,
       iat: Time.now.utc.to_i,
       jti: SecureRandom.uuid,

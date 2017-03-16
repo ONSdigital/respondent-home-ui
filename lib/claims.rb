@@ -28,6 +28,7 @@ class Claims
       exp: Time.now.to_i + 60 * 60,
       form_type: @form_type,
       iat: Time.now.to_i,
+      jti: SecureRandom.uuid,
       language_code: @language_code,
       period_id: '',
       period_str: '',

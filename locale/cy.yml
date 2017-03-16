@@ -56,12 +56,14 @@ cy:
   internal_server_error_heading1: "Gwall 500"
 
   # Layout view template. / Templed golwg llunwedd
+  layout_accessibility_url: "https://www.ons.gov.uk/help/accessibility"
   layout_call: "Ffoniwch"
   layout_cookie_notice: "Mae&rsquo;r Prawf Cyfrifiad yn defnyddio cwcis. <a href=\"https://www.ons.gov.uk/help/cookiesandprivacy\" target=\"blank\" rel=\"noopener noreferrer\">Darganfyddwch mwy am gwcis.</a>"
   layout_help: "Help a Chymorth -"
   layout_help_button: "Help<span> a chymorth</span>"
   layout_help_call: "I gael help ffoniwch"
   layout_help_number: "0300 068 3001"
+  layout_help_url: "https://www.ons.gov.uk/helpcyfrifiad"
   layout_help_tel_url: "tel:03000683001"
   layout_image_census_alt: "Cyfrifiad Prawf 2017"
   layout_image_crown_alt: "Coron"
@@ -71,7 +73,9 @@ cy:
   layout_link_accessibility: "Datganiad hygyrchedd"
   layout_link_privacy: "Preifatrwydd"
   layout_link_terms: "Termau ac Amodau"
+  layout_privacy_url: "https://cy.ons.gov.uk/census/censustransformationprogramme/privacystatement"
   layout_skip_content: "Ymlaen at y cynnwys"
+  layout_terms_and_conditions_url: "https://cy.ons.gov.uk/census/censustransformationprogramme/termsandconditions"
 
   # HTTP 404 error page. / # Tudalen gwall HTTP 404
   not_found_heading1: "Gwall 404"

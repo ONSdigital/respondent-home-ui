@@ -56,12 +56,14 @@ en:
   internal_server_error_heading1: "Error 500"
 
   # Layout view template.
+  layout_accessibility_url: "https://www.ons.gov.uk/help/accessibility"
   layout_call: "Call"
   layout_cookie_notice: "Census Test uses cookies. <a href=\"https://www.ons.gov.uk/help/cookiesandprivacy\" target=\"blank\" rel=\"noopener noreferrer\">Find out more about cookies.</a>"
   layout_help: "Help and Support –"
   layout_help_button: "Help<span> and support</span>"
   layout_help_call: "For help call"
   layout_help_number: "0300 068 3001"
+  layout_help_url: "https://www.ons.gov.uk/censushelp"
   layout_help_tel_url: "tel:03000683001"
   layout_image_census_alt: "2017 Census Test"
   layout_image_crown_alt: "Crown"
@@ -71,7 +73,9 @@ en:
   layout_link_accessibility: "Accessibility"
   layout_link_privacy: "Privacy"
   layout_link_terms: "Terms and Conditions"
+  layout_privacy_url: "https://www.ons.gov.uk/census/censustransformationprogramme/privacystatement"
   layout_skip_content: "Skip to content"
+  layout_terms_and_conditions_url: "https://www.ons.gov.uk/census/censustransformationprogramme/termsandconditions"
 
   # HTTP 404 error page.
   not_found_heading1: "Error 404"

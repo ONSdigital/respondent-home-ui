@@ -24,13 +24,15 @@ en:
   contact_field_town: "Town or city"
   contact_heading1: "Request a Personal and Confidential Form"
   contact_legend: "Request an Individual Questionnaire"
-  contact_paragraph1: "The personal form is a way for you to keep your answers private from the rest of your household."
-  contact_paragraph2: "If you're 16 or over, fill in your details and we'll send you an access code by text. You can then use that code to take part. Your details will not be shared with the person who completed your household form. They will not be told that you have requested a personal form."
+  contact_paragraph1: "You can request a personal form if your household has received a questionnaire or an invitation letter to take part in the test."
+  contact_paragraph2: "The personal form is a way for you to keep your answers private from the rest of your household."
+  contact_paragraph3: "If you're 16 or over, fill in your details and we'll send you an access code by text. You can then use that code to take part. Your details will not be shared with the person who completed your household form. They will not be told that you have requested a personal form."
+  contact_paragraph4: "You will not receive a code if you haven't received an invitation to take part in the test. <a href=\"https://www.ons.gov.uk/census/censustransformationprogramme/2017censustest/aboutthe2017censustest/gettingreadyforthe2021census#i-dont-have-a-letter-but-id-like-to-help\">What to do if you don't have a letter but you'd like to help</a>."
   contact_send_button: "Send request"
 
   # Personal and Confidential Form confirmation page.
   contact_success_heading1: "Thank You"
-  contact_success_paragraph1: "Thank you for requesting a personal form by providing your details. You will receive a text containing your access code within the next 24 hours."
+  contact_success_paragraph1: "Thank you for requesting a personal form by providing your details. You will receive a text containing your access code within the next 24 hours. You will not receive a code if you haven't received an invitation to take part in the test."
 
   # System error page.
   error_paragraph1: "<strong>Sorry, something has gone wrong.</strong>"

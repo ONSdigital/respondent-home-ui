@@ -24,13 +24,15 @@ cy:
   contact_field_town: "Tref neu ddinas"
   contact_heading1: "Ceisiwch am Ffurflen Bersonol a Chyfrinachol"
   contact_legend: "Ceisiwch am Holiadur i Unigolyn"
-  contact_paragraph1: "Mae&rsquo;r ffurflen bersonol yn ffordd i chi gadw eich atebion yn gyfrinachol rhag gweddill eich cartref."
-  contact_paragraph2: "Os ydych yn 16 oed neu&rsquo;n h&ycirc;n, llenwch eich manylion a byddwn yn anfon cod mynediad atoch drwy neges destun. Yna gallwch ddefnyddio&rsquo;r cod hwnnw i gymryd rhan. Ni chaiff eich manylion eu rhannu &acirc;&rsquo;r person a gwblhaodd ffurflen eich cartref. Ni fydd yn cael gwybod eich bod wedi gwneud cais am ffurflen bersonol."
+  contact_paragraph1: "Gallwch ofyn am ffurflen bersonol os ydy’ch cartref wedi derbyn holiadur neu lythyr gwahoddiad i gymryd rhan yn y prawf."
+  contact_paragraph2: "Mae&rsquo;r ffurflen bersonol yn ffordd i chi gadw eich atebion yn gyfrinachol rhag gweddill eich cartref."
+  contact_paragraph3: "Os ydych yn 16 oed neu&rsquo;n h&ycirc;n, llenwch eich manylion a byddwn yn anfon cod mynediad atoch drwy neges destun. Yna gallwch ddefnyddio&rsquo;r cod hwnnw i gymryd rhan. Ni chaiff eich manylion eu rhannu &acirc;&rsquo;r person a gwblhaodd ffurflen eich cartref. Ni fydd yn cael gwybod eich bod wedi gwneud cais am ffurflen bersonol."
+  contact_paragraph4: "Ni fyddwch yn derbyn cod os nad ydych wedi derbyn gwahoddiad i gymryd rhan yn y prawf. <a href=\"https://cy.ons.gov.uk/census/censustransformationprogramme/2017censustest/aboutthe2017censustest/gettingreadyforthe2021census#nid-wyf-wedi-derbyn-llythyr-ond-hoffwn-helpu\">Beth i wneud os nad oes gennych lythyr ond hoffech ein helpu</a>."
   contact_send_button: "Danfonwch Gais"
 
   # Personal and Confidential Form confirmation page. / Tudalen cadarnhad Ffurflen Bersonol a Chyfrinachol.
   contact_success_heading1: "Diolch yn fawr"
-  contact_success_paragraph1: "Diolch am geisio am ffurflen bersonol gan ddarparu&rsquo;ch manylion. Byddwch yn derbyn neges destun yn cynnwys eich cod mynediad o fewn y 24 awr nesaf."
+  contact_success_paragraph1: "Diolch am geisio am ffurflen bersonol gan ddarparu’ch manylion. Byddwch yn derbyn neges destun yn cynnwys eich cod mynediad o fewn y 24 awr nesaf. Ni fyddwch yn derbyn cod os nad ydych wedi derbyn gwahoddiad i gymryd rhan yn y prawf."
 
   # System error page. / Tudalen gwall system.
   error_paragraph1: "<strong>Ymddiheuriadau, mae rhywbeth wedi mynd o le.</strong>"

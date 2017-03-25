@@ -1,4 +1,5 @@
 require 'aws-sdk'
+require 'contact_data'
 
 # Sucker Punch job class for storing contact details in the background using
 # Amazon S3.
@@ -8,7 +9,10 @@ class S3Job
   # rubocop:disable Metrics/AbcSize
   def perform(bucket, contact_data)
     s3 = Aws::S3::Resource.new
-    object_name = "#{contact_data[:first_name].downcase}-#{contact_data[:last_name].downcase}-#{Time.now.to_i}.json"
+
+    # INC0039549: Force the S3 object name to be ASCII so the object creation
+    # event always fires.
+    object_name = "#{ContactData.new(contact_data).ascii_name}-#{Time.now.to_i}.json"
     object = s3.bucket(bucket).object(object_name)
     object.put(acl: 'authenticated-read',
                body: contact_data.to_json,

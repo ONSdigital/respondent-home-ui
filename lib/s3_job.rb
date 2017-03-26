@@ -12,7 +12,7 @@ class S3Job
 
     # INC0039549: Force the S3 object name to be ASCII so the object creation
     # event always fires.
-    object_name = "#{ContactData.new(contact_data).ascii_name}-#{Time.now.to_i}.json"
+    object_name = "#{ContactData.new(contact_data).ascii_name}-#{Time.now.utc.to_i}.json"
     object = s3.bucket(bucket).object(object_name)
     object.put(acl: 'authenticated-read',
                body: contact_data.to_json,

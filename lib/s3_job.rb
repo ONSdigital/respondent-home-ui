@@ -1,5 +1,6 @@
 require 'aws-sdk'
-require 'contact_data'
+
+require_relative 'contact_data'
 
 # Sucker Punch job class for storing contact details in the background using
 # Amazon S3.

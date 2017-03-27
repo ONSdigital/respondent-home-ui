@@ -10,6 +10,6 @@ class ContactDataTest < Test::Unit::TestCase
 
   def test_non_alphanumeric_name_replacement
     contact_data = { first_name: '+!"#$&\'()*+,:;=?', last_name: 'áëîòú' }
-    assert_equal '????????????????-?????', ContactData.new(contact_data).alphanumeric_name
+    assert_equal 'XXXXXXXXXXXXXXXX-XXXXX', ContactData.new(contact_data).alphanumeric_name
   end
 end

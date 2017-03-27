@@ -1,17 +1,13 @@
-require 'i18n'
 
-# Class for forcing a contact name to ASCII, ignoring spaces and multiple first
-# and last names.
+# Class for forcing a contact name to alphanumeric characters. Non-alphanumeric
+# characters are replaced with a dash (-).
 class ContactData
   def initialize(contact_data)
-    I18n.available_locales = [:en]
-    I18n.default_locale = :en
-    I18n.locale = :en
-    @first_first_name = contact_data[:first_name].strip.split(/\s+/).first.downcase
-    @first_last_name  = contact_data[:last_name].strip.split(/\s+/).first.downcase
+    @first_name = contact_data[:first_name].gsub(/[^A-Za-z0-9]/, '?').downcase
+    @last_name  = contact_data[:last_name].gsub(/[^A-Za-z0-9]/, '?').downcase
   end
 
-  def ascii_name
-    I18n.transliterate("#{@first_first_name}-#{@first_last_name}")
+  def alphanumeric_name
+    "#{@first_name}-#{@last_name}"
   end
 end

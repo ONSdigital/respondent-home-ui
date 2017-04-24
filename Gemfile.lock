@@ -1,6 +1,6 @@
 GEM
   remote: https://rubygems.org/
-  remote: http://rubygems.ctpdev.local/
+  remote: http://rubygems-sdc.onsdigital.uk/
   specs:
     activesupport (5.0.2)
       concurrent-ruby (~> 1.0, >= 1.0.2)
@@ -110,4 +110,4 @@ DEPENDENCIES
   user_agent_parser
 
 BUNDLED WITH
-   1.13.6
+   1.16.2

@@ -10,7 +10,7 @@ en:
   contact_alert_heading1b: "error"
   contact_alert_heading1c: "errors"
   contact_alert_paragraph1: "These <strong>must be corrected</strong> to continue."
-  contact_field_building: "Building"
+  contact_field_building: "House or flat number"
   contact_field_county: "County (optional)"
   contact_field_first_name: "First name"
   contact_field_last_name: "Last name"

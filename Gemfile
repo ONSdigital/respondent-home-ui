@@ -13,7 +13,7 @@ gem 'sinatra-formkeeper'
 gem 'sucker_punch', '~> 2.0'
 gem 'user_agent_parser'
 
-source 'http://rubygems.ctpdev.local' do
+source 'http://rubygems-sdc.onsdigital.uk/' do
   gem 'iac-validator'
 end
 

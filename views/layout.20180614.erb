@@ -1,0 +1,173 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html lang="<%= I18n.t 'layout_lang' %>" dir="ltr" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="<%= I18n.t 'layout_lang' %>" dir="ltr" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="<%= I18n.t 'layout_lang' %>" dir="ltr" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="<%= I18n.t 'layout_lang' %>" dir="ltr" class="no-js"> <!--<![endif]-->
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title><%= title %></title>
+    <meta content="" name="description">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <link rel="shortcut icon" href="favicon.ico">
+  <!--[if lt IE 9]>
+    <script src="/js/vendor/html5shiv.min.js?q=95ed16e2c89bb26d9c02129271468664828e4cee"></script>
+  <![endif]-->
+  <!--[if lte IE 9]>
+    <script src="/js/polyfills.js?q=95ed16e2c89bb26d9c02129271468664828e4cee"></script>
+  <![endif]-->
+  <!--[if gt IE 8]><!-->
+    <script>document.documentElement.className = document.documentElement.className.replace('no-js','has-js')</script>
+  <!--<![endif]-->
+  <!--[if (gt IE 9) | (IEMobile)]><!-->
+    <link href="/css/responsive.css" rel="stylesheet">
+  <!--<![endif]-->
+  <!--[if (lte IE 9) & (!IEMobile)]>
+    <link href="/css/fixed.min.css?q=95ed16e2c89bb26d9c02129271468664828e4cee" rel="stylesheet">
+  <![endif]-->
+
+
+<!--    <link href="/css/respondent.min.css" rel="stylesheet"> -->
+
+
+  </head>
+  <body>
+    <div class="page">
+    <div class="page__content">
+      <div class="skip">
+        <a class="skip__link" href="#main"><%= I18n.t 'layout_skip_content' %></a>
+      </div>
+      <div class="page__header">
+        <div class="header header--census">
+<!--
+          <div class="census-header__cookie">
+            <div class="container">
+              <p class="pluto"><%= I18n.t 'layout_cookie_notice' %></p>
+            </div>
+          </div>
+        -->
+        <!--
+          <div class="header__help is-closed js-help-body">
+            <div class="header__container container">
+              <div class="header__title"><%= I18n.t 'layout_help' %></div>
+                <ul class="header__nav nav nav--horizontal">
+                  <li class="nav__item">
+                    <span class="mars" role="presentation"><%= I18n.t 'layout_call' %> </span> <a class="venus nav__link" href="<%= I18n.t 'layout_help_tel_url' %>"><span class="u-vh"><%= I18n.t 'layout_help_call' %> </span><%= I18n.t 'layout_help_number' %></a>
+                  </li>
+                  <li class="nav__item">
+                    <a class="venus nav__link external" href="<%= I18n.t 'layout_help_url' %>" rel="ext"><%= I18n.t 'layout_online_help' %></a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          -->
+          <div class="container">
+            <header class="header">
+              <div class="logo header__logo">
+                <img src="https://cdn.ons.gov.uk/assets/images/ons-logo/v2/ons-logo.svg" alt="Office for National Statistics" class="logo__img">
+              </div>
+            </header>
+          </div>
+          <div class="bar" role="banner">
+            <div class="bar__inner container">
+              <h1 class="bar__title venus">Online Household Study</h1>
+            </div>
+          </div>
+            <div class="header__container container">
+              <div class="header__crest">
+                <img src="/s/img/crest.svg" alt="<%= I18n.t 'layout_image_crown_alt' %>">
+              </div>
+              <!--
+              <div class="header__logo">
+              <% if @locale == 'en' %>
+                <img src="/s/img/logo-english-reversed.svg" alt="<%= I18n.t 'layout_image_census_alt' %>">
+              <% elsif @locale == 'cy' %>
+                <img src="/s/img/logo-welsh-reversed.svg" alt="<%= I18n.t 'layout_image_census_alt' %>">
+              <% end %>
+              </div>
+            -->
+            <!--
+              <button class="header__btn btn btn--light btn--border js-help-btn">
+                <%= I18n.t 'layout_help_button' %>
+              </button>
+            -->
+            </div>
+          </div>
+        </div>
+        <div class="page__subheader">
+
+        </div>
+        <div class="page__container container">
+          <div class="grid">
+            <div class="grid__col col-8@m">
+              <%= yield %>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="page__footer">
+        <div class="footer footer--census" id="footer" role="contentinfo">
+          <div class="container footer__container">
+            <a class="footer__logo" href="https://www.ons.gov.uk/">
+              <img src="/s/img/ons-logo.svg" alt="<%= I18n.t 'layout_ons' %>" class="">
+            </a>
+            <!--
+            <ul class="footer__nav nav nav--horizontal nav--dark">
+              <li class="nav__item">
+                <a class="nav__link" target="_blank" rel="noopener noreferrer" href="<%= I18n.t 'layout_privacy_url' %>"><%= I18n.t 'layout_link_privacy' %></a>
+              </li>
+              <li class="nav__item">
+                <a class="nav__link" target="_blank" rel="noopener noreferrer" href="<%= I18n.t 'layout_terms_and_conditions_url' %>"><%= I18n.t 'layout_link_terms' %></a>
+              </li>
+              <li class="nav__item">
+                <a class="nav__link" target="_blank" rel="noopener noreferrer" href="<%= I18n.t 'layout_accessibility_url' %>"><%= I18n.t 'layout_link_accessibility' %></a>
+              </li>
+            </ul>
+          -->
+          </div>
+          <!--
+          <div class="footer__help">
+            <div class="container">
+              <div class="mars"><%= I18n.t 'layout_help' %>
+                <ul class="footer__helpnav nav nav--horizontal">
+                  <li class="nav__item">
+                    <span class="mars" role="presentation"><%= I18n.t 'layout_call' %> </span> <a class="venus nav__link" href="tel:<%= I18n.t 'layout_help_number' %>"><span class="u-vh"><%= I18n.t 'layout_help_call' %> </span><%= I18n.t 'layout_help_number' %></a>
+                  </li>
+                  <li class="nav__item">
+                    <a class="venus nav__link external" href="<%= I18n.t 'layout_help_url' %>" target="blank" rel="noopener noreferrer"><%= I18n.t 'layout_online_help' %></a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        -->
+
+        </div>
+      </div>
+    </div>
+    <!-- jQuery 1 -->
+  	<!--[if lt IE 9]>
+  	  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  	  <script>window.jQuery || document.write('<script "/js/vendor/jquery-1.12.0.min.js?q=95ed16e2c89bb26d9c02129271468664828e4cee"><\/script>')</script>
+  	<![endif]-->
+  	<!-- jQuery 2 -->
+  	<!--[if gte IE 9]><!-->
+  	  <script src="/js/vendor/jquery-2.2.0.min.js"></script>
+  	  <script>window.jQuery || document.write('<script "/js/vendor/jquery-2.2.0.min.js?q=95ed16e2c89bb26d9c02129271468664828e4cee"><\/script>')</script>
+  	<!--<![endif]-->
+    <!--[if gte IE 9]><!-->
+      <script src="/js/bundle.js"></script>
+  	<!--<![endif]-->
+    <%= yield_content :javascript %>
+  <% unless analytics_account.nil? %>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+      ga('create', '<%=h analytics_account %>', 'auto');
+      ga('send', 'pageview');
+    </script>
+  <% end %>
+  </body>
+</html>

@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+aiohttp = "*"
+aiohttp-utils = "*"
+ipython = "*"
+envparse = "*"
+"aiohttp-jinja2" = "*"
+
+[dev-packages]
+invoke = "*"
+
+[requires]
+python_version = "3.6"

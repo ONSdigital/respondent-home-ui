@@ -2,6 +2,7 @@ import logging
 
 import aiohttp_jinja2
 import jinja2
+import pathlib
 from aiohttp import web
 from aiohttp_utils import negotiation
 
@@ -36,6 +37,11 @@ def create_app() -> web.Application:
 
     # Setup jinja2 environment
     aiohttp_jinja2.setup(app, loader=jinja2.PackageLoader("app", "templates"))
+
+    # Set static folder location
+    # TODO: Only turn on in dev environment
+    app['static_root_url'] = '/'
+    app.router.add_static('/', 'app/static', show_index=True)
 
     return app
 

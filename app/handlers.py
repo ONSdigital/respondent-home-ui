@@ -5,7 +5,7 @@ from aiohttp.web import Response
 @aiohttp_jinja2.template('index.html')
 async def get_index(request):
     context = {'a_variable': 12}
-    response = aiohttp_jinja2.render_template("index.html", request, context)
+    response = aiohttp_jinja2.render_template("base.html", request, context)
     return response
 
 

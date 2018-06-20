@@ -1,4 +1,0 @@
-eq-service:
-  public_key: ../keys/sdc-user-authentication-encryption-sr-public-key.pem
-  private_key: ../keys/sdc-user-authentication-signing-rrm-private-key.pem
-  private_key_passphrase: 'digitaleq'

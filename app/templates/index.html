@@ -1,30 +1,35 @@
 {% extends "base.html" %}
-
 {% block content %}
-<!-- <% if flash[:notice] %> -->
-<div class="u-mt-s">
-  <div class="panel panel--error">
-    <div class="panel__header">
-      <!-- <h1 class="panel__title venus"><%= I18n.t 'home_alert_heading1' %></h1> -->
-    </div>
-    <div class="panel__body">
-      <!-- <p class="mars"><%= I18n.t 'home_alert_paragraph1' %></p> -->
-      <ul class="list list--bare">
-        <!-- <li class="list__item mars">1) <%= flash[:notice] %></li> -->
-      </ul>
+{% for message in get_flashed_messages() %}
+  <div class="u-mt-s">
+    <div class="panel panel--error">
+      <div class="panel__header">
+        <h1 class="panel__title venus">
+          This page has 1 error
+        </h1>
+      </div>
+      <div class="panel__body">
+        <p class="mars">
+        "This <strong>must be corrected</strong> to continue."
+        </p>
+        <ul class="list list--bare">
+          <li class="list__item mars">1)
+            {{ message }}
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
-</div>
-<!-- <% end %> -->
+{% endfor %}
 
 <div>
-  <!-- <h2 class="saturn u-mt-l u-mb-m"><%= I18n.t 'home_heading1' %></h2> -->
+<h2 class="saturn u-mt-l u-mb-m">Welcome to the Online Household Study (Alpha)</h2>
   <form action="/" class="form qa-questionnaire-form" role="form" method="post" novalidate="">
 
     <div class="panel panel--simple panel--info u-mb-l">
-        <div class="panel__body">
+      <div class="panel__body">
 
-          <div class="group" id="household-and-accommodation">
+        <div class="group" id="household-and-accommodation">
 
           <div class="block" id="census-access-code">
             <div class="section" id="census-access-code-section">
@@ -35,19 +40,22 @@
                       <div class="answer answer--integer " id="census-access-code-answer">
                         <div class="answer__fields js-fields">
                           <fieldset class="fieldgroup fieldgroup--date">
-                            <!-- <legend class="fieldgroup__title venus"><%= I18n.t 'home_iac_legend' %></legend> -->
+                            <legend class="fieldgroup__title venus">Enter your unique access code below</legend>
                             <div class="fieldgroup__fields">
                               <div class="field field--input field--code">
-                                <!-- <label class="label mercury u-vh" for="iac1"><%= I18n.t 'home_iac_segment1' %></label> -->
-                                <input pattern="^[a-zA-Z0-9]{4}$" maxlength="4" data-qa="input-text" id="iac1" name="iac1" class="input input--text" value="" type="text" autocomplete="off">
+<label class="label mercury u-vh" for="iac1">Enter the first four characters of the access code</label>
+                                <input pattern="^[a-zA-Z0-9]{4}$" maxlength="4" data-qa="input-text" id="iac1" name="iac1" class="input input--text" value=""
+                                  type="text" autocomplete="off">
                               </div>
                               <div class="field field--select field--code">
-                                <!-- <label class="label mercury u-vh" for="iac2"><%= I18n.t 'home_iac_segment2' %></label> -->
-                                <input pattern="^[a-zA-Z0-9]{4}$" maxlength="4" data-qa="input-text" id="iac2" name="iac2" class="input input--text" value="" type="text" autocomplete="off">
+                                <label class="label mercury u-vh" for="iac2">Enter the next four characters of the access code</label>
+                                <input pattern="^[a-zA-Z0-9]{4}$" maxlength="4" data-qa="input-text" id="iac2" name="iac2" class="input input--text" value=""
+                                  type="text" autocomplete="off">
                               </div>
                               <div class="field field--input field--code">
-                                <!-- <label class="label mercury u-vh" for="iac3"><%= I18n.t 'home_iac_segment3' %></label> -->
-                                <input pattern="^[a-zA-Z0-9]{4}$" maxlength="4" data-qa="input-text" id="iac3" name="iac3" class="input input--text" value="" type="text" autocomplete="off">
+                                <label class="label mercury u-vh" for="iac3">Enter the last four characters of the access code</label>
+                                <input pattern="^[a-zA-Z0-9]{4}$" maxlength="4" data-qa="input-text" id="iac3" name="iac3" class="input input--text" value=""
+                                  type="text" autocomplete="off">
                               </div>
                             </div>
                           </fieldset>
@@ -55,30 +63,21 @@
                       </div>
                     </div>
                   </div>
-                  <!-- <p class="mars u-mt-m"><%= I18n.t 'home_iac_instructions' %></p> -->
+                  <p class="mars u-mt-m">The unique access code is printed on your invitation letter or form.</p>
                 </div>
               </div>
             </div>
           </div>
-
-
-
+        </div>
+      </div>
     </div>
-
-
-
-  </div>
-</div>
-
-
-
-    <!-- <button class="btn btn--lg qa-btn-get-started" type="submit" name="action[save_continue]"><%= I18n.t 'home_start_button' %></button> -->
+    <button class="btn btn--lg qa-btn-get-started" type="submit" name="action[save_continue]">Start</button>
   </form>
 
 
-    <div class="lock u-mt-l u-mb-l">
-      <!-- <div class="venus lock__text"><%= I18n.t 'confidentiality_statement' %></div> -->
-    </div>
-
+  <div class="lock u-mt-l u-mb-l">
+<div class="venus lock__text">Your personal information is protected by law and will be kept confidential.</div>
   </div>
+
+</div>
 {% endblock %}

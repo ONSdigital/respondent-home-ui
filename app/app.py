@@ -7,13 +7,17 @@ from aiohttp_utils import negotiation
 from structlog import wrap_logger
 
 from . import config
+from . import flash
 from . import jwt
 from . import routes
 from . import session
 from . import settings
-from .logging import logger_initial_config
+from .app_logging import logger_initial_config
 
-logger = wrap_logger(logging.getLogger('respondent-home'))
+logger = wrap_logger(logging.getLogger("respondent-home"))
+server_logger = logging.getLogger("aiohttp.server")
+
+server_logger.setLevel("INFO")
 
 
 def create_app() -> web.Application:
@@ -24,30 +28,30 @@ def create_app() -> web.Application:
 
     app_config.from_object(getattr(config, app_config["ENV"]))
 
-    app = web.Application(debug=settings.DEBUG)
+    app = web.Application(
+        debug=settings.DEBUG, middlewares=[session.setup(), flash.flash_middleware]
+    )
 
     # Store uppercased configuration variables on app
     app.update(app_config)
 
     # Bind logger
-    logger_initial_config(
-        service_name="respondent-home",
-        log_level=app["LOG_LEVEL"]
-    )
+    logger_initial_config(service_name="respondent-home", log_level=app["LOG_LEVEL"])
 
     logger.info("Logging configured")
 
     # Set up routes
     routes.setup(app)
 
-    # Create session handler
-    session.setup(app)
-
     # Use content negotiation middleware to render JSON responses
     negotiation.setup(app)
 
     # Setup jinja2 environment
-    aiohttp_jinja2.setup(app, loader=jinja2.PackageLoader("app", "templates"))
+    aiohttp_jinja2.setup(
+        app,
+        loader=jinja2.PackageLoader("app", "templates"),
+        context_processors=flash.context_processor,
+    )
 
     # Set static folder location
     # TODO: Only turn on in dev environment

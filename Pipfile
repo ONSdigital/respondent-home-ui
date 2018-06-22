@@ -11,7 +11,7 @@ envparse = "*"
 "aiohttp-jinja2" = "*"
 structlog = "*"
 sdc-cryptography = "*"
-aiohttp-session = "*"
+aiohttp-session = {extras = ["secure"]}
 
 [dev-packages]
 invoke = "*"

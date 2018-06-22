@@ -9,9 +9,13 @@ aiohttp-utils = "*"
 ipython = "*"
 envparse = "*"
 "aiohttp-jinja2" = "*"
+structlog = "*"
+sdc-cryptography = "*"
+aiohttp-session = "*"
 
 [dev-packages]
 invoke = "*"
+"flake8" = "*"
 
 [requires]
 python_version = "3.6"

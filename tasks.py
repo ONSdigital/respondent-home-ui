@@ -9,7 +9,8 @@ def server(ctx, port=None, reload=True):
     """Run the development server"""
 
     command = (
-        "pipenv run python -m app.app"
+        'pipenv run gunicorn "app.app:create_app()" -w 4 '
+        f"--bind 0.0.0.0:{port} --worker-class aiohttp.worker.GunicornWebWorker"
     )
 
     if reload:

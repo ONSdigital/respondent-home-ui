@@ -5,8 +5,10 @@ from . import handlers
 Route = namedtuple("Route", ["method", "path", "handler", "name"])
 
 ROUTES = [
-    Route("GET", "/", handler=handlers.get_index, name="get_index"),
+    Route("GET",  "/", handler=handlers.get_index,  name="get_index"),
     Route("POST", "/", handler=handlers.post_index, name="post_index"),
+    Route("GET",  "/questionnaire", handler=handlers.get_questionnaire,  name="get_questionnaire"),
+    Route("POST", "/questionnaire", handler=handlers.post_questionnaire, name="get_questionnaire"),
 ]
 
 

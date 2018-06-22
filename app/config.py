@@ -1,4 +1,6 @@
-from envparse import env
+from functools import partial
+
+from envparse import Env
 
 
 class Config(dict):
@@ -19,22 +21,28 @@ class Config(dict):
 
 
 class BaseConfig:
-    HOST = env.str("HOST", default=None)
-    PORT = env.int("PORT", default=None)
-    EQ_URL = env.str("EQ_URL", default=None)
-    IAC_URL = env.str("IAC_URL", default=None)
-    IAC_AUTH = (
-        env.str("IAC_USERNAME", default=None),
-        env.str("IAC_PASSWORD", default=None),
-    )
+    env = Env()
+    env = partial(env, default=None)
+
+    HOST = env("HOST")
+    PORT = env("PORT")
+    LOG_LEVEL = env("LOG_LEVEL")
+
+    EQ_URL = env("EQ_URL")
+    JSON_SECRET_KEYS = env("JSON_SECRET_KEYS")
+
+    IAC_URL = env("IAC_URL")
+    IAC_AUTH = (env("IAC_USERNAME"), env("IAC_PASSWORD"))
 
 
 class DevelopmentConfig:
+    env = Env()
     HOST = env.str("HOST", default="0.0.0.0")
     PORT = env.int("PORT", default="9092")
-    EQ_URL = env.str("EQ_URL", default='https://localhost:5000/session?token=')
-    IAC_URL = env.str("IAC_URL", default='http://localhost:8121')
-    IAC_AUTH = (
-        env.str("IAC_USERNAME", default="admin"),
-        env.str("IAC_PASSWORD", default="secret"),
-    )
+    LOG_LEVEL = env("LOG_LEVEL", default="INFO")
+
+    EQ_URL = env.str("EQ_URL", default="https://localhost:5000/session")
+    JSON_SECRET_KEYS = env.json("JSON_SECRET_KEYS", default="tests/test_keys.json")
+
+    IAC_URL = env.str("IAC_URL", default="http://localhost:8121")
+    IAC_AUTH = (env.str("IAC_USERNAME", default="admin"), env.str("IAC_PASSWORD", default="secret"))

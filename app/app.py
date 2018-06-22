@@ -50,8 +50,10 @@ def create_app() -> web.Application:
     aiohttp_jinja2.setup(
         app,
         loader=jinja2.PackageLoader("app", "templates"),
-        context_processors=flash.context_processor,
+        context_processors=[flash.context_processor, aiohttp_jinja2.request_processor],
     )
+
+    logger.error(app["aiohttp_jinja2_context_processors"])
 
     # Set static folder location
     # TODO: Only turn on in dev environment

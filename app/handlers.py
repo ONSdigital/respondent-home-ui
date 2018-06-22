@@ -4,19 +4,15 @@ import aiohttp_jinja2
 from aiohttp.web import Response
 from aiohttp_session import get_session
 
+from .flash import pop_flash
+
 
 async def get_index(request):
-    context = {}
-    session = await get_session(request)
-    session['flash'] = {"message": "hello!"}
-    session.changed()
-    response = aiohttp_jinja2.render_template("index.html", request, context)
+    response = aiohttp_jinja2.render_template("index.html", request, {})
     return response
 
 
 async def post_index(request):
-    for message in pop_flash(request):
-        print(message)
     return Response(text="A post!")
 
 

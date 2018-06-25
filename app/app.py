@@ -64,6 +64,8 @@ def create_app() -> web.Application:
 
     logger.error(app["aiohttp_jinja2_context_processors"])
 
+    logger.error(app['IAC_URL'])
+
     # Set static folder location
     # TODO: Only turn on in dev environment
     app["static_root_url"] = "/"

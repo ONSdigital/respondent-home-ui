@@ -2,12 +2,13 @@ import logging
 
 import aiohttp_jinja2
 import jinja2
-from aiohttp import ClientSession
+from aiohttp import BasicAuth, ClientSession
 from aiohttp import web
 from aiohttp_utils import negotiation
 from structlog import wrap_logger
 
 from . import config
+from . import exceptions
 from . import flash
 from . import jwt
 from . import routes
@@ -26,7 +27,7 @@ async def on_startup(app):
 
 
 async def on_cleanup(app):
-    app.http_session_pool.close()
+    await app.http_session_pool.close()
 
 
 def create_app() -> web.Application:
@@ -38,17 +39,19 @@ def create_app() -> web.Application:
     app_config.from_object(getattr(config, app_config["ENV"]))
 
     app = web.Application(
-        debug=settings.DEBUG, middlewares=[session.setup(), flash.flash_middleware]
+        debug=settings.DEBUG, middlewares=[session.setup(), flash.flash_middleware, exceptions.error_middleware]
     )
 
     # Store uppercased configuration variables on app
     app.update(app_config)
 
+    # Create IAC basic auth
+    app["IAC_AUTH"] = BasicAuth(*app["IAC_AUTH"])
+
     # Bind logger
     logger_initial_config(service_name="respondent-home", log_level=app["LOG_LEVEL"])
 
     logger.info("Logging configured")
-
     # Set up routes
     routes.setup(app)
 
@@ -61,10 +64,6 @@ def create_app() -> web.Application:
         loader=jinja2.PackageLoader("app", "templates"),
         context_processors=[flash.context_processor, aiohttp_jinja2.request_processor],
     )
-
-    logger.error(app["aiohttp_jinja2_context_processors"])
-
-    logger.error(app['IAC_URL'])
 
     # Set static folder location
     # TODO: Only turn on in dev environment

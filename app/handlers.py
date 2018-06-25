@@ -1,11 +1,13 @@
-import time
-from uuid import UUID
+import logging
 
 import aiohttp_jinja2
 from aiohttp.web import Response
-from aiohttp_session import get_session
+from structlog import wrap_logger
 
-from .flash import pop_flash, flash
+from .flash import flash
+
+
+logger = wrap_logger(logging.getLogger("respondent-home"))
 
 
 async def get_index(request):
@@ -15,12 +17,29 @@ async def get_index(request):
 
 async def post_index(request):
     data = await request.post()
-    iac = ''.join([v.lower() for v in data.values()][:3])
+    iac = "".join([v.lower() for v in data.values()][:3])
+    client_ip = request.headers.get("X-Forwarded-For")
+    async with request.app.http_session_pool.get(
+        'http://httpstat.us/500',
+    ) as resp:
+        try:
+            resp.raise_for_status()
+            if resp.status == 404:
+                logger.info(f"Attempt to use an invalid access code from {client_ip}")
+                flash(
+                    request,
+                    "Please provide the unique access code printed on your invitation letter or form.",
+                )
+                return aiohttp_jinja2.render_template("index.html", request, {})
+            elif resp.status == 401:
+                logger.info(f"Unauthorized access to IAC service from {client_ip} attempted")
+                flash(request, "You are not authorized to access this service.")
+                return aiohttp_jinja2.render_template("index.html", request, {})
+            elif 400 <= resp.status < 500:
+                logger.info(f"Client error when accessing IAC service from {client_ip}", status=resp.status)
+        finally:
+            return Response(text=iac)
 
-    async with request.app.http_session_pool.get(f'{request.app["IAC_URL"]}/iacs/{iac}') as resp:
-        assert resp.status == 200
-
-    return Response(text=iac)
 
 
 @aiohttp_jinja2.template("base.html")

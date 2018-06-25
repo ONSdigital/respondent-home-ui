@@ -1,6 +1,5 @@
 import base64
 
-from aiohttp_session import setup as session_setup
 from aiohttp_session import session_middleware
 from aiohttp_session.cookie_storage import EncryptedCookieStorage
 from cryptography import fernet

@@ -44,5 +44,5 @@ class DevelopmentConfig:
     EQ_URL = env.str("EQ_URL", default="https://localhost:5000/session")
     JSON_SECRET_KEYS = env.json("JSON_SECRET_KEYS", default="tests/test_keys.json")
 
-    IAC_URL = env.str("IAC_URL", default="http://localhost:8121")
+    IAC_URL = env.str("IAC_URL", default="http://0.0.0.0:8121")
     IAC_AUTH = (env.str("IAC_USERNAME", default="admin"), env.str("IAC_PASSWORD", default="secret"))

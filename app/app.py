@@ -2,6 +2,7 @@ import logging
 
 import aiohttp_jinja2
 import jinja2
+from aiohttp import ClientSession
 from aiohttp import web
 from aiohttp_utils import negotiation
 from structlog import wrap_logger
@@ -18,6 +19,14 @@ logger = wrap_logger(logging.getLogger("respondent-home"))
 server_logger = logging.getLogger("aiohttp.server")
 
 server_logger.setLevel("INFO")
+
+
+async def on_startup(app):
+    app.http_session_pool = ClientSession()
+
+
+async def on_cleanup(app):
+    app.http_session_pool.close()
 
 
 def create_app() -> web.Application:
@@ -62,6 +71,9 @@ def create_app() -> web.Application:
 
     # JWT KeyStore
     app["key_store"] = jwt.key_store(app["JSON_SECRET_KEYS"])
+
+    app.on_startup.append(on_startup)
+    app.on_cleanup.append(on_cleanup)
 
     return app
 

@@ -1,7 +1,9 @@
 import logging
 
 import aiohttp_jinja2
+from aiohttp.web import HTTPFound
 from aiohttp.web import Response
+from aiohttp.client_exceptions import ClientResponseError
 from structlog import wrap_logger
 
 from .flash import flash
@@ -20,10 +22,13 @@ async def post_index(request):
     iac = "".join([v.lower() for v in data.values()][:3])
     client_ip = request.headers.get("X-Forwarded-For")
     async with request.app.http_session_pool.get(
-        'http://httpstat.us/500',
+        f"{request.app['IAC_URL']}/iacs/{iac}", auth=request.app["IAC_AUTH"]
     ) as resp:
+        logger.info("Received response from IAC", iac=f"{iac}", status_code=f"{resp.status}")
+
         try:
             resp.raise_for_status()
+        except ClientResponseError as ex:
             if resp.status == 404:
                 logger.info(f"Attempt to use an invalid access code from {client_ip}")
                 flash(
@@ -36,10 +41,15 @@ async def post_index(request):
                 flash(request, "You are not authorized to access this service.")
                 return aiohttp_jinja2.render_template("index.html", request, {})
             elif 400 <= resp.status < 500:
-                logger.info(f"Client error when accessing IAC service from {client_ip}", status=resp.status)
-        finally:
-            return Response(text=iac)
+                logger.info(
+                    f"Client error when accessing IAC service from {client_ip}", status=resp.status
+                )
+                flash(request, "Bad request. Please try again")
+                return aiohttp_jinja2.render_template("index.html", request, {})
+            else:
+                raise ex
 
+        return Response(text="Questionnaire post!")
 
 
 @aiohttp_jinja2.template("base.html")

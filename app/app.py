@@ -39,8 +39,11 @@ def create_app() -> web.Application:
     app_config.from_object(getattr(config, app_config["ENV"]))
 
     app = web.Application(
-        debug=settings.DEBUG, middlewares=[session.setup(), flash.flash_middleware, exceptions.error_middleware]
+        debug=settings.DEBUG, middlewares=[session.setup(), flash.flash_middleware]
     )
+
+    # Handle 500 errors
+    exceptions.setup(app)
 
     # Store uppercased configuration variables on app
     app.update(app_config)
@@ -81,4 +84,4 @@ def create_app() -> web.Application:
 
 if __name__ == "__main__":
     app = create_app()
-    web.run_app(app, port=app["PORT"], access_log=logger)
+    web.run_app(app, port=app["PORT"])

@@ -10,7 +10,7 @@ def server(ctx, port=None, reload=True):
 
     command = (
         'pipenv run gunicorn "app.app:create_app()" -w 4 '
-        f"--bind 0.0.0.0:{port} --worker-class aiohttp.worker.GunicornWebWorker"
+        f"--bind 0.0.0.0:{port} --worker-class aiohttp.worker.GunicornWebWorker --access-logfile - --log-level DEBUG"
     )
 
     if reload:

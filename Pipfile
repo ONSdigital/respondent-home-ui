@@ -12,6 +12,8 @@ envparse = "*"
 structlog = "*"
 sdc-cryptography = "*"
 aiohttp-session = {extras = ["secure"]}
+cchardet = "*"
+aiodns = "*"
 
 [dev-packages]
 invoke = "*"

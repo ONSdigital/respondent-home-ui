@@ -1,11 +1,11 @@
 import logging
 
 import aiohttp_jinja2
-from aiohttp.web import HTTPFound
 from aiohttp.web import Response
 from aiohttp.client_exceptions import ClientResponseError
 from structlog import wrap_logger
 
+from .exceptions import InactiveCaseError
 from .flash import flash
 
 
@@ -49,6 +49,16 @@ async def post_index(request):
             else:
                 raise ex
 
+        try:
+            await _validate_case(resp)
+        except InactiveCaseError:
+            logger.info(
+                f'Attempt to use an inactive access code from {resp.request_info.headers.get("X-Forwarded-For")}')
+            flash(request, "The unique access code entered has already been used")
+            return aiohttp_jinja2.render_template("index.html", request, {})
+
+
+
         return Response(text="Questionnaire post!")
 
 
@@ -61,3 +71,9 @@ async def get_questionnaire(request):
 
 async def post_questionnaire(request):
     return Response(text="Questionnaire post!")
+
+
+async def _validate_case(response):
+    resp_json = await response.json()
+    if not resp_json['active']:
+        raise InactiveCaseError

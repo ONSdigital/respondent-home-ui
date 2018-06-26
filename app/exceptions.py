@@ -8,6 +8,9 @@ from .flash import flash
 
 logger = logging.getLogger("respondent-home")
 
+class InactiveCaseError(Exception):
+    """Raised when a user enters a used IAC code"""
+
 
 def create_error_middleware(overrides):
 

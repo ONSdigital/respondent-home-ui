@@ -8,7 +8,7 @@ from aiohttp_utils import negotiation
 from structlog import wrap_logger
 
 from . import config
-from . import exceptions
+from . import error_handlers
 from . import flash
 from . import jwt
 from . import routes
@@ -43,7 +43,7 @@ def create_app() -> web.Application:
     )
 
     # Handle 500 errors
-    exceptions.setup(app)
+    error_handlers.setup(app)
 
     # Store uppercased configuration variables on app
     app.update(app_config)

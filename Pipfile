@@ -14,6 +14,7 @@ sdc-cryptography = "*"
 aiohttp-session = {extras = ["secure"]}
 cchardet = "*"
 aiodns = "*"
+"iso8601" = "*"
 
 [dev-packages]
 invoke = "*"

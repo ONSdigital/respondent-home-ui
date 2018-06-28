@@ -41,7 +41,7 @@ class DevelopmentConfig:
     PORT = env.int("PORT", default="9092")
     LOG_LEVEL = env("LOG_LEVEL", default="INFO")
 
-    EQ_URL = env.str("EQ_URL", default="https://localhost:5000/session")
+    EQ_URL = env.str("EQ_URL", default="https://localhost:5000/session?token=")
     JSON_SECRET_KEYS = env.json("JSON_SECRET_KEYS", default="tests/test_keys.json")
 
     IAC_URL = env.str("IAC_URL", default="http://0.0.0.0:8121")

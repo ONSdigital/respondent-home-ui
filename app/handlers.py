@@ -16,8 +16,6 @@ from .flash import flash
 
 logger = wrap_logger(logging.getLogger("respondent-home"))
 
-KEY_PURPOSE = "authentication"
-
 
 async def get_index(request, msg=None, redirect=False):
     if msg:
@@ -80,14 +78,13 @@ async def post_index(request):
             return aiohttp_jinja2.render_template("index.html", request, {})
 
         case_json = await resp.json()
-        case = await get_case(case_json["caseId"])
-        eq_payload = await EqPayloadConstructor(case).build()
+        case = await get_case(case_json["caseId"], request.app)
 
-        keys = json.loads(request.app['JSON_SECRET_KEYS'])
-        validate_required_keys(keys, KEY_PURPOSE)
-        key_store = KeyStore(keys)
+        eq_payload = await EqPayloadConstructor(case, request.app).build()
 
-        token = encrypt(eq_payload, key_store=key_store, key_purpose=KEY_PURPOSE)
+        token = encrypt(eq_payload, key_store=request.app['key_store'], key_purpose="authentication")
+
+        # TODO: Post case event here before launching eQ?
 
         return HTTPFound(request.app['EQ_URL'] + token)
 

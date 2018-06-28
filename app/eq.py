@@ -61,7 +61,7 @@ class EqPayloadConstructor(object):
         self._collex_url = "{}/collectionexercises/{}"
         self._survey_url = "{}/surveys/{}"
 
-        self._tx_id = uuid4()
+        self._tx_id = str(uuid4())
         self._account_service_url = app["ACCOUNT_SERVICE_URL"]
 
         try:
@@ -198,8 +198,10 @@ class EqPayloadConstructor(object):
 
         logger.info(payload=self._payload)
 
+        return self._payload
+
     async def _make_request(self, request: Request):
-        method, url, func = Request
+        method, url, func = request
         logger.info(f"Making {method} request to {url} and handling with {func}")
         async with self._app.http_session_pool.request(
             method, url, auth=self._app["COLLECTION_INSTRUMENT_AUTH"]
@@ -209,19 +211,23 @@ class EqPayloadConstructor(object):
 
     async def _get_survey(self):
         url = self._survey_url.format(self._app["SURVEY_URL"], self._survey_id)
-        return await self._make_request(Request("GET", url, handle_response)).json()
+        resp = await self._make_request(Request("GET", url, handle_response))
+        return resp
 
     async def _get_collection_instrument(self):
         url = self._ci_url.format(self._app["COLLECTION_INSTRUMENT_URL"], self._ci_id)
-        return await self._make_request(Request("GET", url, handle_response)).json()
+        resp = await self._make_request(Request("GET", url, handle_response))
+        return resp
 
     async def _get_collection_exercise(self):
         url = self._collex_url.format(self._app["COLLECTION_EXERCISE_URL"], self._ci_id)
-        return await self._make_request(Request("GET", url, handle_response)).json()
+        resp = await self._make_request(Request("GET", url, handle_response))
+        return resp
 
     async def _get_collection_exercise_events(self):
         url = self._collex_url.format(self._app["COLLECTION_EXERCISE_URL"], self._ci_id) + "/events"
-        return await self._make_request(Request("GET", url, handle_response)).json()
+        resp = await self._make_request(Request("GET", url, handle_response))
+        return resp
 
     async def _get_collex_event_dates(self):
         return {

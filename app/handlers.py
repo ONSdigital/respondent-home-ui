@@ -1,8 +1,11 @@
+import json
 import logging
 
 import aiohttp_jinja2
 from aiohttp.web import HTTPFound, Response
 from aiohttp.client_exceptions import ClientResponseError
+from sdc.crypto.encrypter import encrypt
+from sdc.crypto.key_store import validate_required_keys, KeyStore
 from structlog import wrap_logger
 
 from .case import get_case
@@ -12,6 +15,8 @@ from .flash import flash
 
 
 logger = wrap_logger(logging.getLogger("respondent-home"))
+
+KEY_PURPOSE = "authentication"
 
 
 async def get_index(request, msg=None, redirect=False):
@@ -78,7 +83,13 @@ async def post_index(request):
         case = await get_case(case_json["caseId"])
         eq_payload = await EqPayloadConstructor(case).build()
 
-        return Response(text="Questionnaire post!")
+        keys = json.loads(request.app['JSON_SECRET_KEYS'])
+        validate_required_keys(keys, KEY_PURPOSE)
+        key_store = KeyStore(keys)
+
+        token = encrypt(eq_payload, key_store=key_store, key_purpose=KEY_PURPOSE)
+
+        return HTTPFound(request.app['EQ_URL'] + token)
 
 
 @aiohttp_jinja2.template("base.html")

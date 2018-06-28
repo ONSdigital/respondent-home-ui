@@ -48,7 +48,9 @@ def create_app() -> web.Application:
     # Store uppercased configuration variables on app
     app.update(app_config)
 
-    # Create IAC basic auth
+    # Create basic auth for services
+    app["CASE_AUTH"] = BasicAuth(*app["CASE_AUTH"])
+    app["COLLECTION_INSTRUMENT_AUTH"] = BasicAuth(*app["COLLECTION_INSTRUMENT_AUTH"])
     app["IAC_AUTH"] = BasicAuth(*app["IAC_AUTH"])
 
     # Bind logger

@@ -171,6 +171,10 @@ class EqPayloadConstructor(object):
         except KeyError:
             raise InvalidEqPayLoad(f"No survey ref in collection exercise for case {self.case_id}")
 
+        # TODO: Remove hardcoded language variables for payload when they become available in RAS/RM
+        self._region_code = 'GB-ENG'
+        self._language_code = 'en'
+
         self._payload = {
             "jti": str(uuid4()),
             "tx_id": self._tx_id,
@@ -189,6 +193,8 @@ class EqPayloadConstructor(object):
             "case_ref": self._case_ref,
             "account_service_url": self._account_service_url,
             "trad_as": self._trading_as,
+            "region_code": self._region_code,
+            "language_code": self._language_code
         }
 
         # Add any non null event dates that exist for this collection exercise

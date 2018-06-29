@@ -48,7 +48,7 @@ class DevelopmentConfig:
     PORT = env.int("PORT", default="9092")
     LOG_LEVEL = env("LOG_LEVEL", default="INFO")
 
-    ACCOUNT_SERVICE_URL = env.str("ACCOUNT_SERVICE_URL", default="https://0.0.0.0:9092")
+    ACCOUNT_SERVICE_URL = env.str("ACCOUNT_SERVICE_URL", default="http://0.0.0.0:9092")
     EQ_URL = env.str("EQ_URL", default="http://0.0.0.0:5000/session?token=")
     JSON_SECRET_KEYS = env.str("JSON_SECRET_KEYS", default="tests/test_keys.json")
 

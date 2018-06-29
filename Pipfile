@@ -24,6 +24,7 @@ aiodns = "*"
 
 invoke = "*"
 "flake8" = "*"
+pytest-aiohttp = "*"
 
 
 [requires]

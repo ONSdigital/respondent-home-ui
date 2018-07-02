@@ -53,7 +53,10 @@ class DevelopmentConfig:
     JSON_SECRET_KEYS = env.str("JSON_SECRET_KEYS", default=open("./app/tests/test_keys.json").read())
 
     COLLECTION_INSTRUMENT_URL = env.str("COLLECTION_INSTRUMENT_URL", default="http://0.0.0.0:8002")
-    COLLECTION_INSTRUMENT_AUTH = (env.str("COLLECTION_INSTRUMENT_USERNAME", default="admin"), env.str("COLLECTION_INSTRUMENT_PASSWORD", default="secret"))
+    COLLECTION_INSTRUMENT_AUTH = (
+        env.str("COLLECTION_INSTRUMENT_USERNAME", default="admin"),
+        env.str("COLLECTION_INSTRUMENT_PASSWORD", default="secret")
+    )
 
     CASE_URL = env.str("CASE_URL", default="http://0.0.0.0:8171")
     CASE_AUTH = (env.str("CASE_USERNAME", default="admin"), env.str("CASE_PASSWORD", default="secret"))

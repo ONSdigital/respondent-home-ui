@@ -1,0 +1,23 @@
+language: python
+sudo: required
+dist: trusty
+python: '3.6'
+
+# before_install:
+
+cache:
+  - pip
+
+install:
+  - pip install pipenv
+  - pipenv install --dev --deploy
+
+script:
+  - pipenv run inv test
+
+after_success:
+  - pipenv run codecov
+
+branches:
+  only:
+    - master

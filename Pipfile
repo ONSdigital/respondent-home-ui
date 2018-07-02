@@ -21,10 +21,13 @@ aiodns = "*"
 
 [dev-packages]
 
+codecov = "*"
+coverage = "*"
 ipython = "*"
 invoke = "*"
 "flake8" = "*"
 pytest-aiohttp = "*"
+pytest-cov = "*"
 
 
 [requires]

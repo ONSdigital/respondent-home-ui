@@ -6,7 +6,7 @@ from aiohttp.client_exceptions import ClientResponseError
 from sdc.crypto.encrypter import encrypt
 from structlog import wrap_logger
 
-from .case import get_case
+from .case import get_case, post_case_event
 from .eq import EqPayloadConstructor
 from .exceptions import InactiveCaseError
 from .flash import flash
@@ -76,13 +76,15 @@ async def post_index(request):
             return aiohttp_jinja2.render_template("index.html", request, {})
 
         case_json = await resp.json()
-        case = await get_case(case_json["caseId"], request.app)
+        case_id = case_json["caseId"]
+        case = await get_case(case_id, request.app)
 
         eq_payload = await EqPayloadConstructor(case, request.app).build()
 
         token = encrypt(eq_payload, key_store=request.app['key_store'], key_purpose="authentication")
 
-        # TODO: Post case event here before launching eQ?
+        description=f"Instrument LMS launched for case {case_id}"
+        await post_case_event(case_id, 'EQ_LAUNCH', description, request.app)
 
         return HTTPFound(request.app['EQ_URL'] + token)
 

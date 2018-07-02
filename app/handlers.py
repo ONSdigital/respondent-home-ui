@@ -1,11 +1,9 @@
-import json
 import logging
 
 import aiohttp_jinja2
 from aiohttp.web import HTTPFound, Response
 from aiohttp.client_exceptions import ClientResponseError
 from sdc.crypto.encrypter import encrypt
-from sdc.crypto.key_store import validate_required_keys, KeyStore
 from structlog import wrap_logger
 
 from .case import get_case

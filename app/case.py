@@ -1,5 +1,4 @@
 import logging
-from collections import namedtuple
 
 from aiohttp.web import Application
 from structlog import wrap_logger

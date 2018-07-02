@@ -9,7 +9,6 @@ name = "pypi"
 
 aiohttp = "*"
 aiohttp-utils = "*"
-ipython = "*"
 envparse = "*"
 "aiohttp-jinja2" = "*"
 structlog = "*"
@@ -22,6 +21,7 @@ aiodns = "*"
 
 [dev-packages]
 
+ipython = "*"
 invoke = "*"
 "flake8" = "*"
 pytest-aiohttp = "*"

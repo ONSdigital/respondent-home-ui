@@ -1,3 +1,5 @@
+import os
+
 from aiohttp import web
 
 from app.app import create_app

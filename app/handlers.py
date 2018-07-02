@@ -83,7 +83,7 @@ async def post_index(request):
 
         token = encrypt(eq_payload, key_store=request.app['key_store'], key_purpose="authentication")
 
-        description=f"Instrument LMS launched for case {case_id}"
+        description = f"Instrument LMS launched for case {case_id}"
         await post_case_event(case_id, 'EQ_LAUNCH', description, request.app)
 
         return HTTPFound(request.app['EQ_URL'] + token)

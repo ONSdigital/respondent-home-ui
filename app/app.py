@@ -16,6 +16,7 @@ from . import session
 from . import settings
 from .app_logging import logger_initial_config
 
+
 logger = wrap_logger(logging.getLogger("respondent-home"))
 server_logger = logging.getLogger("aiohttp.server")
 

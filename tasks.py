@@ -40,7 +40,7 @@ def test(ctx, clean=False):
 
     if clean:
         clean_pycache(ctx)
-    retcode = pytest.main(["app"])
+    retcode = pytest.main(["tests"])
     sys.exit(retcode)
 
 

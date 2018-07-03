@@ -57,7 +57,7 @@ def create_app() -> web.Application:
     # Bind logger
     logger_initial_config(service_name="respondent-home", log_level=app["LOG_LEVEL"])
 
-    logger.info("Logging configured")
+    logger.info("Logging configured", log_level=app['LOG_LEVEL'])
     # Set up routes
     routes.setup(app)
 
@@ -81,6 +81,8 @@ def create_app() -> web.Application:
 
     app.on_startup.append(on_startup)
     app.on_cleanup.append(on_cleanup)
+
+    logger.info("App setup complete", config=app_config["ENV"])
 
     return app
 

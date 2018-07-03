@@ -20,7 +20,7 @@ def handle_response(response):
     try:
         response.raise_for_status()
     except ClientError as ex:
-        logger.error(f"Error in response from {response.url}, status_code={response.status}")
+        logger.error("Error in response", url=response.url, status_code=response.status)
         raise ClientError
 
 

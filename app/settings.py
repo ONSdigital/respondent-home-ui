@@ -1,6 +1,4 @@
-from envparse import env
+from envparse import Env
 
-env.read_envfile()
-
-ENV = env.str("APP_SETTINGS", default="BaseConfig")
+ENV = Env().str("APP_SETTINGS", default="BaseConfig")
 DEBUG = ENV != "Production"

@@ -1,8 +1,9 @@
+from functools import partial
 import logging
 
 import aiohttp_jinja2
 from aiohttp import web
-from aiohttp.client_exceptions import ClientResponseError
+from aiohttp.client_exceptions import ClientResponseError, ClientConnectorError
 
 from .flash import flash
 
@@ -19,20 +20,28 @@ def create_error_middleware(overrides):
             if override:
                 return await override(request)
             return resp
+        except ClientConnectorError:
+            return await connection_error(request)
         except ClientResponseError as ex:
             override = overrides.get(ex.status)
             if override:
-                return await override(request)
+                return await override(request, ex)
             raise
 
     return middleware_handler
 
 
-async def handle_500(request):
-    flash(request, "500 Server Error")
+async def connection_error(request):
+    flash(request, "Service Connection Error")
+    return aiohttp_jinja2.render_template("index.html", request, {})
+
+
+async def response_error(request, status):
+    flash(request, f"{status} Server Error")
     return aiohttp_jinja2.render_template("index.html", request, {})
 
 
 def setup(app):
-    error_middleware = create_error_middleware({500: handle_500})
+    overrides = {500: partial(response_error, status=500)}
+    error_middleware = create_error_middleware(overrides)
     app.middlewares.append(error_middleware)

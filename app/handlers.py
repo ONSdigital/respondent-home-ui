@@ -26,6 +26,10 @@ async def get_index(request, msg=None, redirect=False):
     return response
 
 
+async def get_info(request):
+    return Response(text="")
+
+
 def get_iac(data):
     return "".join([v.lower() for v in data.values()][:3])
 

@@ -71,11 +71,11 @@ class TestingConfig:
     HOST = "0.0.0.0"
     PORT = "9092"
     LOG_LEVEL = "INFO"
-    STATIC_ROOT = "../app/static"
+    STATIC_ROOT = "app/static"
 
     ACCOUNT_SERVICE_URL = "http://0.0.0.0:9092"
     EQ_URL = "http://0.0.0.0:5000/session?token="
-    JSON_SECRET_KEYS = open("./test_data/test_keys.json").read()
+    JSON_SECRET_KEYS = open("./tests/test_data/test_keys.json").read()
 
     COLLECTION_INSTRUMENT_URL = "http://0.0.0.0:8002"
     COLLECTION_INSTRUMENT_AUTH = ("admin", "secret")

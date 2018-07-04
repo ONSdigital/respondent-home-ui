@@ -2,10 +2,17 @@ import os
 import sys
 
 from envparse import ConfigurationError, Env
-from invoke import task, run
+from invoke import task, run as run_command
 
 
 env = Env()
+
+
+@task
+def run(ctx):
+    if not os.getenv('APP_SETTINGS'):
+        os.environ['APP_SETTINGS'] = 'DevelopmentConfig'
+    run_command("adev runserver app", echo=True)
 
 
 @task
@@ -24,13 +31,13 @@ def server(ctx, port=None, reload=True):
 
     if reload:
         command += " --reload"
-    run(command, echo=True)
+    run_command(command, echo=True)
 
 
 @task
 def flake8(ctx):
     """Run flake8 on the codebase"""
-    run("flake8 app", echo=True)
+    run_command("flake8 app", echo=True)
 
 
 @task(pre=[flake8])
@@ -47,5 +54,5 @@ def test(ctx, clean=False):
 @task
 def clean_pycache(ctx):
     """Clear out __pycache__ directories."""
-    run("find . -path '*/__pycache__/*' -delete", echo=True)
+    run_command("find . -path '*/__pycache__/*' -delete", echo=True)
     print("Cleaned up.")

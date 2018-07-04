@@ -1,4 +1,7 @@
+import unittest
+
 from aiohttp.test_utils import AioHTTPTestCase, unittest_run_loop
+from aioresponses import aioresponses
 
 from app.app import create_app
 from app.eq import format_date
@@ -14,7 +17,21 @@ class TestGenerateEqURL(AioHTTPTestCase):
     @unittest_run_loop
     async def test_get_index(self):
         response = await self.client.request("GET", "/")
-        assert response.status == 200
+        self.assertEqual(response.status, 200)
+
+    @unittest.skip('TODO')
+    @unittest_run_loop
+    @aioresponses(passthrough = ['http://127.0.0.1'])
+    async def test_post_index(self, mocked):
+        mocked.get(f"{self.app['IAC_URL']}/iacs/123456789012", payload={'active': '1', 'caseId': 'test'})
+        mocked.get(f"{self.app['CASE_URL']}/cases/test")
+        response = await self.client.request("POST", "/", data={'iac1': '1234', 'iac2': '5678', 'iac3': '9012', 'action[save_continue]': ''})
+        self.assertEqual(response.status, 200)
+
+    @unittest_run_loop
+    async def test_get_info(self):
+        response = await self.client.request("GET", "/info")
+        self.assertEqual(response.status, 200)
 
     def test_get_iac(self):
         # Given some post data

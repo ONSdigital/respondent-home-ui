@@ -93,17 +93,6 @@ async def post_index(request):
         return HTTPFound(request.app['EQ_URL'] + token)
 
 
-@aiohttp_jinja2.template("base.html")
-async def get_questionnaire(request):
-    context = {"a_variable": 12}
-    response = aiohttp_jinja2.render_template("base.html", request, context)
-    return response
-
-
-async def post_questionnaire(request):
-    return Response(text="Questionnaire post!")
-
-
 async def _validate_case(response):
     resp_json = await response.json()
     if not resp_json["active"]:

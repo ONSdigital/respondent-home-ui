@@ -27,6 +27,7 @@ class BaseConfig:
     HOST = env("HOST")
     PORT = env("PORT")
     LOG_LEVEL = env("LOG_LEVEL")
+    STATIC_ROOT = "app/static"
 
     ACCOUNT_SERVICE_URL = env("ACCOUNT_SERVICE_URL")
     EQ_URL = env("EQ_URL")
@@ -47,10 +48,11 @@ class DevelopmentConfig:
     HOST = env.str("HOST", default="0.0.0.0")
     PORT = env.int("PORT", default="9092")
     LOG_LEVEL = env("LOG_LEVEL", default="INFO")
+    STATIC_ROOT = "app/static"
 
     ACCOUNT_SERVICE_URL = env.str("ACCOUNT_SERVICE_URL", default="http://0.0.0.0:9092")
     EQ_URL = env.str("EQ_URL", default="http://0.0.0.0:5000/session?token=")
-    JSON_SECRET_KEYS = env.str("JSON_SECRET_KEYS", default=open("./tests/test_data/test_keys.json").read())
+    JSON_SECRET_KEYS = env.str("JSON_SECRET_KEYS", default=None) or open("./tests/test_data/test_keys.json").read()
 
     COLLECTION_INSTRUMENT_URL = env.str("COLLECTION_INSTRUMENT_URL", default="http://0.0.0.0:8002")
     COLLECTION_INSTRUMENT_AUTH = (
@@ -63,3 +65,23 @@ class DevelopmentConfig:
 
     IAC_URL = env.str("IAC_URL", default="http://0.0.0.0:8121")
     IAC_AUTH = (env.str("IAC_USERNAME", default="admin"), env.str("IAC_PASSWORD", default="secret"))
+
+
+class TestingConfig:
+    HOST = "0.0.0.0"
+    PORT = "9092"
+    LOG_LEVEL = "INFO"
+    STATIC_ROOT = "../app/static"
+
+    ACCOUNT_SERVICE_URL = "http://0.0.0.0:9092"
+    EQ_URL = "http://0.0.0.0:5000/session?token="
+    JSON_SECRET_KEYS = open("./test_data/test_keys.json").read()
+
+    COLLECTION_INSTRUMENT_URL = "http://0.0.0.0:8002"
+    COLLECTION_INSTRUMENT_AUTH = ("admin", "secret")
+
+    CASE_URL = "http://0.0.0.0:8171"
+    CASE_AUTH = ("admin", "secret")
+
+    IAC_URL = "http://0.0.0.0:8121"
+    IAC_AUTH = ("admin", "secret")

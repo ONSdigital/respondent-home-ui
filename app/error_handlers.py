@@ -32,7 +32,7 @@ def create_error_middleware(overrides):
 
 
 async def connection_error(request):
-    flash(request, "Service Connection Error")
+    flash(request, "Service connection error")
     return aiohttp_jinja2.render_template("index.html", request, {})
 
 

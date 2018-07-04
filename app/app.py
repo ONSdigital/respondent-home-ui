@@ -31,13 +31,13 @@ async def on_cleanup(app):
     await app.http_session_pool.close()
 
 
-def create_app() -> web.Application:
+def create_app(config_name=None) -> web.Application:
     """App factory. Sets up routes and all plugins.
     """
     app_config = config.Config()
     app_config.from_object(settings)
 
-    app_config.from_object(getattr(config, app_config["ENV"]))
+    app_config.from_object(getattr(config, config_name or app_config["ENV"]))
 
     app = web.Application(
         debug=settings.DEBUG, middlewares=[session.setup(), flash.flash_middleware]
@@ -74,7 +74,7 @@ def create_app() -> web.Application:
     # Set static folder location
     # TODO: Only turn on in dev environment
     app["static_root_url"] = "/"
-    app.router.add_static("/", "app/static", show_index=True)
+    app.router.add_static("/", app["STATIC_ROOT"], show_index=True)
 
     # JWT KeyStore
     app["key_store"] = jwt.key_store(app["JSON_SECRET_KEYS"])

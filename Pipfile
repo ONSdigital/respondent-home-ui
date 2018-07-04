@@ -24,6 +24,7 @@ invoke = "*"
 pytest-aiohttp = "*"
 pytest-cov = "*"
 aiohttp-devtools = "*"
+aioresponses = "*"
 
 [requires]
 python_version = "3.6"

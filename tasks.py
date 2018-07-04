@@ -9,10 +9,11 @@ env = Env()
 
 
 @task
-def run(ctx):
+def run(ctx, port=None):
+    port = port or env("PORT", default=8000)
     if not os.getenv('APP_SETTINGS'):
         os.environ['APP_SETTINGS'] = 'DevelopmentConfig'
-    run_command("adev runserver app", echo=True)
+    run_command(f"adev runserver app --port {port}", echo=True)
 
 
 @task

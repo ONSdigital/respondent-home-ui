@@ -85,8 +85,3 @@ def create_app() -> web.Application:
     logger.info("App setup complete", config=app_config["ENV"])
 
     return app
-
-
-if __name__ == "__main__":
-    app = create_app()
-    web.run_app(app, port=app["PORT"])

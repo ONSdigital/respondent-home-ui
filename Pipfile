@@ -1,12 +1,9 @@
 [[source]]
-
 url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
-
 [packages]
-
 aiohttp = "*"
 aiohttp-utils = "*"
 envparse = "*"
@@ -18,9 +15,7 @@ cchardet = "*"
 aiodns = "*"
 "iso8601" = "*"
 
-
 [dev-packages]
-
 codecov = "*"
 coverage = "*"
 ipython = "*"
@@ -28,8 +23,7 @@ invoke = "*"
 "flake8" = "*"
 pytest-aiohttp = "*"
 pytest-cov = "*"
-
+aiohttp-devtools = "*"
 
 [requires]
-
 python_version = "3.6"

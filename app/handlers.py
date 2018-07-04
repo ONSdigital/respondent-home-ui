@@ -30,41 +30,52 @@ async def get_info(request):
     return Response(text="")
 
 
-def get_iac(data):
-    return "".join([v.lower() for v in data.values()][:3])
+def get_iac(data, expected_length=12):
+    combined = "".join([v.lower() for v in data.values()][:3])
+    if len(combined) < expected_length:
+        raise TypeError
+    return combined
 
 
 async def post_index(request):
     client_ip = request.headers.get("X-Forwarded-For")
     data = await request.post()
-    iac = get_iac(data)
+    try:
+        iac = get_iac(data)
+    except TypeError:
+        logger.warn("Attempt to use a malformed access code", client_ip=client_ip)
+        return await get_index(
+            request,
+            msg="Please provide the unique access code printed on your invitation letter or form.",
+            redirect=True,
+        )
     iac_url = f"{request.app['IAC_URL']}/iacs/{iac}"
 
     async with request.app.http_session_pool.get(iac_url, auth=request.app["IAC_AUTH"]) as resp:
-        logger.info("Received response from IAC", iac=f"{iac}", status_code=f"{resp.status}")
+        logger.info("Received response from IAC", iac=iac, status_code=resp.status)
 
         try:
             resp.raise_for_status()
         except ClientResponseError as ex:
             if resp.status == 404:
-                logger.info(f"Attempt to use an invalid access code from {client_ip}")
-                rendered = await get_index(
+                logger.info("Attempt to use an invalid access code", client_ip=client_ip)
+                return await get_index(
                     request,
                     msg="Please provide the unique access code printed on your invitation letter or form.",
                     redirect=True,
                 )
-                return rendered
             elif resp.status == 401:
-                logger.info(f"Unauthorized access to IAC service from {client_ip} attempted")
-                rendered = await get_index(
+                logger.info("Unauthorized access to IAC service attempted", client_ip=client_ip)
+                return await get_index(
                     request,
                     msg="You are not authorized to access this service.",
                     redirect=True,
                 )
-                return rendered
             elif 400 <= resp.status < 500:
                 logger.info(
-                    f"Client error when accessing IAC service from {client_ip}", status=resp.status
+                    "Client error when accessing IAC service",
+                    client_ip=client_ip,
+                    status=resp.status,
                 )
                 flash(request, "Bad request. Please try again")
                 return aiohttp_jinja2.render_template("index.html", request, {})
@@ -74,8 +85,7 @@ async def post_index(request):
         try:
             await _validate_case(resp)
         except InactiveCaseError:
-            msg = f"Attempt to use an inactive access code from {client_ip}"
-            logger.info(msg)
+            logger.info("Attempt to use an inactive access code", client_ip=client_ip)
             flash(request, "The unique access code entered has already been used")
             return aiohttp_jinja2.render_template("index.html", request, {})
 
@@ -90,6 +100,7 @@ async def post_index(request):
         description = f"Instrument LMS launched for case {case_id}"
         await post_case_event(case_id, 'EQ_LAUNCH', description, request.app)
 
+        logger.info('Redirecting to eQ', client_ip=client_ip)
         return HTTPFound(request.app['EQ_URL'] + token)
 
 

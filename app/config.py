@@ -36,6 +36,9 @@ class BaseConfig:
     CASE_URL = env("CASE_URL")
     CASE_AUTH = (env("CASE_USERNAME"), env("CASE_PASSWORD"))
 
+    COLLECTION_EXERCISE_URL = env("COLLECTION_EXERCISE_URL")
+    COLLECTION_EXERCISE_AUTH = env("COLLECTION_EXERCISE_AUTH")
+
     COLLECTION_INSTRUMENT_URL = env("COLLECTION_INSTRUMENT_URL")
     COLLECTION_INSTRUMENT_AUTH = env("COLLECTION_INSTRUMENT_AUTH")
 
@@ -53,6 +56,12 @@ class DevelopmentConfig:
     ACCOUNT_SERVICE_URL = env.str("ACCOUNT_SERVICE_URL", default="http://0.0.0.0:9092")
     EQ_URL = env.str("EQ_URL", default="http://0.0.0.0:5000/session?token=")
     JSON_SECRET_KEYS = env.str("JSON_SECRET_KEYS", default=None) or open("./tests/test_data/test_keys.json").read()
+
+    COLLECTION_EXERCISE_URL = env.str("COLLECTION_EXERCISE_URL", default="http://0.0.0.0:8145")
+    COLLECTION_EXERCISE_AUTH = (
+        env.str("COLLECTION_EXERCISE_USERNAME", default="admin"),
+        env.str("COLLECTION_EXERCISE_PASSWORD", default="secret")
+    )
 
     COLLECTION_INSTRUMENT_URL = env.str("COLLECTION_INSTRUMENT_URL", default="http://0.0.0.0:8002")
     COLLECTION_INSTRUMENT_AUTH = (
@@ -76,6 +85,9 @@ class TestingConfig:
     ACCOUNT_SERVICE_URL = "http://0.0.0.0:9092"
     EQ_URL = "http://0.0.0.0:5000/session?token="
     JSON_SECRET_KEYS = open("./tests/test_data/test_keys.json").read()
+
+    COLLECTION_EXERCISE_URL = "http://0.0.0.0:8145"
+    COLLECTION_EXERCISE_AUTH = ("admin", "secret")
 
     COLLECTION_INSTRUMENT_URL = "http://0.0.0.0:8002"
     COLLECTION_INSTRUMENT_AUTH = ("admin", "secret")

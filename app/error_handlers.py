@@ -25,7 +25,7 @@ def create_error_middleware(overrides):
         except ClientResponseError as ex:
             override = overrides.get(ex.status)
             if override:
-                return await override(request, ex)
+                return await override(request)
             raise
 
     return middleware_handler
@@ -42,6 +42,8 @@ async def response_error(request, status):
 
 
 def setup(app):
-    overrides = {500: partial(response_error, status=500)}
+    overrides = {
+        500: partial(response_error, status=500),
+        503: partial(response_error, status=503)}
     error_middleware = create_error_middleware(overrides)
     app.middlewares.append(error_middleware)

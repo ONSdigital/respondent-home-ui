@@ -2,6 +2,7 @@ import functools
 import time
 from uuid import uuid4
 
+from aiohttp.client_exceptions import ClientConnectorError
 from aiohttp.test_utils import AioHTTPTestCase, unittest_run_loop
 from aioresponses import aioresponses
 
@@ -341,3 +342,27 @@ class TestGenerateEqURL(AioHTTPTestCase):
 
         # Then an InvalidEqPayLoad is raised
         self.assertEqual(e.exception.message, 'Unable to format invalid_date')
+
+    def test_create_eq_constructor(self):
+        from app import eq
+
+        self.assertIsInstance(eq.EqPayloadConstructor(self.case_json, self.app), eq.EqPayloadConstructor)
+
+    @unittest_run_loop
+    async def test_build_no_mocks(self):
+        from app import eq
+
+        with self.assertRaises(ClientConnectorError):
+            await eq.EqPayloadConstructor(self.case_json, self.app).build()
+
+    @unittest_run_loop
+    async def test_build(self):
+        from app import eq
+        with aioresponses() as mocked:
+            url = (
+                f"{self.app['COLLECTION_INSTRUMENT_URL']}"
+                f"/collection-instrument-api/1.0.2/collectioninstrument/id/{self.collection_instrument_id}"
+            )
+            mocked.get(url, payload={'type': 'EQ'})
+            await eq.EqPayloadConstructor(self.case_json, self.app).build()
+

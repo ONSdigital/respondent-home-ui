@@ -83,13 +83,28 @@ class TestGenerateEqURL(AioHTTPTestCase):
         async def build(s):
             return self.eq_payload
 
+        eq.EqPayloadConstructor._bk__init__ = eq.EqPayloadConstructor.__init__
         eq.EqPayloadConstructor.__init__ = lambda *args: None
+        eq.EqPayloadConstructor._bk_build = eq.EqPayloadConstructor.build
         eq.EqPayloadConstructor.build = build
 
-    async def get_application(self):
+    async def _reset_eq_payload_constructor(self):
+        from app import eq
+
+        eq.EqPayloadConstructor.__init__ = eq.EqPayloadConstructor._bk__init__
+        eq.EqPayloadConstructor.build = eq.EqPayloadConstructor._bk_build
+
+    async def setUpAsync(self):
         test_method = getattr(self, self._testMethodName)
         if hasattr(test_method, '_skip_eq'):
             await self._override_eq_payload_constructor()
+
+    async def tearDownAsync(self):
+        test_method = getattr(self, self._testMethodName)
+        if hasattr(test_method, '_skip_eq'):
+            await self._reset_eq_payload_constructor()
+
+    async def get_application(self):
         return create_app('TestingConfig')
 
     @unittest_run_loop
@@ -111,6 +126,19 @@ class TestGenerateEqURL(AioHTTPTestCase):
 
         self.assertEqual(response.status, 302)
         self.assertIn(self.app['EQ_URL'], response.headers['location'])
+
+    @unittest_run_loop
+    async def test_post_index_no_skip(self):
+        with aioresponses(passthrough=[str(self.server._root)]) as mocked:
+            mocked.get(f"{self.app['IAC_URL']}/iacs/{self.iac_code}", payload=self.iac_json)
+            mocked.get(f"{self.app['CASE_URL']}/cases/{self.case_id}", payload=self.case_json)
+            mocked.post(f"{self.app['CASE_URL']}/cases/{self.case_id}/events")
+
+            response = await self.client.request("POST", "/", allow_redirects=False, data={
+                'iac1': self.iac1, 'iac2': self.iac2, 'iac3': self.iac3, 'action[save_continue]': '',
+            })
+
+        self.assertEqual(response.status, 500)
 
     @unittest_run_loop
     async def test_get_info(self):

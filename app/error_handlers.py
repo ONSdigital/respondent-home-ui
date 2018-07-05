@@ -5,7 +5,9 @@ import aiohttp_jinja2
 from aiohttp import web
 from aiohttp.client_exceptions import ClientResponseError, ClientConnectorError
 
+from .exceptions import InvalidEqPayLoad
 from .flash import flash
+
 
 logger = logging.getLogger("respondent-home")
 
@@ -20,6 +22,8 @@ def create_error_middleware(overrides):
             if override:
                 return await override(request)
             return resp
+        except InvalidEqPayLoad as ex:
+            return await eq_error(request, ex.message)
         except ClientConnectorError:
             return await connection_error(request)
         except ClientResponseError as ex:
@@ -29,6 +33,12 @@ def create_error_middleware(overrides):
             raise
 
     return middleware_handler
+
+
+async def eq_error(request, message):
+    logger.error("Service failed to build eQ payload", message=message)
+    flash(request, "Failed to redirect to survey")
+    return aiohttp_jinja2.render_template("index.html", request, {})
 
 
 async def connection_error(request):

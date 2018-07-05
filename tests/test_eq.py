@@ -361,9 +361,21 @@ class TestGenerateEqURL(AioHTTPTestCase):
     async def test_build(self):
         from app import eq
         with aioresponses() as mocked:
-            url = (
+            collection_instrument_url = (
                 f"{self.app['COLLECTION_INSTRUMENT_URL']}"
                 f"/collection-instrument-api/1.0.2/collectioninstrument/id/{self.collection_instrument_id}"
             )
-            mocked.get(url, payload={'type': 'EQ'})
+            mocked.get(collection_instrument_url, payload={
+                'type': 'EQ',
+                'classifiers': {'eq_id': '1', 'form_type': '0001'}
+            })
+
+            collection_exercise_url = (
+                f"{self.app['COLLECTION_EXERCISE_URL']}"
+                f"/collectionexercises/{self.collection_exercise_id}"
+            )
+            mocked.get(collection_exercise_url, payload={
+
+            })
+
             await eq.EqPayloadConstructor(self.case_json, self.app).build()

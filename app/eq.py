@@ -226,7 +226,7 @@ class EqPayloadConstructor(object):
         return resp
 
     async def _get_collection_exercise(self):
-        url = self._collex_url.format(self._app["COLLECTION_EXERCISE_URL"], self._ci_id)
+        url = self._collex_url.format(self._app["COLLECTION_EXERCISE_URL"], self._collex_id)
         resp = await self._make_request(Request("GET", url, handle_response))
         return resp
 

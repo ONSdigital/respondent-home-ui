@@ -2,7 +2,9 @@ from collections import namedtuple
 
 from . import handlers
 
+
 Route = namedtuple("Route", ["method", "path", "handler", "name"])
+
 
 ROUTES = [
     Route("GET",  "/", handler=handlers.get_index,  name="get_index"),

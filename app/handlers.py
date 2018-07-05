@@ -64,7 +64,7 @@ async def post_index(request):
                     msg="Please provide the unique access code printed on your invitation letter or form.",
                     redirect=True,
                 )
-            elif resp.status == 401:
+            elif resp.status in (401, 403):
                 logger.info("Unauthorized access to IAC service attempted", client_ip=client_ip)
                 return await get_index(
                     request,
@@ -90,7 +90,13 @@ async def post_index(request):
             return aiohttp_jinja2.render_template("index.html", request, {})
 
         case_json = await resp.json()
-        case_id = case_json["caseId"]
+        try:
+            case_id = case_json["caseId"]
+        except KeyError:
+            logger.error('caseId missing from case response', client_ip=client_ip)
+            flash(request, "Bad response from server. Please try again")
+            return aiohttp_jinja2.render_template("index.html", request, {})
+
         case = await get_case(case_id, request.app)
 
         eq_payload = await EqPayloadConstructor(case, request.app).build()
@@ -106,5 +112,5 @@ async def post_index(request):
 
 async def _validate_case(response):
     resp_json = await response.json()
-    if not resp_json["active"]:
+    if 'active' not in resp_json or not resp_json["active"]:
         raise InactiveCaseError

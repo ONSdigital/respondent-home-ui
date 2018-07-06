@@ -37,13 +37,19 @@ class BaseConfig:
     CASE_AUTH = (env("CASE_USERNAME"), env("CASE_PASSWORD"))
 
     COLLECTION_EXERCISE_URL = env("COLLECTION_EXERCISE_URL")
-    COLLECTION_EXERCISE_AUTH = env("COLLECTION_EXERCISE_AUTH")
+    COLLECTION_EXERCISE_AUTH = (env("COLLECTION_EXERCISE_USERNAME"), env("COLLECTION_EXERCISE_PASSWORD"))
 
     COLLECTION_INSTRUMENT_URL = env("COLLECTION_INSTRUMENT_URL")
-    COLLECTION_INSTRUMENT_AUTH = env("COLLECTION_INSTRUMENT_AUTH")
+    COLLECTION_INSTRUMENT_AUTH = (env("COLLECTION_INSTRUMENT_USERNAME"), env("COLLECTION_INSTRUMENT_PASSWORD"))
 
     IAC_URL = env("IAC_URL")
     IAC_AUTH = (env("IAC_USERNAME"), env("IAC_PASSWORD"))
+
+    PARTY_URL = env("PARTY_URL")
+    PARTY_AUTH = (env("PARTY_USERNAME"), env("PARTY_PASSWORD"))
+
+    SURVEY_URL = env("SURVEY_URL")
+    SURVEY_AUTH = (env("SURVEY_USERNAME"), env("SURVEY_PASSWORD"))
 
 
 class DevelopmentConfig:
@@ -75,6 +81,12 @@ class DevelopmentConfig:
     IAC_URL = env.str("IAC_URL", default="http://0.0.0.0:8121")
     IAC_AUTH = (env.str("IAC_USERNAME", default="admin"), env.str("IAC_PASSWORD", default="secret"))
 
+    PARTY_URL = env("PARTY_URL", default="http://0.0.0.0:8081")
+    PARTY_AUTH = (env("PARTY_USERNAME", default="admin"), env("PARTY_PASSWORD", default="secret"))
+
+    SURVEY_URL = env("SURVEY_URL", default="http://0.0.0.0:8080")
+    SURVEY_AUTH = (env("SURVEY_USERNAME", default="admin"), env("SURVEY_PASSWORD", default="secret"))
+
 
 class TestingConfig:
     HOST = "0.0.0.0"
@@ -97,3 +109,9 @@ class TestingConfig:
 
     IAC_URL = "http://0.0.0.0:8121"
     IAC_AUTH = ("admin", "secret")
+
+    PARTY_URL = "http://0.0.0.0:8081"
+    PARTY_AUTH = ("admin", "secret")
+
+    SURVEY_URL = "http://0.0.0.0:8080"
+    SURVEY_AUTH = ("admin", "secret")

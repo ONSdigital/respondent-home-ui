@@ -1,0 +1,28 @@
+{
+  "associations": [
+    {
+      "enrolments": [
+        {
+          "enrolmentStatus": "ENABLED",
+          "name": "Social",
+          "surveyId": "9ce458b8-739a-489d-ba56-dc27aa7080d1"
+        }
+      ],
+      "partyId": "89e0d37d-1564-4696-9873-abb5b9b4312e",
+      "sampleUnitRef": "49900000004"
+    }
+  ],
+  "checkletter":"C",
+  "emailAddress": "testuser@email.com",
+  "firstName": "Test",
+  "id": "89e0d37d-1564-4696-9873-abb5b9b4312e",
+  "name": "RUNAME1_COMPANY4 RUNNAME2_COMPANY4",
+  "lastName": "User",
+  "sampleUnitRef": "49900000004",
+  "sampleUnitType": "H",
+  "status": "ACTIVE",
+  "telephone": "01636 265626",
+  "tradstyle1": "TRADSTYLE1",
+  "tradstyle2": "TRADSTYLE2",
+  "tradstyle3": "TRADSTYLE3"
+}

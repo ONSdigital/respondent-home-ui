@@ -249,6 +249,22 @@ class TestGenerateEqURL(AioHTTPTestCase):
         self.assertEqual(response.status, 200)
         self.assertIn(b'Bad response', await response.content.read())
 
+
+    @unittest_run_loop
+    async def test_post_index_malformed(self):
+        iac_json = self.iac_json.copy()
+        del iac_json['caseId']
+
+        with aioresponses(passthrough=[str(self.server._root)]) as mocked:
+            mocked.get(f"{self.app['IAC_URL']}/iacs/{self.iac_code}", payload=iac_json)
+
+            response = await self.client.request("POST", "/", data={
+                'iac1': self.iac1, 'iac2': self.iac2, 'action[save_continue]': '',  # missing iac3
+            })
+
+        self.assertEqual(response.status, 200)
+        self.assertIn(b'Please provide the unique access code', await response.content.read())
+
     @unittest_run_loop
     async def test_post_index_iac_active_missing(self):
         iac_json = self.iac_json.copy()

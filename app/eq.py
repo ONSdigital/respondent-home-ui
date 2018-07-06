@@ -13,7 +13,7 @@ from .exceptions import InvalidEqPayLoad
 
 logger = wrap_logger(logging.getLogger(__name__))
 
-Request = namedtuple("Request", ["method", "path", "func"])
+Request = namedtuple("Request", ["method", "path", "auth", "func"])
 
 
 def handle_response(response):
@@ -57,9 +57,10 @@ class EqPayloadConstructor(object):
         """
 
         self._app = app
-        self._ci_url = "{}/collection-instrument-api/1.0.2/collectioninstrument/id/{}"
-        self._collex_url = "{}/collectionexercises/{}"
-        self._survey_url = "{}/surveys/{}"
+        self._ci_url = f"{app['COLLECTION_INSTRUMENT_URL']}/collection-instrument-api/1.0.2/collectioninstrument/id/"
+        self._collex_url = f"{app['COLLECTION_EXERCISE_URL']}/collectionexercises/"
+        self._party_url = f"{app['PARTY_URL']}/party-api/v1/businesses/id/"  # TODO: swap out for the sample service(?)
+        self._survey_url = f"{app['SURVEY_URL']}/surveys/"
 
         self._tx_id = str(uuid4())
         self._account_service_url = app["ACCOUNT_SERVICE_URL"]
@@ -134,8 +135,8 @@ class EqPayloadConstructor(object):
             raise InvalidEqPayLoad(f"Could not retrieve id for case {self._case_id}")
 
         self._collex_events = await self._get_collection_exercise_events()
-        self._collex_event_dates = await self._get_collex_event_dates()
-        self._party = await self._get_party_by_business_id()
+        self._collex_event_dates = self._get_collex_event_dates()
+        self._party = await self._get_party_by_id()
 
         try:
             self._sample_unit_ref = self._party["sampleUnitRef"]
@@ -207,60 +208,41 @@ class EqPayloadConstructor(object):
         return self._payload
 
     async def _make_request(self, request: Request):
-        method, url, func = request
+        method, url, auth, func = request
         logger.info(f"Making {method} request to {url} and handling with {func}")
         async with self._app.http_session_pool.request(
-            method, url, auth=self._app["COLLECTION_INSTRUMENT_AUTH"]
+            method, url, auth=auth
         ) as resp:
             func(resp)
             return await resp.json()
 
+    async def _get_party_by_id(self):
+        url = self._party_url + self._party_id
+        return await self._make_request(Request("GET", url, self._app['PARTY_AUTH'], handle_response))
+
     async def _get_survey(self):
-        url = self._survey_url.format(self._app["SURVEY_URL"], self._survey_id)
-        resp = await self._make_request(Request("GET", url, handle_response))
-        return resp
+        url = self._survey_url + self._survey_id
+        return await self._make_request(Request("GET", url, self._app['SURVEY_AUTH'], handle_response))
 
     async def _get_collection_instrument(self):
-        url = self._ci_url.format(self._app["COLLECTION_INSTRUMENT_URL"], self._ci_id)
-        resp = await self._make_request(Request("GET", url, handle_response))
-        return resp
+        url = self._ci_url + self._ci_id
+        return await self._make_request(Request("GET", url, self._app['COLLECTION_INSTRUMENT_AUTH'], handle_response))
 
     async def _get_collection_exercise(self):
-        url = self._collex_url.format(self._app["COLLECTION_EXERCISE_URL"], self._collex_id)
-        resp = await self._make_request(Request("GET", url, handle_response))
-        return resp
+        url = self._collex_url + self._collex_id
+        return await self._make_request(Request("GET", url, self._app['COLLECTION_EXERCISE_AUTH'], handle_response))
 
     async def _get_collection_exercise_events(self):
-        url = self._collex_url.format(self._app["COLLECTION_EXERCISE_URL"], self._ci_id) + "/events"
-        resp = await self._make_request(Request("GET", url, handle_response))
-        return resp
+        url = self._collex_url + self._collex_id + "/events"
+        return await self._make_request(Request("GET", url, self._app['COLLECTION_EXERCISE_AUTH'], handle_response))
 
-    async def _get_collex_event_dates(self):
+    def _get_collex_event_dates(self):
         return {
             "ref_p_start_date": find_event_date_by_tag(
                 "ref_period_start", self._collex_events, self._collex_id, True
             ),
             "ref_p_end_date": find_event_date_by_tag(
                 "ref_period_end", self._collex_events, self._collex_id, True
-            ),
-            "employment_date": find_event_date_by_tag(
-                "employment", self._collex_events, self._collex_id, False
-            ),
-            "return_by": find_event_date_by_tag(
-                "return_by", self._collex_events, self._collex_id, True
-            ),
-        }
-
-    def _get_party_by_business_id(self):
-        return {
-            "ref_p_start_date": find_event_date_by_tag(
-                "ref_period_start", self._collex_events, self._collex_id, True
-            ),
-            "ref_p_end_date": find_event_date_by_tag(
-                "ref_period_end", self._collex_events, self._collex_id, True
-            ),
-            "employment_date": find_event_date_by_tag(
-                "employment", self._collex_events, self._collex_id, False
             ),
             "return_by": find_event_date_by_tag(
                 "return_by", self._collex_events, self._collex_id, True

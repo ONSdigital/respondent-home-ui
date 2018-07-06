@@ -1,0 +1,23 @@
+{
+  "id": "6553d121-df61-4b3a-8f43-e0726666b8cc",
+  "surveyId": "9ce458b8-739a-489d-ba56-dc27aa7080d1",
+  "name": "201712",
+  "exerciseRef": "221_201712",
+  "actualExecutionDateTime": "2017-05-15T14:20:24Z",
+  "scheduledExecutionDateTime": "2017-05-15T00:00:00Z",
+  "scheduledStartDateTime": "2017-06-01T00:00:00Z",
+  "actualPublishDateTime": "2017-06-30T00:00:00Z",
+  "periodStartDateTime": "2017-06-30T00:00:00Z",
+  "periodEndDateTime": "2017-06-30T00:00:00Z",
+  "scheduledReturnDateTime": "2017-06-30T00:00:00Z",
+  "scheduledEndDateTime": null,
+  "executedBy": "Fred Bloggs",
+  "state": "EXECUTED",
+  "userDescription": "December 2017",
+  "caseTypes": [
+    {
+      "sampleUnitType": "H",
+      "actionPlanId": "26d65fa5-c8c3-4cad-bab0-44a52f81ca42"
+    }
+  ]
+}

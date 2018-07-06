@@ -1,6 +1,7 @@
 import functools
+import json
 import time
-from unittest import skip
+from unittest import skip, mock
 from uuid import uuid4
 
 from aiohttp.client_exceptions import ClientConnectorError
@@ -28,61 +29,92 @@ class TestGenerateEqURL(AioHTTPTestCase):
     action_plan_id = 'e6ce828c-ed94-457e-85a6-bcef784f4160'
     case_id = '8849c299-5014-4637-bd2b-fc866aeccdf5'
     case_group_id = '26d65fa5-c8c3-4cad-bab0-44a52f81ca42'
-    case_ref = "1000000000000001"
+    case_ref = "1000000000000502"
     collection_exercise_id = '6553d121-df61-4b3a-8f43-e0726666b8cc'
+    collection_exercise_ref = '221_201712'
+    collection_exercise_user_desc = 'December 2017'
     collection_instrument_id = '724f7d1c-4343-408b-be06-725422a2e223'
+    eq_id = '2'
+    form_type = '0001'
+    jti = 'f2327dcd-40b3-41ff-8766-de2a5db6272d'
     iac_code = '123456789012'
     iac1, iac2, iac3 = iac_code[:4], iac_code[4:8], iac_code[8:]
     iac_json = {'active': '1', 'caseId': case_id}
     party_id = '89e0d37d-1564-4696-9873-abb5b9b4312e'
-    case_json = {
-        "state": "ACTIONABLE",
-        "id": case_id,
-        "actionPlanId": action_plan_id,
-        "collectionInstrumentId": collection_instrument_id,
-        "partyId": party_id,
-        "iac": "null",
-        "caseRef": case_ref,
-        "createdBy": "SYSTEM",
-        "sampleUnitType": "B",  # TODO: will this be different for social?
-        "createdDateTime": "2018-06-28T08:36:44.904Z",
-        "caseGroup": {
-            "collectionExerciseId": collection_exercise_id,
-            "id": case_group_id,
-            "partyId": party_id,
-            "sampleUnitRef": "49900000001",
-            "sampleUnitType": "B",  # TODO: will this be different for social?
-            "caseGroupStatus": "NOTSTARTED"
-        },
-        "responses": [],
-        "caseEvents": "null"
-    }
-    eq_payload = {
-        "jti": str(uuid4()),
-        # "tx_id": self._tx_id,
-        "user_id": party_id,
-        "iat": int(time.time()),
-        "exp": int(time.time() + (5 * 60)),
-        # "eq_id": self._eq_id,
-        # "period_str": self._collex_user_description,
-        # "period_id": self._collex_period_id,
-        # "form_type": self._form_type,
-        "collection_exercise_sid": collection_exercise_id,
-        # "ru_ref": self._sample_unit_ref + self._checkletter,
-        # "ru_name": self._ru_name,
-        # "survey_id": self._survey_ref,
-        "case_id": case_id,
-        "case_ref": case_ref,
-        # "account_service_url": self._account_service_url,
-        # "trad_as": self._trading_as,
-        # "region_code": self._region_code,
-        # "language_code": self._language_code
-    }
+    ru_name = 'RUNAME1_COMPANY4 RUNNAME2_COMPANY4'
+    sample_unit_ref = '49900000004'
+    sample_unit_type = 'H'
+    survey_id = '9ce458b8-739a-489d-ba56-dc27aa7080d1'
+    survey_ref = '221'
+    region_code = 'GB-ENG'
+    language_code = 'en'
+    trading_as = 'TRADSTYLE1 TRADSTYLE2 TRADSTYLE3'
+    start_date = '2018-04-10'
+    end_date = '2020-05-31'
+    return_by = '2018-05-08'
+
+    def setUp(self):
+        super().setUp()  # NB: setUp the server first so we can use self.app
+        self.eq_payload = {
+            "jti": self.jti,
+            "tx_id": self.jti,
+            "user_id": self.party_id,
+            "iat": int(time.time()),
+            "exp": int(time.time() + (5 * 60)),
+            "eq_id": self.eq_id,
+            "period_str": self.collection_exercise_user_desc,
+            "period_id": self.collection_exercise_ref,
+            "form_type": self.form_type,
+            "collection_exercise_sid": self.collection_exercise_id,
+            "ru_ref": self.sample_unit_ref + 'C',
+            "ru_name": self.ru_name,
+            "survey_id": self.survey_ref,
+            "case_id": self.case_id,
+            "case_ref": self.case_ref,
+            "account_service_url": self.app['ACCOUNT_SERVICE_URL'],
+            "trad_as": self.trading_as,
+            "region_code": self.region_code,
+            "language_code": self.language_code,
+            "return_by": self.return_by,
+            "ref_p_end_date": self.end_date,
+            "ref_p_start_date": self.start_date
+        }
+        with open('tests/test_data/case/case.json') as fp:
+            self.case_json = json.load(fp)
+        with open('tests/test_data/collection_exercise/collection_exercise.json') as fp:
+            self.collection_exercise_json = json.load(fp)
+        with open('tests/test_data/collection_exercise/collection_exercise_events.json') as fp:
+            self.collection_exercise_events_json = json.load(fp)
+        with open('tests/test_data/collection_instrument/collection_instrument_eq.json') as fp:
+            self.collection_instrument_json = json.load(fp)
+        with open('tests/test_data/party/party.json') as fp:
+            self.party_json = json.load(fp)
+        with open('tests/test_data/survey/survey.json') as fp:
+            self.survey_json = json.load(fp)
+
+        self.collection_instrument_url = (
+            f"{self.app['COLLECTION_INSTRUMENT_URL']}"
+            f"/collection-instrument-api/1.0.2/collectioninstrument/id/{self.collection_instrument_id}"
+        )
+        self.collection_exercise_url = (
+            f"{self.app['COLLECTION_EXERCISE_URL']}"
+            f"/collectionexercises/{self.collection_exercise_id}"
+        )
+        self.collection_exercise_events_url = (
+            f"{self.app['COLLECTION_EXERCISE_URL']}"
+            f"/collectionexercises/{self.collection_exercise_id}/events"
+        )
+        self.party_url = (
+            f"{self.app['PARTY_URL']}/party-api/v1/businesses/id/{self.party_id}"
+        )
+        self.survey_url = (
+            f"{self.app['SURVEY_URL']}/surveys/{self.survey_id}"
+        )
 
     async def _override_eq_payload_constructor(self):
         from app import eq
 
-        async def build(s):
+        async def build(_):
             return self.eq_payload
 
         eq.EqPayloadConstructor._bk__init__ = eq.EqPayloadConstructor.__init__
@@ -356,26 +388,25 @@ class TestGenerateEqURL(AioHTTPTestCase):
         with self.assertRaises(ClientConnectorError):
             await eq.EqPayloadConstructor(self.case_json, self.app).build()
 
-    @skip('TODO')
     @unittest_run_loop
     async def test_build(self):
-        from app import eq
-        with aioresponses() as mocked:
-            collection_instrument_url = (
-                f"{self.app['COLLECTION_INSTRUMENT_URL']}"
-                f"/collection-instrument-api/1.0.2/collectioninstrument/id/{self.collection_instrument_id}"
-            )
-            mocked.get(collection_instrument_url, payload={
-                'type': 'EQ',
-                'classifiers': {'eq_id': '1', 'form_type': '0001'}
-            })
+        self.maxDiff = None  # for full payload comparison when running this test
+        with mock.patch('app.eq.uuid4') as mocked_uuid4, mock.patch('app.eq.time.time') as mocked_time:
+            # NB: has to be mocked after setup but before import
+            mocked_time.return_value = self.eq_payload['iat']
+            mocked_uuid4.return_value = self.jti
 
-            collection_exercise_url = (
-                f"{self.app['COLLECTION_EXERCISE_URL']}"
-                f"/collectionexercises/{self.collection_exercise_id}"
-            )
-            mocked.get(collection_exercise_url, payload={
+            from app import eq  # NB: local import to avoid overwriting the patched version for some tests
 
-            })
+            with aioresponses() as mocked:
+                mocked.get(self.collection_instrument_url, payload=self.collection_instrument_json)
+                mocked.get(self.collection_exercise_url, payload=self.collection_exercise_json)
+                mocked.get(self.collection_exercise_events_url, payload=self.collection_exercise_events_json)
+                mocked.get(self.party_url, payload=self.party_json)
+                mocked.get(self.survey_url, payload=self.survey_json)
 
-            await eq.EqPayloadConstructor(self.case_json, self.app).build()
+                payload = await eq.EqPayloadConstructor(self.case_json, self.app).build()
+
+        mocked_uuid4.assert_called()
+        mocked_time.assert_called()
+        self.assertEqual(payload, self.eq_payload)

@@ -1,8 +1,8 @@
 import functools
 import json
 import time
+import urllib
 from unittest import skip, mock
-from uuid import uuid4
 
 from aiohttp.client_exceptions import ClientConnectorError
 from aiohttp.test_utils import AioHTTPTestCase, unittest_run_loop
@@ -24,8 +24,19 @@ def skip_build_eq(func, *args, **kwargs):
     return new_func
 
 
+def skip_encrypt(func, *args, **kwargs):
+
+    @functools.wraps(func, *args, **kwargs)
+    def new_func(self, *inner_args, **inner_kwargs):
+        return func(self, *inner_args, **inner_kwargs)
+
+    new_func._skip_encrypt = True
+    return new_func
+
+
 class TestGenerateEqURL(AioHTTPTestCase):
 
+    # TODO: initialise most of this from the JSON files in setUp
     action_plan_id = 'e6ce828c-ed94-457e-85a6-bcef784f4160'
     case_id = '8849c299-5014-4637-bd2b-fc866aeccdf5'
     case_group_id = '26d65fa5-c8c3-4cad-bab0-44a52f81ca42'
@@ -122,21 +133,39 @@ class TestGenerateEqURL(AioHTTPTestCase):
         eq.EqPayloadConstructor._bk_build = eq.EqPayloadConstructor.build
         eq.EqPayloadConstructor.build = build
 
+    async def _override_sdc_encrypt(self):
+        from app import handlers
+
+        def encrypt(payload, **_):
+            return json.dumps(payload)
+
+        handlers._bk_encrypt = handlers.encrypt
+        handlers.encrypt = encrypt
+
     async def _reset_eq_payload_constructor(self):
         from app import eq
 
         eq.EqPayloadConstructor.__init__ = eq.EqPayloadConstructor._bk__init__
         eq.EqPayloadConstructor.build = eq.EqPayloadConstructor._bk_build
 
+    async def _reset_sdc_encrypt(self):
+        from app import handlers
+
+        handlers.encrypt = handlers._bk_encrypt
+
     async def setUpAsync(self):
         test_method = getattr(self, self._testMethodName)
         if hasattr(test_method, '_skip_eq'):
             await self._override_eq_payload_constructor()
+        if hasattr(test_method, '_skip_encrypt'):
+            await self._override_sdc_encrypt()
 
     async def tearDownAsync(self):
         test_method = getattr(self, self._testMethodName)
         if hasattr(test_method, '_skip_eq'):
             await self._reset_eq_payload_constructor()
+        if hasattr(test_method, '_skip_encrypt'):
+            await self._reset_sdc_encrypt()
 
     async def get_application(self):
         return create_app('TestingConfig')
@@ -160,6 +189,50 @@ class TestGenerateEqURL(AioHTTPTestCase):
 
         self.assertEqual(response.status, 302)
         self.assertIn(self.app['EQ_URL'], response.headers['location'])
+
+    @unittest_run_loop
+    async def test_post_index_with_build_no_mocks(self):
+        with aioresponses(passthrough=[str(self.server._root)]) as mocked:
+            mocked.get(f"{self.app['IAC_URL']}/iacs/{self.iac_code}", payload=self.iac_json)
+            mocked.get(f"{self.app['CASE_URL']}/cases/{self.case_id}", payload=self.case_json)
+            mocked.post(f"{self.app['CASE_URL']}/cases/{self.case_id}/events")
+
+            response = await self.client.request("POST", "/", allow_redirects=False, data={
+                'iac1': self.iac1, 'iac2': self.iac2, 'iac3': self.iac3, 'action[save_continue]': '',
+            })
+
+        self.assertEqual(response.status, 500)
+        self.assertIn(b'500 Internal Server Error', await response.content.read())
+
+    @skip_encrypt
+    @unittest_run_loop
+    async def test_post_index_with_build(self):
+        with aioresponses(passthrough=[str(self.server._root)]) as mocked:
+            # mocks for initial data setup in post
+            mocked.get(f"{self.app['IAC_URL']}/iacs/{self.iac_code}", payload=self.iac_json)
+            mocked.get(f"{self.app['CASE_URL']}/cases/{self.case_id}", payload=self.case_json)
+            mocked.post(f"{self.app['CASE_URL']}/cases/{self.case_id}/events")
+            # mocks for the payload builder
+            mocked.get(self.collection_instrument_url, payload=self.collection_instrument_json)
+            mocked.get(self.collection_exercise_url, payload=self.collection_exercise_json)
+            mocked.get(self.collection_exercise_events_url, payload=self.collection_exercise_events_json)
+            mocked.get(self.party_url, payload=self.party_json)
+            mocked.get(self.survey_url, payload=self.survey_json)
+
+            response = await self.client.request("POST", "/", allow_redirects=False, data={
+                'iac1': self.iac1, 'iac2': self.iac2, 'iac3': self.iac3, 'action[save_continue]': '',
+            })
+
+        self.assertEqual(response.status, 302)
+        redirected_url = response.headers['location']
+        self.assertTrue(redirected_url.startswith(self.app['EQ_URL']), redirected_url)  # outputs url on fail
+        _, _, _, query, *_ = urllib.parse.urlsplit(redirected_url)  # we only care about the query string
+        token = json.loads(urllib.parse.parse_qs(query)['token'][0])  # convert token to dict
+        self.assertEqual(self.eq_payload.keys(), token.keys())  # fail early if payload keys differ
+        for key in self.eq_payload.keys():
+            if key in ['jti', 'tx_id', 'iat', 'exp']:
+                continue  # skip uuid / time generated values
+            self.assertEqual(self.eq_payload[key], token[key], key)  # outputs failed key as msg
 
     @unittest_run_loop
     async def test_post_index_caseid_missing(self):
@@ -292,35 +365,6 @@ class TestGenerateEqURL(AioHTTPTestCase):
 
         self.assertEqual(response.status, 200)
         self.assertIn(b'500 Server Error', await response.content.read())
-
-    @skip_build_eq
-    @unittest_run_loop
-    async def test_post_index(self):
-        with aioresponses(passthrough=[str(self.server._root)]) as mocked:
-            mocked.get(f"{self.app['IAC_URL']}/iacs/{self.iac_code}", payload=self.iac_json)
-            mocked.get(f"{self.app['CASE_URL']}/cases/{self.case_id}", payload=self.case_json)
-            mocked.post(f"{self.app['CASE_URL']}/cases/{self.case_id}/events")
-
-            response = await self.client.request("POST", "/", allow_redirects=False, data={
-                'iac1': self.iac1, 'iac2': self.iac2, 'iac3': self.iac3, 'action[save_continue]': '',
-            })
-
-        self.assertEqual(response.status, 302)
-        self.assertIn(self.app['EQ_URL'], response.headers['location'])
-
-    @unittest_run_loop
-    async def test_post_index_no_skip(self):
-        with aioresponses(passthrough=[str(self.server._root)]) as mocked:
-            mocked.get(f"{self.app['IAC_URL']}/iacs/{self.iac_code}", payload=self.iac_json)
-            mocked.get(f"{self.app['CASE_URL']}/cases/{self.case_id}", payload=self.case_json)
-            mocked.post(f"{self.app['CASE_URL']}/cases/{self.case_id}/events")
-
-            response = await self.client.request("POST", "/", allow_redirects=False, data={
-                'iac1': self.iac1, 'iac2': self.iac2, 'iac3': self.iac3, 'action[save_continue]': '',
-            })
-
-        self.assertEqual(response.status, 500)
-        self.assertIn(b'500 Internal Server Error', await response.content.read())
 
     @unittest_run_loop
     async def test_get_info(self):

@@ -249,7 +249,6 @@ class TestGenerateEqURL(AioHTTPTestCase):
         self.assertEqual(response.status, 200)
         self.assertIn(b'Bad response', await response.content.read())
 
-
     @unittest_run_loop
     async def test_post_index_malformed(self):
         iac_json = self.iac_json.copy()

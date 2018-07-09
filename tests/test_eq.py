@@ -17,31 +17,85 @@ from app.exceptions import InvalidEqPayLoad
 
 def skip_build_eq(func, *args, **kwargs):
 
+    async def _override_eq_payload_constructor(test_case, *_):
+        from app import eq
+
+        async def build(_):
+            return test_case.eq_payload
+
+        eq.EqPayloadConstructor._bk__init__ = eq.EqPayloadConstructor.__init__
+        eq.EqPayloadConstructor.__init__ = lambda *args: None
+        eq.EqPayloadConstructor._bk_build = eq.EqPayloadConstructor.build
+        eq.EqPayloadConstructor.build = build
+
+    async def _reset_eq_payload_constructor(*_):
+        from app import eq
+
+        eq.EqPayloadConstructor.__init__ = eq.EqPayloadConstructor._bk__init__
+        eq.EqPayloadConstructor.build = eq.EqPayloadConstructor._bk_build
+
     @functools.wraps(func, *args, **kwargs)
     def new_func(self, *inner_args, **inner_kwargs):
         return func(self, *inner_args, **inner_kwargs)
 
-    new_func._skip_eq = True
+    new_func.setUp = _override_eq_payload_constructor
+    new_func.tearDown = _reset_eq_payload_constructor
+
     return new_func
 
 
 def build_eq_raises(func, *args, **kwargs):
 
+    async def _override_eq_build_with_error(*_):
+        from app import eq
+
+        async def build(_):
+            raise InvalidEqPayLoad('')
+
+        eq.EqPayloadConstructor._bk__init__ = eq.EqPayloadConstructor.__init__
+        eq.EqPayloadConstructor.__init__ = lambda *args: None
+        eq.EqPayloadConstructor._bk_build = eq.EqPayloadConstructor.build
+        eq.EqPayloadConstructor.build = build
+
+    async def _reset_eq_payload_constructor(*_):
+        from app import eq
+
+        eq.EqPayloadConstructor.__init__ = eq.EqPayloadConstructor._bk__init__
+        eq.EqPayloadConstructor.build = eq.EqPayloadConstructor._bk_build
+
     @functools.wraps(func, *args, **kwargs)
     def new_func(self, *inner_args, **inner_kwargs):
         return func(self, *inner_args, **inner_kwargs)
 
-    new_func._build_raises = True
+    new_func.setUp = _override_eq_build_with_error
+    new_func.tearDown = _reset_eq_payload_constructor
+
     return new_func
 
 
 def skip_encrypt(func, *args, **kwargs):
 
+    async def _override_sdc_encrypt(*_):
+        from app import handlers
+
+        def encrypt(payload, **_):
+            return json.dumps(payload)
+
+        handlers._bk_encrypt = handlers.encrypt
+        handlers.encrypt = encrypt
+
+    async def _reset_sdc_encrypt(*_):
+        from app import handlers
+
+        handlers.encrypt = handlers._bk_encrypt
+
     @functools.wraps(func, *args, **kwargs)
     def new_func(self, *inner_args, **inner_kwargs):
         return func(self, *inner_args, **inner_kwargs)
 
-    new_func._skip_encrypt = True
+    new_func.setUp = _override_sdc_encrypt
+    new_func.tearDown = _reset_sdc_encrypt
+
     return new_func
 
 
@@ -53,6 +107,19 @@ class TestGenerateEqURL(AioHTTPTestCase):
     start_date = '2018-04-10'
     end_date = '2020-05-31'
     return_by = '2018-05-08'
+
+    async def setUpAsync(self):
+        test_method = getattr(self, self._testMethodName)
+        if hasattr(test_method, 'setUp'):
+            await test_method.setUp(self)
+
+    async def tearDownAsync(self):
+        test_method = getattr(self, self._testMethodName)
+        if hasattr(test_method, 'tearDown'):
+            await test_method.tearDown(self)
+
+    async def get_application(self):
+        return create_app('TestingConfig')
 
     def setUp(self):
         super().setUp()  # NB: setUp the server first so we can use self.app
@@ -148,67 +215,6 @@ class TestGenerateEqURL(AioHTTPTestCase):
         self.form_data = {
             'iac1': self.iac1, 'iac2': self.iac2, 'iac3': self.iac3, 'action[save_continue]': '',
         }
-
-    async def _override_eq_payload_constructor(self):
-        from app import eq
-
-        async def build(_):
-            return self.eq_payload
-
-        eq.EqPayloadConstructor._bk__init__ = eq.EqPayloadConstructor.__init__
-        eq.EqPayloadConstructor.__init__ = lambda *args: None
-        eq.EqPayloadConstructor._bk_build = eq.EqPayloadConstructor.build
-        eq.EqPayloadConstructor.build = build
-
-    async def _override_eq_build_with_error(self):
-        from app import eq
-
-        async def build(_):
-            raise InvalidEqPayLoad('')
-
-        eq.EqPayloadConstructor._bk__init__ = eq.EqPayloadConstructor.__init__
-        eq.EqPayloadConstructor.__init__ = lambda *args: None
-        eq.EqPayloadConstructor._bk_build = eq.EqPayloadConstructor.build
-        eq.EqPayloadConstructor.build = build
-
-    async def _override_sdc_encrypt(self):
-        from app import handlers
-
-        def encrypt(payload, **_):
-            return json.dumps(payload)
-
-        handlers._bk_encrypt = handlers.encrypt
-        handlers.encrypt = encrypt
-
-    async def _reset_eq_payload_constructor(self):
-        from app import eq
-
-        eq.EqPayloadConstructor.__init__ = eq.EqPayloadConstructor._bk__init__
-        eq.EqPayloadConstructor.build = eq.EqPayloadConstructor._bk_build
-
-    async def _reset_sdc_encrypt(self):
-        from app import handlers
-
-        handlers.encrypt = handlers._bk_encrypt
-
-    async def setUpAsync(self):
-        test_method = getattr(self, self._testMethodName)
-        if hasattr(test_method, '_skip_eq'):
-            await self._override_eq_payload_constructor()
-        if hasattr(test_method, '_skip_encrypt'):
-            await self._override_sdc_encrypt()
-        if hasattr(test_method, '_build_raises'):
-            await self._override_eq_build_with_error()
-
-    async def tearDownAsync(self):
-        test_method = getattr(self, self._testMethodName)
-        if hasattr(test_method, '_skip_eq') or hasattr(test_method, '_build_raises'):
-            await self._reset_eq_payload_constructor()
-        if hasattr(test_method, '_skip_encrypt'):
-            await self._reset_sdc_encrypt()
-
-    async def get_application(self):
-        return create_app('TestingConfig')
 
     @unittest_run_loop
     async def test_get_index(self):

@@ -285,6 +285,106 @@ class TestGenerateEqURL(AioHTTPTestCase):
         self.assertIn(b'Failed to redirect to survey', await response.content.read())
 
     @unittest_run_loop
+    async def test_post_index_with_build_ci_500(self):
+        with aioresponses(passthrough=[str(self.server._root)]) as mocked:
+            # mocks for initial data setup in post
+            mocked.get(self.iac_url, payload=self.iac_json)
+            mocked.get(self.case_url, payload=self.case_json)
+            mocked.post(self.case_events_url)
+            # mocks for the payload builder
+            mocked.get(self.collection_instrument_url, status=500)
+
+            response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+
+        self.assertEqual(response.status, 200)
+        self.assertIn(b'500 Server error', await response.content.read())
+
+    @unittest_run_loop
+    async def test_post_index_with_build_ci_connect_400(self):
+        with aioresponses(passthrough=[str(self.server._root)]) as mocked:
+            # mocks for initial data setup in post
+            mocked.get(self.iac_url, payload=self.iac_json)
+            mocked.get(self.case_url, payload=self.case_json)
+            mocked.post(self.case_events_url)
+            # mocks for the payload builder
+            mocked.get(self.collection_instrument_url, status=400)
+
+            response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+
+        self.assertEqual(response.status, 200)
+        self.assertIn(b'400 Server error', await response.content.read())
+
+    @unittest_run_loop
+    async def test_post_index_with_build_ce_connect_503(self):
+        with aioresponses(passthrough=[str(self.server._root)]) as mocked:
+            # mocks for initial data setup in post
+            mocked.get(self.iac_url, payload=self.iac_json)
+            mocked.get(self.case_url, payload=self.case_json)
+            mocked.post(self.case_events_url)
+            # mocks for the payload builder
+            mocked.get(self.collection_instrument_url, payload=self.collection_instrument_json)
+            mocked.get(self.collection_exercise_url, status=503)
+
+            response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+
+        self.assertEqual(response.status, 200)
+        self.assertIn(b'503 Server error', await response.content.read())
+
+    @unittest_run_loop
+    async def test_post_index_with_build_events_connect_404(self):
+        with aioresponses(passthrough=[str(self.server._root)]) as mocked:
+            # mocks for initial data setup in post
+            mocked.get(self.iac_url, payload=self.iac_json)
+            mocked.get(self.case_url, payload=self.case_json)
+            mocked.post(self.case_events_url)
+            # mocks for the payload builder
+            mocked.get(self.collection_instrument_url, payload=self.collection_instrument_json)
+            mocked.get(self.collection_exercise_url, payload=self.collection_exercise_json)
+            mocked.get(self.collection_exercise_events_url, status=404)
+
+            response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+
+        self.assertEqual(response.status, 200)
+        self.assertIn(b'404 Server error', await response.content.read())
+
+    @unittest_run_loop
+    async def test_post_index_with_build_party_403(self):
+        with aioresponses(passthrough=[str(self.server._root)]) as mocked:
+            # mocks for initial data setup in post
+            mocked.get(self.iac_url, payload=self.iac_json)
+            mocked.get(self.case_url, payload=self.case_json)
+            mocked.post(self.case_events_url)
+            # mocks for the payload builder
+            mocked.get(self.collection_instrument_url, payload=self.collection_instrument_json)
+            mocked.get(self.collection_exercise_url, payload=self.collection_exercise_json)
+            mocked.get(self.collection_exercise_events_url, payload=self.collection_exercise_events_json)
+            mocked.get(self.party_url, status=403)
+
+            response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+
+        self.assertEqual(response.status, 200)
+        self.assertIn(b'403 Server error', await response.content.read())
+
+    @unittest_run_loop
+    async def test_post_index_with_build_survey_500(self):
+        with aioresponses(passthrough=[str(self.server._root)]) as mocked:
+            # mocks for initial data setup in post
+            mocked.get(self.iac_url, payload=self.iac_json)
+            mocked.get(self.case_url, payload=self.case_json)
+            mocked.post(self.case_events_url)
+            # mocks for the payload builder
+            mocked.get(self.collection_instrument_url, payload=self.collection_instrument_json)
+            mocked.get(self.collection_exercise_url, payload=self.collection_exercise_json)
+            mocked.get(self.collection_exercise_events_url, payload=self.collection_exercise_events_json)
+            mocked.get(self.party_url, payload=self.party_json)
+            mocked.get(self.survey_url, status=500)
+
+            response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+
+        self.assertEqual(response.status, 200)
+        self.assertIn(b'500 Server error', await response.content.read())
+
+    @unittest_run_loop
     async def test_post_index_caseid_missing(self):
         iac_json = self.iac_json.copy()
         del iac_json['caseId']
@@ -346,7 +446,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
             response = await self.client.request("POST", "/", data=self.form_data)
 
         self.assertEqual(response.status, 200)
-        self.assertIn(b'500 Server Error', await response.content.read())
+        self.assertIn(b'500 Server error', await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_iac_service_503(self):
@@ -356,7 +456,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
             response = await self.client.request("POST", "/", data=self.form_data)
 
         self.assertEqual(response.status, 200)
-        self.assertIn(b'503 Server Error', await response.content.read())
+        self.assertIn(b'503 Server error', await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_iac_service_404(self):
@@ -407,7 +507,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
             response = await self.client.request("POST", "/", data=self.form_data)
 
         self.assertEqual(response.status, 200)
-        self.assertIn(b'500 Server Error', await response.content.read())
+        self.assertIn(b'500 Server error', await response.content.read())
 
     def test_get_iac(self):
         # Given some post data

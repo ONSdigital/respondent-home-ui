@@ -28,10 +28,7 @@ def create_error_middleware(overrides):
         except ClientConnectorError:
             return await connection_error(request)
         except ClientResponseError as ex:
-            override = overrides.get(ex.status)
-            if override:
-                return await override(request)
-            raise
+            return await response_error(request, ex.status)
 
     return middleware_handler
 
@@ -48,7 +45,7 @@ async def connection_error(request):
 
 
 async def response_error(request, status):
-    flash(request, f"{status} Server Error")
+    flash(request, f"{status} Server error")
     return aiohttp_jinja2.render_template("index.html", request, {})
 
 

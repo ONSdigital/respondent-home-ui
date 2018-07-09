@@ -4,12 +4,13 @@ import logging
 import aiohttp_jinja2
 from aiohttp import web
 from aiohttp.client_exceptions import ClientResponseError, ClientConnectorError
+from structlog import wrap_logger
 
 from .exceptions import InvalidEqPayLoad
 from .flash import flash
 
 
-logger = logging.getLogger("respondent-home")
+logger = wrap_logger(logging.getLogger("respondent-home"))
 
 
 def create_error_middleware(overrides):

@@ -25,6 +25,16 @@ def skip_build_eq(func, *args, **kwargs):
     return new_func
 
 
+def build_eq_raises(func, *args, **kwargs):
+
+    @functools.wraps(func, *args, **kwargs)
+    def new_func(self, *inner_args, **inner_kwargs):
+        return func(self, *inner_args, **inner_kwargs)
+
+    new_func._build_raises = True
+    return new_func
+
+
 def skip_encrypt(func, *args, **kwargs):
 
     @functools.wraps(func, *args, **kwargs)
@@ -150,6 +160,17 @@ class TestGenerateEqURL(AioHTTPTestCase):
         eq.EqPayloadConstructor._bk_build = eq.EqPayloadConstructor.build
         eq.EqPayloadConstructor.build = build
 
+    async def _override_eq_build_with_error(self):
+        from app import eq
+
+        async def build(_):
+            raise InvalidEqPayLoad('')
+
+        eq.EqPayloadConstructor._bk__init__ = eq.EqPayloadConstructor.__init__
+        eq.EqPayloadConstructor.__init__ = lambda *args: None
+        eq.EqPayloadConstructor._bk_build = eq.EqPayloadConstructor.build
+        eq.EqPayloadConstructor.build = build
+
     async def _override_sdc_encrypt(self):
         from app import handlers
 
@@ -176,10 +197,12 @@ class TestGenerateEqURL(AioHTTPTestCase):
             await self._override_eq_payload_constructor()
         if hasattr(test_method, '_skip_encrypt'):
             await self._override_sdc_encrypt()
+        if hasattr(test_method, '_build_raises'):
+            await self._override_eq_build_with_error()
 
     async def tearDownAsync(self):
         test_method = getattr(self, self._testMethodName)
-        if hasattr(test_method, '_skip_eq'):
+        if hasattr(test_method, '_skip_eq') or hasattr(test_method, '_build_raises'):
             await self._reset_eq_payload_constructor()
         if hasattr(test_method, '_skip_encrypt'):
             await self._reset_sdc_encrypt()
@@ -244,6 +267,22 @@ class TestGenerateEqURL(AioHTTPTestCase):
             if key in ['jti', 'tx_id', 'iat', 'exp']:
                 continue  # skip uuid / time generated values
             self.assertEqual(self.eq_payload[key], token[key], key)  # outputs failed key as msg
+
+    @build_eq_raises
+    @unittest_run_loop
+    async def test_post_index_build_raises_InvalidEqPayLoad(self):
+        with aioresponses(passthrough=[str(self.server._root)]) as mocked:
+            # mocks for initial data setup in post
+            mocked.get(self.iac_url, payload=self.iac_json)
+            mocked.get(self.case_url, payload=self.case_json)
+            mocked.post(self.case_events_url)
+
+            # decorator makes URL constructor raise InvalidEqPayLoad when build() is called in handler
+            response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+
+        # then error handler catches exception and flashes message to index
+        self.assertEqual(response.status, 200)
+        self.assertIn(b'Failed to redirect to survey', await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_caseid_missing(self):
@@ -453,3 +492,237 @@ class TestGenerateEqURL(AioHTTPTestCase):
         mocked_uuid4.assert_called()
         mocked_time.assert_called()
         self.assertEqual(payload, self.eq_payload)
+
+    @unittest_run_loop
+    async def test_build_raises_InvalidEqPayLoad_bad_ci_type(self):
+        ci_json = self.collection_instrument_json.copy()
+        ci_json['type'] = 'not_eq'
+
+        from app import eq  # NB: local import to avoid overwriting the patched version for some tests
+
+        with aioresponses() as mocked:
+            mocked.get(self.collection_instrument_url, payload=ci_json)
+
+            with self.assertRaises(InvalidEqPayLoad):
+                await eq.EqPayloadConstructor(self.case_json, self.app).build()
+
+    @unittest_run_loop
+    async def test_build_raises_InvalidEqPayLoad_missing_ci_type(self):
+        ci_json = self.collection_instrument_json.copy()
+        del ci_json['type']
+
+        from app import eq  # NB: local import to avoid overwriting the patched version for some tests
+
+        with aioresponses() as mocked:
+            mocked.get(self.collection_instrument_url, payload=ci_json)
+
+            with self.assertRaises(InvalidEqPayLoad):
+                await eq.EqPayloadConstructor(self.case_json, self.app).build()
+
+    @unittest_run_loop
+    async def test_build_raises_InvalidEqPayLoad_missing_classifiers(self):
+        ci_json = self.collection_instrument_json.copy()
+        del ci_json['classifiers']
+
+        from app import eq  # NB: local import to avoid overwriting the patched version for some tests
+
+        with aioresponses() as mocked:
+            mocked.get(self.collection_instrument_url, payload=ci_json)
+
+            with self.assertRaises(InvalidEqPayLoad):
+                await eq.EqPayloadConstructor(self.case_json, self.app).build()
+
+    @unittest_run_loop
+    async def test_build_raises_InvalidEqPayLoad_missing_eq_id(self):
+        ci_json = self.collection_instrument_json.copy()
+        del ci_json['classifiers']['eq_id']
+
+        from app import eq  # NB: local import to avoid overwriting the patched version for some tests
+
+        with aioresponses() as mocked:
+            mocked.get(self.collection_instrument_url, payload=ci_json)
+
+            with self.assertRaises(InvalidEqPayLoad):
+                await eq.EqPayloadConstructor(self.case_json, self.app).build()
+
+    @unittest_run_loop
+    async def test_build_raises_InvalidEqPayLoad_missing_form_type(self):
+        ci_json = self.collection_instrument_json.copy()
+        del ci_json['classifiers']['form_type']
+
+        from app import eq  # NB: local import to avoid overwriting the patched version for some tests
+
+        with aioresponses() as mocked:
+            mocked.get(self.collection_instrument_url, payload=ci_json)
+
+            with self.assertRaises(InvalidEqPayLoad):
+                await eq.EqPayloadConstructor(self.case_json, self.app).build()
+
+    @unittest_run_loop
+    async def test_build_raises_InvalidEqPayLoad_missing_userDescription(self):
+        ce_json = self.collection_exercise_json.copy()
+        del ce_json['userDescription']
+
+        from app import eq  # NB: local import to avoid overwriting the patched version for some tests
+
+        with aioresponses() as mocked:
+            mocked.get(self.collection_instrument_url, payload=self.collection_instrument_json)
+            mocked.get(self.collection_exercise_url, payload=ce_json)
+
+            with self.assertRaises(InvalidEqPayLoad):
+                await eq.EqPayloadConstructor(self.case_json, self.app).build()
+
+    @unittest_run_loop
+    async def test_build_raises_InvalidEqPayLoad_missing_exerciseRef(self):
+        ce_json = self.collection_exercise_json.copy()
+        del ce_json['exerciseRef']
+
+        from app import eq  # NB: local import to avoid overwriting the patched version for some tests
+
+        with aioresponses() as mocked:
+            mocked.get(self.collection_instrument_url, payload=self.collection_instrument_json)
+            mocked.get(self.collection_exercise_url, payload=ce_json)
+
+            with self.assertRaises(InvalidEqPayLoad):
+                await eq.EqPayloadConstructor(self.case_json, self.app).build()
+
+    @unittest_run_loop
+    async def test_build_raises_InvalidEqPayLoad_missing_exercise_id(self):
+        ce_json = self.collection_exercise_json.copy()
+        del ce_json['id']
+
+        from app import eq  # NB: local import to avoid overwriting the patched version for some tests
+
+        with aioresponses() as mocked:
+            mocked.get(self.collection_instrument_url, payload=self.collection_instrument_json)
+            mocked.get(self.collection_exercise_url, payload=ce_json)
+
+            with self.assertRaises(InvalidEqPayLoad):
+                await eq.EqPayloadConstructor(self.case_json, self.app).build()
+
+    @unittest_run_loop
+    async def test_build_raises_InvalidEqPayLoad_missing_survey_id(self):
+        ce_json = self.collection_exercise_json.copy()
+        del ce_json['surveyId']
+
+        from app import eq  # NB: local import to avoid overwriting the patched version for some tests
+
+        with aioresponses() as mocked:
+            mocked.get(self.collection_instrument_url, payload=self.collection_instrument_json)
+            mocked.get(self.collection_exercise_url, payload=ce_json)
+
+            with self.assertRaises(InvalidEqPayLoad):
+                await eq.EqPayloadConstructor(self.case_json, self.app).build()
+
+    @unittest_run_loop
+    async def test_build_raises_InvalidEqPayLoad_missing_sampleUnitRef(self):
+        party_json = self.party_json.copy()
+        del party_json['sampleUnitRef']
+
+        from app import eq  # NB: local import to avoid overwriting the patched version for some tests
+
+        with aioresponses() as mocked:
+            mocked.get(self.collection_instrument_url, payload=self.collection_instrument_json)
+            mocked.get(self.collection_exercise_url, payload=self.collection_exercise_json)
+            mocked.get(self.collection_exercise_events_url, payload=self.collection_exercise_events_json)
+            mocked.get(self.party_url, payload=party_json)
+
+            with self.assertRaises(InvalidEqPayLoad):
+                await eq.EqPayloadConstructor(self.case_json, self.app).build()
+
+    @unittest_run_loop
+    async def test_build_raises_InvalidEqPayLoad_missing_checkletter(self):
+        party_json = self.party_json.copy()
+        del party_json['checkletter']
+
+        from app import eq  # NB: local import to avoid overwriting the patched version for some tests
+
+        with aioresponses() as mocked:
+            mocked.get(self.collection_instrument_url, payload=self.collection_instrument_json)
+            mocked.get(self.collection_exercise_url, payload=self.collection_exercise_json)
+            mocked.get(self.collection_exercise_events_url, payload=self.collection_exercise_events_json)
+            mocked.get(self.party_url, payload=party_json)
+
+            with self.assertRaises(InvalidEqPayLoad):
+                await eq.EqPayloadConstructor(self.case_json, self.app).build()
+
+    @unittest_run_loop
+    async def test_build_raises_InvalidEqPayLoad_missing_name(self):
+        party_json = self.party_json.copy()
+        del party_json['name']
+
+        from app import eq  # NB: local import to avoid overwriting the patched version for some tests
+
+        with aioresponses() as mocked:
+            mocked.get(self.collection_instrument_url, payload=self.collection_instrument_json)
+            mocked.get(self.collection_exercise_url, payload=self.collection_exercise_json)
+            mocked.get(self.collection_exercise_events_url, payload=self.collection_exercise_events_json)
+            mocked.get(self.party_url, payload=party_json)
+
+            with self.assertRaises(InvalidEqPayLoad):
+                await eq.EqPayloadConstructor(self.case_json, self.app).build()
+
+    @unittest_run_loop
+    async def test_build_raises_InvalidEqPayLoad_missing_tradstyle1(self):
+        party_json = self.party_json.copy()
+        del party_json['tradstyle1']
+
+        from app import eq  # NB: local import to avoid overwriting the patched version for some tests
+
+        with aioresponses() as mocked:
+            mocked.get(self.collection_instrument_url, payload=self.collection_instrument_json)
+            mocked.get(self.collection_exercise_url, payload=self.collection_exercise_json)
+            mocked.get(self.collection_exercise_events_url, payload=self.collection_exercise_events_json)
+            mocked.get(self.party_url, payload=party_json)
+
+            with self.assertRaises(InvalidEqPayLoad):
+                await eq.EqPayloadConstructor(self.case_json, self.app).build()
+
+    @unittest_run_loop
+    async def test_build_raises_InvalidEqPayLoad_missing_tradstyle2(self):
+        party_json = self.party_json.copy()
+        del party_json['tradstyle2']
+
+        from app import eq  # NB: local import to avoid overwriting the patched version for some tests
+
+        with aioresponses() as mocked:
+            mocked.get(self.collection_instrument_url, payload=self.collection_instrument_json)
+            mocked.get(self.collection_exercise_url, payload=self.collection_exercise_json)
+            mocked.get(self.collection_exercise_events_url, payload=self.collection_exercise_events_json)
+            mocked.get(self.party_url, payload=party_json)
+
+            with self.assertRaises(InvalidEqPayLoad):
+                await eq.EqPayloadConstructor(self.case_json, self.app).build()
+
+    @unittest_run_loop
+    async def test_build_raises_InvalidEqPayLoad_missing_tradstyle3(self):
+        party_json = self.party_json.copy()
+        del party_json['tradstyle3']
+
+        from app import eq  # NB: local import to avoid overwriting the patched version for some tests
+
+        with aioresponses() as mocked:
+            mocked.get(self.collection_instrument_url, payload=self.collection_instrument_json)
+            mocked.get(self.collection_exercise_url, payload=self.collection_exercise_json)
+            mocked.get(self.collection_exercise_events_url, payload=self.collection_exercise_events_json)
+            mocked.get(self.party_url, payload=party_json)
+
+            with self.assertRaises(InvalidEqPayLoad):
+                await eq.EqPayloadConstructor(self.case_json, self.app).build()
+
+    @unittest_run_loop
+    async def test_build_raises_InvalidEqPayLoad_missing_surveyRef(self):
+        survey_json = self.survey_json.copy()
+        del survey_json['surveyRef']
+
+        from app import eq  # NB: local import to avoid overwriting the patched version for some tests
+
+        with aioresponses() as mocked:
+            mocked.get(self.collection_instrument_url, payload=self.collection_instrument_json)
+            mocked.get(self.collection_exercise_url, payload=self.collection_exercise_json)
+            mocked.get(self.collection_exercise_events_url, payload=self.collection_exercise_events_json)
+            mocked.get(self.party_url, payload=self.party_json)
+            mocked.get(self.survey_url, payload=survey_json)
+
+            with self.assertRaises(InvalidEqPayLoad):
+                await eq.EqPayloadConstructor(self.case_json, self.app).build()

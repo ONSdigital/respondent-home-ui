@@ -21,7 +21,7 @@ def handle_response(response):
         response.raise_for_status()
     except ClientError as ex:
         logger.error("Error in response", url=response.url, status_code=response.status)
-        raise ClientError
+        raise ex
 
 
 def find_event_date_by_tag(search_param: str, collex_events: dict, collex_id: str, mandatory: bool):
@@ -105,7 +105,7 @@ class EqPayloadConstructor(object):
         try:
             self._ci["classifiers"]
         except KeyError:
-            raise InvalidEqPayLoad(f"Could not retrieve eq_id for case {self._case_id}")
+            raise InvalidEqPayLoad(f"Could not retrieve classifiers for case {self._case_id}")
 
         try:
             self._eq_id = self._ci["classifiers"]["eq_id"]
@@ -132,7 +132,12 @@ class EqPayloadConstructor(object):
         try:
             self._collex_id = self._collex["id"]
         except KeyError:
-            raise InvalidEqPayLoad(f"Could not retrieve id for case {self._case_id}")
+            raise InvalidEqPayLoad(f"Could not retrieve ce id for case {self._case_id}")
+
+        try:
+            self._survey_id = self._collex["surveyId"]
+        except KeyError:
+            raise InvalidEqPayLoad(f"No survey id in collection exercise for case {self._case_id}")
 
         self._collex_events = await self._get_collection_exercise_events()
         self._collex_event_dates = self._get_collex_event_dates()
@@ -141,7 +146,7 @@ class EqPayloadConstructor(object):
         try:
             self._sample_unit_ref = self._party["sampleUnitRef"]
         except KeyError:
-            raise InvalidEqPayLoad(f"Could not retrieve id for case {self._case_id}")
+            raise InvalidEqPayLoad(f"Could not retrieve sample unit ref for case {self._case_id}")
 
         try:
             self._checkletter = self._party["checkletter"]
@@ -160,17 +165,12 @@ class EqPayloadConstructor(object):
         except KeyError:
             raise InvalidEqPayLoad(f"Could not retrieve trading as data for case {self._case_id}")
 
-        try:
-            self._survey_id = self._collex["surveyId"]
-        except KeyError:
-            raise InvalidEqPayLoad(f"No survey id in collection exercise for case {self.case_id}")
-
         self._survey = await self._get_survey()
 
         try:
             self._survey_ref = self._survey["surveyRef"]
         except KeyError:
-            raise InvalidEqPayLoad(f"No survey ref in collection exercise for case {self.case_id}")
+            raise InvalidEqPayLoad(f"No survey ref in collection exercise for case {self._case_id}")
 
         # TODO: Remove hardcoded language variables for payload when they become available in RAS/RM
         self._region_code = 'GB-ENG'

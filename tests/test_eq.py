@@ -2,7 +2,8 @@ import functools
 import json
 import time
 import urllib
-from unittest import skip, mock
+import uuid
+from unittest import mock
 
 from aiohttp.client_exceptions import ClientConnectorError
 from aiohttp.test_utils import AioHTTPTestCase, unittest_run_loop
@@ -36,36 +37,51 @@ def skip_encrypt(func, *args, **kwargs):
 
 class TestGenerateEqURL(AioHTTPTestCase):
 
-    # TODO: initialise most of this from the JSON files in setUp
-    action_plan_id = 'e6ce828c-ed94-457e-85a6-bcef784f4160'
-    case_id = '8849c299-5014-4637-bd2b-fc866aeccdf5'
-    case_group_id = '26d65fa5-c8c3-4cad-bab0-44a52f81ca42'
-    case_ref = "1000000000000502"
-    collection_exercise_id = '6553d121-df61-4b3a-8f43-e0726666b8cc'
-    collection_exercise_ref = '221_201712'
-    collection_exercise_user_desc = 'December 2017'
-    collection_instrument_id = '724f7d1c-4343-408b-be06-725422a2e223'
-    eq_id = '2'
-    form_type = '0001'
-    jti = 'f2327dcd-40b3-41ff-8766-de2a5db6272d'
-    iac_code = '123456789012'
-    iac1, iac2, iac3 = iac_code[:4], iac_code[4:8], iac_code[8:]
-    iac_json = {'active': '1', 'caseId': case_id}
-    party_id = '89e0d37d-1564-4696-9873-abb5b9b4312e'
-    ru_name = 'RUNAME1_COMPANY4 RUNNAME2_COMPANY4'
-    sample_unit_ref = '49900000004'
-    sample_unit_type = 'H'
-    survey_id = '9ce458b8-739a-489d-ba56-dc27aa7080d1'
-    survey_ref = '221'
     region_code = 'GB-ENG'
     language_code = 'en'
-    trading_as = 'TRADSTYLE1 TRADSTYLE2 TRADSTYLE3'
+
     start_date = '2018-04-10'
     end_date = '2020-05-31'
     return_by = '2018-05-08'
 
     def setUp(self):
         super().setUp()  # NB: setUp the server first so we can use self.app
+        with open('tests/test_data/case/case.json') as fp:
+            self.case_json = json.load(fp)
+        with open('tests/test_data/collection_exercise/collection_exercise.json') as fp:
+            self.collection_exercise_json = json.load(fp)
+        with open('tests/test_data/collection_exercise/collection_exercise_events.json') as fp:
+            self.collection_exercise_events_json = json.load(fp)
+        with open('tests/test_data/collection_instrument/collection_instrument_eq.json') as fp:
+            self.collection_instrument_json = json.load(fp)
+        with open('tests/test_data/party/party.json') as fp:
+            self.party_json = json.load(fp)
+        with open('tests/test_data/survey/survey.json') as fp:
+            self.survey_json = json.load(fp)
+
+        self.action_plan_id = self.case_json['actionPlanId']
+        self.case_id = self.case_json['id']
+        self.case_group_id = self.case_json['caseGroup']['id']
+        self.case_ref = self.case_json['caseRef']
+        self.collection_exercise_id = self.collection_exercise_json['id']
+        self.collection_exercise_ref = self.collection_exercise_json['exerciseRef']
+        self.collection_exercise_user_desc = self.collection_exercise_json['userDescription']
+        self.collection_instrument_id = self.collection_instrument_json['id']
+        self.eq_id = self.collection_instrument_json['classifiers']['eq_id']
+        self.form_type = self.collection_instrument_json['classifiers']['form_type']
+        self.jti = str(uuid.uuid4())
+        self.iac_code = ''.join([str(n) for n in range(11)])
+        self.iac1, self.iac2, self.iac3 = self.iac_code[:4], self.iac_code[4:8], self.iac_code[8:]
+        self.iac_json = {'active': '1', 'caseId': self.case_id}
+        self.party_id = self.party_json['id']
+        self.ru_name = self.party_json['name']
+        self.sample_unit_ref = self.party_json['sampleUnitRef']
+        self.sample_unit_type = self.party_json['sampleUnitType']
+        self.survey_id = self.survey_json['id']
+        self.survey_ref = self.survey_json['surveyRef']
+        self.trading_as = (
+            f"{self.party_json['tradstyle1']} {self.party_json['tradstyle2']} {self.party_json['tradstyle3']}"
+        )
         self.eq_payload = {
             "jti": self.jti,
             "tx_id": self.jti,
@@ -90,18 +106,6 @@ class TestGenerateEqURL(AioHTTPTestCase):
             "ref_p_end_date": self.end_date,
             "ref_p_start_date": self.start_date
         }
-        with open('tests/test_data/case/case.json') as fp:
-            self.case_json = json.load(fp)
-        with open('tests/test_data/collection_exercise/collection_exercise.json') as fp:
-            self.collection_exercise_json = json.load(fp)
-        with open('tests/test_data/collection_exercise/collection_exercise_events.json') as fp:
-            self.collection_exercise_events_json = json.load(fp)
-        with open('tests/test_data/collection_instrument/collection_instrument_eq.json') as fp:
-            self.collection_instrument_json = json.load(fp)
-        with open('tests/test_data/party/party.json') as fp:
-            self.party_json = json.load(fp)
-        with open('tests/test_data/survey/survey.json') as fp:
-            self.survey_json = json.load(fp)
 
         self.collection_instrument_url = (
             f"{self.app['COLLECTION_INSTRUMENT_URL']}"

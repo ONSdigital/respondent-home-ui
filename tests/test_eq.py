@@ -107,6 +107,12 @@ class TestGenerateEqURL(AioHTTPTestCase):
             "ref_p_start_date": self.start_date
         }
 
+        self.case_url = (
+            f"{self.app['CASE_URL']}/cases/{self.case_id}"
+        )
+        self.case_events_url = (
+            f"{self.app['CASE_URL']}/cases/{self.case_id}/events"
+        )
         self.collection_instrument_url = (
             f"{self.app['COLLECTION_INSTRUMENT_URL']}"
             f"/collection-instrument-api/1.0.2/collectioninstrument/id/{self.collection_instrument_id}"
@@ -119,12 +125,19 @@ class TestGenerateEqURL(AioHTTPTestCase):
             f"{self.app['COLLECTION_EXERCISE_URL']}"
             f"/collectionexercises/{self.collection_exercise_id}/events"
         )
+        self.iac_url = (
+            f"{self.app['IAC_URL']}/iacs/{self.iac_code}"
+        )
         self.party_url = (
             f"{self.app['PARTY_URL']}/party-api/v1/businesses/id/{self.party_id}"
         )
         self.survey_url = (
             f"{self.app['SURVEY_URL']}/surveys/{self.survey_id}"
         )
+
+        self.form_data = {
+            'iac1': self.iac1, 'iac2': self.iac2, 'iac3': self.iac3, 'action[save_continue]': '',
+        }
 
     async def _override_eq_payload_constructor(self):
         from app import eq
@@ -183,13 +196,11 @@ class TestGenerateEqURL(AioHTTPTestCase):
     @unittest_run_loop
     async def test_post_index(self):
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
-            mocked.get(f"{self.app['IAC_URL']}/iacs/{self.iac_code}", payload=self.iac_json)
-            mocked.get(f"{self.app['CASE_URL']}/cases/{self.case_id}", payload=self.case_json)
-            mocked.post(f"{self.app['CASE_URL']}/cases/{self.case_id}/events")
+            mocked.get(self.iac_url, payload=self.iac_json)
+            mocked.get(self.case_url, payload=self.case_json)
+            mocked.post(self.case_events_url)
 
-            response = await self.client.request("POST", "/", allow_redirects=False, data={
-                'iac1': self.iac1, 'iac2': self.iac2, 'iac3': self.iac3, 'action[save_continue]': '',
-            })
+            response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
 
         self.assertEqual(response.status, 302)
         self.assertIn(self.app['EQ_URL'], response.headers['location'])
@@ -197,13 +208,11 @@ class TestGenerateEqURL(AioHTTPTestCase):
     @unittest_run_loop
     async def test_post_index_with_build_no_mocks(self):
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
-            mocked.get(f"{self.app['IAC_URL']}/iacs/{self.iac_code}", payload=self.iac_json)
-            mocked.get(f"{self.app['CASE_URL']}/cases/{self.case_id}", payload=self.case_json)
-            mocked.post(f"{self.app['CASE_URL']}/cases/{self.case_id}/events")
+            mocked.get(self.iac_url, payload=self.iac_json)
+            mocked.get(self.case_url, payload=self.case_json)
+            mocked.post(self.case_events_url)
 
-            response = await self.client.request("POST", "/", allow_redirects=False, data={
-                'iac1': self.iac1, 'iac2': self.iac2, 'iac3': self.iac3, 'action[save_continue]': '',
-            })
+            response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
 
         self.assertEqual(response.status, 500)
         self.assertIn(b'500 Internal Server Error', await response.content.read())
@@ -213,9 +222,9 @@ class TestGenerateEqURL(AioHTTPTestCase):
     async def test_post_index_with_build(self):
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
             # mocks for initial data setup in post
-            mocked.get(f"{self.app['IAC_URL']}/iacs/{self.iac_code}", payload=self.iac_json)
-            mocked.get(f"{self.app['CASE_URL']}/cases/{self.case_id}", payload=self.case_json)
-            mocked.post(f"{self.app['CASE_URL']}/cases/{self.case_id}/events")
+            mocked.get(self.iac_url, payload=self.iac_json)
+            mocked.get(self.case_url, payload=self.case_json)
+            mocked.post(self.case_events_url)
             # mocks for the payload builder
             mocked.get(self.collection_instrument_url, payload=self.collection_instrument_json)
             mocked.get(self.collection_exercise_url, payload=self.collection_exercise_json)
@@ -223,9 +232,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
             mocked.get(self.party_url, payload=self.party_json)
             mocked.get(self.survey_url, payload=self.survey_json)
 
-            response = await self.client.request("POST", "/", allow_redirects=False, data={
-                'iac1': self.iac1, 'iac2': self.iac2, 'iac3': self.iac3, 'action[save_continue]': '',
-            })
+            response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
 
         self.assertEqual(response.status, 302)
         redirected_url = response.headers['location']
@@ -244,26 +251,22 @@ class TestGenerateEqURL(AioHTTPTestCase):
         del iac_json['caseId']
 
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
-            mocked.get(f"{self.app['IAC_URL']}/iacs/{self.iac_code}", payload=iac_json)
+            mocked.get(self.iac_url, payload=iac_json)
 
-            response = await self.client.request("POST", "/", allow_redirects=False, data={
-                'iac1': self.iac1, 'iac2': self.iac2, 'iac3': self.iac3, 'action[save_continue]': '',
-            })
+            response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
 
         self.assertEqual(response.status, 200)
         self.assertIn(b'Bad response', await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_malformed(self):
-        iac_json = self.iac_json.copy()
-        del iac_json['caseId']
+        form_data = self.form_data.copy()
+        del form_data['iac3']
 
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
-            mocked.get(f"{self.app['IAC_URL']}/iacs/{self.iac_code}", payload=iac_json)
+            mocked.get(self.iac_url, payload=self.iac_json)
 
-            response = await self.client.request("POST", "/", data={
-                'iac1': self.iac1, 'iac2': self.iac2, 'action[save_continue]': '',  # missing iac3
-            })
+            response = await self.client.request("POST", "/", data=form_data)
 
         self.assertEqual(response.status, 200)
         self.assertIn(b'Please provide the unique access code', await response.content.read())
@@ -275,11 +278,9 @@ class TestGenerateEqURL(AioHTTPTestCase):
 
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
 
-            mocked.get(f"{self.app['IAC_URL']}/iacs/{self.iac_code}", payload=iac_json)
+            mocked.get(self.iac_url, payload=iac_json)
 
-            response = await self.client.request("POST", "/", data={
-                'iac1': self.iac1, 'iac2': self.iac2, 'iac3': self.iac3, 'action[save_continue]': '',
-            })
+            response = await self.client.request("POST", "/", data=self.form_data)
 
         self.assertEqual(response.status, 200)
         self.assertIn(b'already been used', await response.content.read())
@@ -291,11 +292,9 @@ class TestGenerateEqURL(AioHTTPTestCase):
 
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
 
-            mocked.get(f"{self.app['IAC_URL']}/iacs/{self.iac_code}", payload=iac_json)
+            mocked.get(self.iac_url, payload=iac_json)
 
-            response = await self.client.request("POST", "/", data={
-                'iac1': self.iac1, 'iac2': self.iac2, 'iac3': self.iac3, 'action[save_continue]': '',
-            })
+            response = await self.client.request("POST", "/", data=self.form_data)
 
         self.assertEqual(response.status, 200)
         self.assertIn(b'already been used', await response.content.read())
@@ -303,11 +302,9 @@ class TestGenerateEqURL(AioHTTPTestCase):
     @unittest_run_loop
     async def test_post_index_iac_service_500(self):
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
-            mocked.get(f"{self.app['IAC_URL']}/iacs/{self.iac_code}", status=500)
+            mocked.get(self.iac_url, status=500)
 
-            response = await self.client.request("POST", "/", data={
-                'iac1': self.iac1, 'iac2': self.iac2, 'iac3': self.iac3, 'action[save_continue]': '',
-            })
+            response = await self.client.request("POST", "/", data=self.form_data)
 
         self.assertEqual(response.status, 200)
         self.assertIn(b'500 Server Error', await response.content.read())
@@ -315,11 +312,9 @@ class TestGenerateEqURL(AioHTTPTestCase):
     @unittest_run_loop
     async def test_post_index_iac_service_503(self):
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
-            mocked.get(f"{self.app['IAC_URL']}/iacs/{self.iac_code}", status=503)
+            mocked.get(self.iac_url, status=503)
 
-            response = await self.client.request("POST", "/", data={
-                'iac1': self.iac1, 'iac2': self.iac2, 'iac3': self.iac3, 'action[save_continue]': '',
-            })
+            response = await self.client.request("POST", "/", data=self.form_data)
 
         self.assertEqual(response.status, 200)
         self.assertIn(b'503 Server Error', await response.content.read())
@@ -327,11 +322,9 @@ class TestGenerateEqURL(AioHTTPTestCase):
     @unittest_run_loop
     async def test_post_index_iac_service_404(self):
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
-            mocked.get(f"{self.app['IAC_URL']}/iacs/{self.iac_code}", status=404)
+            mocked.get(self.iac_url, status=404)
 
-            response = await self.client.request("POST", "/", data={
-                'iac1': self.iac1, 'iac2': self.iac2, 'iac3': self.iac3, 'action[save_continue]': '',
-            })
+            response = await self.client.request("POST", "/", data=self.form_data)
 
         self.assertEqual(response.status, 200)
         self.assertIn(b'Please provide the unique access code', await response.content.read())
@@ -339,11 +332,9 @@ class TestGenerateEqURL(AioHTTPTestCase):
     @unittest_run_loop
     async def test_post_index_iac_service_403(self):
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
-            mocked.get(f"{self.app['IAC_URL']}/iacs/{self.iac_code}", status=403)
+            mocked.get(self.iac_url, status=403)
 
-            response = await self.client.request("POST", "/", data={
-                'iac1': self.iac1, 'iac2': self.iac2, 'iac3': self.iac3, 'action[save_continue]': '',
-            })
+            response = await self.client.request("POST", "/", data=self.form_data)
 
         self.assertEqual(response.status, 200)
         self.assertIn(b'not authorized', await response.content.read())
@@ -351,11 +342,9 @@ class TestGenerateEqURL(AioHTTPTestCase):
     @unittest_run_loop
     async def test_post_index_iac_service_401(self):
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
-            mocked.get(f"{self.app['IAC_URL']}/iacs/{self.iac_code}", status=401)
+            mocked.get(self.iac_url, status=401)
 
-            response = await self.client.request("POST", "/", data={
-                'iac1': self.iac1, 'iac2': self.iac2, 'iac3': self.iac3, 'action[save_continue]': '',
-            })
+            response = await self.client.request("POST", "/", data=self.form_data)
 
         self.assertEqual(response.status, 200)
         self.assertIn(b'not authorized', await response.content.read())
@@ -363,11 +352,9 @@ class TestGenerateEqURL(AioHTTPTestCase):
     @unittest_run_loop
     async def test_post_index_iac_service_400(self):
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
-            mocked.get(f"{self.app['IAC_URL']}/iacs/{self.iac_code}", status=400)
+            mocked.get(self.iac_url, status=400)
 
-            response = await self.client.request("POST", "/", data={
-                'iac1': self.iac1, 'iac2': self.iac2, 'iac3': self.iac3, 'action[save_continue]': '',
-            })
+            response = await self.client.request("POST", "/", data=self.form_data)
 
         self.assertEqual(response.status, 200)
         self.assertIn(b'Bad request', await response.content.read())
@@ -375,20 +362,13 @@ class TestGenerateEqURL(AioHTTPTestCase):
     @unittest_run_loop
     async def test_post_index_case_service_500(self):
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
-            mocked.get(f"{self.app['IAC_URL']}/iacs/{self.iac_code}", payload=self.iac_json)
-            mocked.get(f"{self.app['CASE_URL']}/cases/{self.case_id}", status=500)
+            mocked.get(self.iac_url, payload=self.iac_json)
+            mocked.get(self.case_url, status=500)
 
-            response = await self.client.request("POST", "/", data={
-                'iac1': self.iac1, 'iac2': self.iac2, 'iac3': self.iac3, 'action[save_continue]': '',
-            })
+            response = await self.client.request("POST", "/", data=self.form_data)
 
         self.assertEqual(response.status, 200)
         self.assertIn(b'500 Server Error', await response.content.read())
-
-    @unittest_run_loop
-    async def test_get_info(self):
-        response = await self.client.request("GET", "/info")
-        self.assertEqual(response.status, 200)
 
     def test_get_iac(self):
         # Given some post data

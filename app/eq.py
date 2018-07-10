@@ -22,6 +22,8 @@ def handle_response(response):
     except ClientError as ex:
         logger.error("Error in response", url=response.url, status_code=response.status)
         raise ex
+    else:
+        logger.debug("Successfully connected to service", url=response.url)
 
 
 def find_event_date_by_tag(search_param: str, collex_events: dict, collex_id: str, mandatory: bool):
@@ -210,14 +212,12 @@ class EqPayloadConstructor(object):
     async def _make_request(self, request: Request):
         method, url, auth, func = request
         logger.info(f"Making {method} request to {url} and handling with {func}")
-        async with self._app.http_session_pool.request(
-            method, url, auth=auth
-        ) as resp:
+        async with self._app.http_session_pool.request(method, url, auth=auth) as resp:
             func(resp)
             return await resp.json()
 
     async def _get_party_by_id(self):
-        url = self._party_url + self._party_id
+        url = self._party_url + self._party_id + "?verbose=True"
         return await self._make_request(Request("GET", url, self._app['PARTY_AUTH'], handle_response))
 
     async def _get_survey(self):

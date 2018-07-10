@@ -1,17 +1,17 @@
 import functools
 import json
 import time
-import urllib
 import uuid
 from unittest import mock
+from urllib.parse import urlsplit, parse_qs
 
 from aiohttp.test_utils import AioHTTPTestCase, unittest_run_loop
 from aioresponses import aioresponses
 
 from app.app import create_app
 from app.eq import format_date
-from app.handlers import get_iac
-from app.exceptions import InvalidEqPayLoad
+from app.handlers import get_iac, _validate_case
+from app.exceptions import InvalidEqPayLoad, InactiveCaseError
 
 
 def skip_build_eq(func, *args, **kwargs):
@@ -274,6 +274,16 @@ class TestGenerateEqURL(AioHTTPTestCase):
         self.assertIn(self.app['EQ_URL'], response.headers['location'])
 
     @unittest_run_loop
+    async def test_post_index_no_iac_json(self):
+        with aioresponses(passthrough=[str(self.server._root)]) as mocked:
+            mocked.get(self.iac_url, content_type='text')
+
+            response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+
+        self.assertEqual(response.status, 200)
+        self.assertIn(b'Server error', await response.content.read())
+
+    @unittest_run_loop
     async def test_post_index_case_403(self):
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
             mocked.get(self.iac_url, payload=self.iac_json)
@@ -316,8 +326,8 @@ class TestGenerateEqURL(AioHTTPTestCase):
         self.assertEqual(response.status, 302)
         redirected_url = response.headers['location']
         self.assertTrue(redirected_url.startswith(self.app['EQ_URL']), redirected_url)  # outputs url on fail
-        _, _, _, query, *_ = urllib.parse.urlsplit(redirected_url)  # we only care about the query string
-        token = json.loads(urllib.parse.parse_qs(query)['token'][0])  # convert token to dict
+        _, _, _, query, *_ = urlsplit(redirected_url)  # we only care about the query string
+        token = json.loads(parse_qs(query)['token'][0])  # convert token to dict
         self.assertEqual(self.eq_payload.keys(), token.keys())  # fail early if payload keys differ
         for key in self.eq_payload.keys():
             if key in ['jti', 'tx_id', 'iat', 'exp']:
@@ -632,6 +642,35 @@ class TestGenerateEqURL(AioHTTPTestCase):
 
         # Then an InvalidEqPayLoad is raised
         self.assertEqual(e.exception.message, 'Unable to format invalid_date')
+
+    def test_validate_case(self):
+        # Given a dict with an active key and value
+        case_json = {'active': True}
+
+        # When _validate_case is called
+        _validate_case(case_json)
+
+        # Nothing happens
+
+    def test_validate_case_inactive(self):
+        # Given a dict with an active key and value
+        case_json = {'active': False}
+
+        # When _validate_case is called
+        with self.assertRaises(InactiveCaseError):
+            _validate_case(case_json)
+
+        # Then an InactiveCaseError is raised
+
+    def test_validate_case_empty(self):
+        # Given an empty dict
+        case_json = {}
+
+        # When _validate_case is called
+        with self.assertRaises(InactiveCaseError):
+            _validate_case(case_json)
+
+        # Then an InactiveCaseError is raised
 
     def test_create_eq_constructor(self):
         from app import eq

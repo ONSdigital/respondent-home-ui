@@ -16,6 +16,19 @@ from app.exceptions import InvalidEqPayLoad
 
 
 def skip_build_eq(func, *args, **kwargs):
+    """
+    Helper decorator for manually patching the methods of app.eq.EqPayloadConstructor.
+
+    This can be useful for tests that perform as a client but wish the server to skip the builder functionality.
+
+    The test case checks for and calls when possible .setUp and .tearDown attributes on each test method
+    at server setUp (setUpAsync) and server tearDown (tearDownAsync).
+
+    :param func: test method that requires the patch
+    :param args: the test method's arguments
+    :param args: the test method's keyword arguments
+    :return: new method with patching functions attached as attributes
+    """
 
     async def _override_eq_payload_constructor(test_case, *_):
         from app import eq
@@ -45,6 +58,20 @@ def skip_build_eq(func, *args, **kwargs):
 
 
 def build_eq_raises(func, *args, **kwargs):
+    """
+    Helper decorator for manually patching the methods of app.eq.EqPayloadConstructor.
+
+    This can be useful for tests that perform as a client but wish the server to raise InvalidEqPayLoad when .build()
+    is called on an instance of app.eq.EqPayloadConstructor.
+
+    The test case checks for and calls when possible .setUp and .tearDown attributes on each test method
+    at server setUp (setUpAsync) and server tearDown (tearDownAsync).
+
+    :param func: test method that requires the patch
+    :param args: the test method's arguments
+    :param args: the test method's keyword arguments
+    :return: new method with patching functions attached as attributes
+    """
 
     async def _override_eq_build_with_error(*_):
         from app import eq
@@ -74,6 +101,19 @@ def build_eq_raises(func, *args, **kwargs):
 
 
 def skip_encrypt(func, *args, **kwargs):
+    """
+    Helper decorator for manually patching the encrypt function in handlers.py.
+
+    This can be useful for tests that perform as a client but wish the server to skip encrypting a payload.
+
+    The test case checks for and calls when possible .setUp and .tearDown attributes on each test method
+    at server setUp (setUpAsync) and server tearDown (tearDownAsync).
+
+    :param func: test method that requires the patch
+    :param args: the test method's arguments
+    :param args: the test method's keyword arguments
+    :return: new method with patching functions attached as attributes
+    """
 
     async def _override_sdc_encrypt(*_):
         from app import handlers
@@ -108,6 +148,9 @@ class TestGenerateEqURL(AioHTTPTestCase):
     end_date = '2020-05-31'
     return_by = '2018-05-08'
 
+    async def get_application(self):
+        return create_app('TestingConfig')
+
     async def setUpAsync(self):
         test_method = getattr(self, self._testMethodName)
         if hasattr(test_method, 'setUp'):
@@ -117,9 +160,6 @@ class TestGenerateEqURL(AioHTTPTestCase):
         test_method = getattr(self, self._testMethodName)
         if hasattr(test_method, 'tearDown'):
             await test_method.tearDown(self)
-
-    async def get_application(self):
-        return create_app('TestingConfig')
 
     def setUp(self):
         super().setUp()  # NB: setUp the server first so we can use self.app

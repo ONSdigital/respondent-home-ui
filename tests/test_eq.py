@@ -346,7 +346,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
         self.assertIn(b'500 Server error', await response.content.read())
 
     @unittest_run_loop
-    async def test_post_index_with_build_ci_connect_400(self):
+    async def test_post_index_with_build_ci_400(self):
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
             # mocks for initial data setup in post
             mocked.get(self.iac_url, payload=self.iac_json)
@@ -361,7 +361,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
         self.assertIn(b'400 Server error', await response.content.read())
 
     @unittest_run_loop
-    async def test_post_index_with_build_ce_connect_503(self):
+    async def test_post_index_with_build_ce_503(self):
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
             # mocks for initial data setup in post
             mocked.get(self.iac_url, payload=self.iac_json)
@@ -377,7 +377,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
         self.assertIn(b'503 Server error', await response.content.read())
 
     @unittest_run_loop
-    async def test_post_index_with_build_events_connect_404(self):
+    async def test_post_index_with_build_events_404(self):
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
             # mocks for initial data setup in post
             mocked.get(self.iac_url, payload=self.iac_json)
@@ -394,7 +394,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
         self.assertIn(b'404 Server error', await response.content.read())
 
     @unittest_run_loop
-    async def test_post_index_with_build_party_403(self):
+    async def test_post_index_with_build_403(self):
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
             # mocks for initial data setup in post
             mocked.get(self.iac_url, payload=self.iac_json)

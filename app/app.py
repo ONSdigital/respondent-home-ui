@@ -39,6 +39,9 @@ def create_app(config_name=None) -> web.Application:
 
     app_config.from_object(getattr(config, config_name or app_config["ENV"]))
 
+    # Create basic auth for services
+    [app_config.__setitem__(key, BasicAuth(*app_config[key])) for key in app_config if key.endswith('_AUTH')]
+
     app = web.Application(
         debug=settings.DEBUG, middlewares=[session.setup(), flash.flash_middleware]
     )
@@ -48,11 +51,6 @@ def create_app(config_name=None) -> web.Application:
 
     # Store uppercased configuration variables on app
     app.update(app_config)
-
-    # Create basic auth for services
-    app["CASE_AUTH"] = BasicAuth(*app["CASE_AUTH"])
-    app["COLLECTION_INSTRUMENT_AUTH"] = BasicAuth(*app["COLLECTION_INSTRUMENT_AUTH"])
-    app["IAC_AUTH"] = BasicAuth(*app["IAC_AUTH"])
 
     # Bind logger
     logger_initial_config(service_name="respondent-home", log_level=app["LOG_LEVEL"])

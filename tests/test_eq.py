@@ -255,6 +255,14 @@ class TestGenerateEqURL(AioHTTPTestCase):
             'iac1': self.iac1, 'iac2': self.iac2, 'iac3': self.iac3, 'action[save_continue]': '',
         }
 
+    def assertLogLine(self, watcher, event, **kwargs):
+        for record in watcher.records:
+            message_json = json.loads(record.message)
+            if event in message_json['event'] and all(message_json[key] == val for key, val in kwargs.items()):
+                break
+        else:
+            self.fail(f'No matching log records present: {event}')
+
     @unittest_run_loop
     async def test_get_index(self):
         response = await self.client.request("GET", "/")
@@ -278,7 +286,9 @@ class TestGenerateEqURL(AioHTTPTestCase):
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
             mocked.get(self.iac_url, content_type='text')
 
-            response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+            with self.assertLogs('respondent-home', 'ERROR') as cm:
+                response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+            self.assertLogLine(cm, "Service failed to return expected JSON payload")
 
         self.assertEqual(response.status, 200)
         self.assertIn(b'Server error', await response.content.read())

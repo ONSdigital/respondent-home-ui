@@ -82,18 +82,19 @@ async def post_index(request):
             else:
                 raise ex
 
+        iac_json = await resp.json()
+
         try:
-            await _validate_case(resp)
+            _validate_case(iac_json)
         except InactiveCaseError:
             logger.info("Attempt to use an inactive access code", client_ip=client_ip)
             flash(request, "The unique access code entered has already been used")
             return aiohttp_jinja2.render_template("index.html", request, {})
 
-        case_json = await resp.json()
         try:
-            case_id = case_json["caseId"]
+            case_id = iac_json["caseId"]
         except KeyError:
-            logger.error('caseId missing from case response', client_ip=client_ip)
+            logger.error('caseId missing from IAC response', client_ip=client_ip)
             flash(request, "Bad response from server. Please try again")
             return aiohttp_jinja2.render_template("index.html", request, {})
 
@@ -110,7 +111,6 @@ async def post_index(request):
         return HTTPFound(request.app['EQ_URL'] + token)
 
 
-async def _validate_case(response):
-    resp_json = await response.json()
-    if 'active' not in resp_json or not resp_json["active"]:
+def _validate_case(case_json):
+    if not case_json.get("active", False):
         raise InactiveCaseError

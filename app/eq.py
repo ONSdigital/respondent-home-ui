@@ -70,7 +70,7 @@ class EqPayloadConstructor(object):
         try:
             self._case_id = case["id"]
         except KeyError:
-            raise InvalidEqPayLoad(f"No case id in supplied case JSON")
+            raise InvalidEqPayLoad("No case id in supplied case JSON")
 
         try:
             self._case_ref = case["caseRef"]

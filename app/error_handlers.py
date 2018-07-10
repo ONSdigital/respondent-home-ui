@@ -20,9 +20,7 @@ def create_error_middleware(overrides):
         try:
             resp = await handler(request)
             override = overrides.get(resp.status)
-            if override:
-                return await override(request)
-            return resp
+            return await override(request) if override else resp
         except InvalidEqPayLoad as ex:
             return await eq_error(request, ex.message)
         except ClientConnectorError as ex:

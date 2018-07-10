@@ -25,8 +25,8 @@ def create_error_middleware(overrides):
             return resp
         except InvalidEqPayLoad as ex:
             return await eq_error(request, ex.message)
-        except ClientConnectorError:
-            return await connection_error(request)
+        except ClientConnectorError as ex:
+            return await connection_error(request, ex.os_error.strerror)
         except ClientResponseError as ex:
             return await response_error(request, ex.status)
 
@@ -39,7 +39,8 @@ async def eq_error(request, message):
     return aiohttp_jinja2.render_template("index.html", request, {})
 
 
-async def connection_error(request):
+async def connection_error(request, message):
+    logger.error("Service connection error", message=message)
     flash(request, "Service connection error")
     return aiohttp_jinja2.render_template("index.html", request, {})
 

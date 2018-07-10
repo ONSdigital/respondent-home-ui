@@ -353,8 +353,10 @@ class TestGenerateEqURL(AioHTTPTestCase):
             mocked.get(self.case_url, payload=self.case_json)
             mocked.post(self.case_events_url)
 
-            # decorator makes URL constructor raise InvalidEqPayLoad when build() is called in handler
-            response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+            with self.assertLogs('respondent-home', 'ERROR') as cm:
+                # decorator makes URL constructor raise InvalidEqPayLoad when build() is called in handler
+                response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+            self.assertLogLine(cm, "Service failed to build eQ payload")
 
         # then error handler catches exception and flashes message to index
         self.assertEqual(response.status, 200)
@@ -370,7 +372,9 @@ class TestGenerateEqURL(AioHTTPTestCase):
             # mocks for the payload builder
             mocked.get(self.collection_instrument_url, status=500)
 
-            response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+            with self.assertLogs('app.eq', 'ERROR') as cm:
+                response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+            self.assertLogLine(cm, "Error in response", status_code=500)
 
         self.assertEqual(response.status, 200)
         self.assertIn(b'500 Server error', await response.content.read())
@@ -385,7 +389,9 @@ class TestGenerateEqURL(AioHTTPTestCase):
             # mocks for the payload builder
             mocked.get(self.collection_instrument_url, status=400)
 
-            response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+            with self.assertLogs('app.eq', 'ERROR') as cm:
+                response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+            self.assertLogLine(cm, "Error in response", status_code=400)
 
         self.assertEqual(response.status, 200)
         self.assertIn(b'400 Server error', await response.content.read())
@@ -401,7 +407,9 @@ class TestGenerateEqURL(AioHTTPTestCase):
             mocked.get(self.collection_instrument_url, payload=self.collection_instrument_json)
             mocked.get(self.collection_exercise_url, status=503)
 
-            response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+            with self.assertLogs('app.eq', 'ERROR') as cm:
+                response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+            self.assertLogLine(cm, "Error in response", status_code=503)
 
         self.assertEqual(response.status, 200)
         self.assertIn(b'503 Server error', await response.content.read())
@@ -418,7 +426,9 @@ class TestGenerateEqURL(AioHTTPTestCase):
             mocked.get(self.collection_exercise_url, payload=self.collection_exercise_json)
             mocked.get(self.collection_exercise_events_url, status=404)
 
-            response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+            with self.assertLogs('app.eq', 'ERROR') as cm:
+                response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+            self.assertLogLine(cm, "Error in response", status_code=404)
 
         self.assertEqual(response.status, 200)
         self.assertIn(b'404 Server error', await response.content.read())
@@ -436,7 +446,9 @@ class TestGenerateEqURL(AioHTTPTestCase):
             mocked.get(self.collection_exercise_events_url, payload=self.collection_exercise_events_json)
             mocked.get(self.party_url, status=403)
 
-            response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+            with self.assertLogs('app.eq', 'ERROR') as cm:
+                response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+            self.assertLogLine(cm, "Error in response", status_code=403)
 
         self.assertEqual(response.status, 200)
         self.assertIn(b'403 Server error', await response.content.read())
@@ -455,7 +467,9 @@ class TestGenerateEqURL(AioHTTPTestCase):
             mocked.get(self.party_url, payload=self.party_json)
             mocked.get(self.survey_url, status=500)
 
-            response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+            with self.assertLogs('app.eq', 'ERROR') as cm:
+                response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+            self.assertLogLine(cm, "Error in response", status_code=500)
 
         self.assertEqual(response.status, 200)
         self.assertIn(b'500 Server error', await response.content.read())
@@ -474,7 +488,9 @@ class TestGenerateEqURL(AioHTTPTestCase):
             mocked.get(self.survey_url, payload=self.survey_json)
             mocked.post(self.case_events_url, status=500)
 
-            response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+            with self.assertLogs('app.case', 'ERROR') as cm:
+                response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+            self.assertLogLine(cm, "Error posting case event", status_code=500, case_id=self.case_id)
 
         self.assertEqual(response.status, 200)
         self.assertIn(b'500 Server error', await response.content.read())
@@ -487,7 +503,9 @@ class TestGenerateEqURL(AioHTTPTestCase):
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
             mocked.get(self.iac_url, payload=iac_json)
 
-            response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+            with self.assertLogs('respondent-home', 'ERROR') as cm:
+                response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+            self.assertLogLine(cm, 'caseId missing from IAC response')
 
         self.assertEqual(response.status, 200)
         self.assertIn(b'Bad response', await response.content.read())
@@ -500,7 +518,9 @@ class TestGenerateEqURL(AioHTTPTestCase):
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
             mocked.get(self.iac_url, payload=self.iac_json)
 
-            response = await self.client.request("POST", "/", data=form_data)
+            with self.assertLogs('respondent-home', 'WARNING') as cm:
+                response = await self.client.request("POST", "/", data=form_data)
+            self.assertLogLine(cm, "Attempt to use a malformed access code")
 
         self.assertEqual(response.status, 200)
         self.assertIn(b'Please provide the unique access code', await response.content.read())
@@ -511,10 +531,11 @@ class TestGenerateEqURL(AioHTTPTestCase):
         del iac_json['active']
 
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
-
             mocked.get(self.iac_url, payload=iac_json)
 
-            response = await self.client.request("POST", "/", data=self.form_data)
+            with self.assertLogs('respondent-home', 'INFO') as cm:
+                response = await self.client.request("POST", "/", data=self.form_data)
+            self.assertLogLine(cm, "Attempt to use an inactive access code")
 
         self.assertEqual(response.status, 200)
         self.assertIn(b'already been used', await response.content.read())
@@ -525,10 +546,11 @@ class TestGenerateEqURL(AioHTTPTestCase):
         iac_json['active'] = False
 
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
-
             mocked.get(self.iac_url, payload=iac_json)
 
-            response = await self.client.request("POST", "/", data=self.form_data)
+            with self.assertLogs('respondent-home', 'INFO') as cm:
+                response = await self.client.request("POST", "/", data=self.form_data)
+            self.assertLogLine(cm, "Attempt to use an inactive access code")
 
         self.assertEqual(response.status, 200)
         self.assertIn(b'already been used', await response.content.read())

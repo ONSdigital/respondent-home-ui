@@ -274,6 +274,17 @@ class TestGenerateEqURL(AioHTTPTestCase):
         self.assertIn(self.app['EQ_URL'], response.headers['location'])
 
     @unittest_run_loop
+    async def test_post_index_case_403(self):
+        with aioresponses(passthrough=[str(self.server._root)]) as mocked:
+            mocked.get(self.iac_url, payload=self.iac_json)
+            mocked.get(self.case_url, status=403)
+
+            response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+
+        self.assertEqual(response.status, 200)
+        self.assertIn(b'403 Server error', await response.content.read())
+
+    @unittest_run_loop
     async def test_post_index_with_build_no_mocks(self):
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
             mocked.get(self.iac_url, payload=self.iac_json)
@@ -393,7 +404,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
         self.assertIn(b'404 Server error', await response.content.read())
 
     @unittest_run_loop
-    async def test_post_index_with_build_403(self):
+    async def test_post_index_with_build_party_403(self):
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
             # mocks for initial data setup in post
             mocked.get(self.iac_url, payload=self.iac_json)
@@ -423,6 +434,25 @@ class TestGenerateEqURL(AioHTTPTestCase):
             mocked.get(self.collection_exercise_events_url, payload=self.collection_exercise_events_json)
             mocked.get(self.party_url, payload=self.party_json)
             mocked.get(self.survey_url, status=500)
+
+            response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+
+        self.assertEqual(response.status, 200)
+        self.assertIn(b'500 Server error', await response.content.read())
+
+    @unittest_run_loop
+    async def test_post_index_with_build_case_event_500(self):
+        with aioresponses(passthrough=[str(self.server._root)]) as mocked:
+            # mocks for initial data setup in post
+            mocked.get(self.iac_url, payload=self.iac_json)
+            mocked.get(self.case_url, payload=self.case_json)
+            # mocks for the payload builder
+            mocked.get(self.collection_instrument_url, payload=self.collection_instrument_json)
+            mocked.get(self.collection_exercise_url, payload=self.collection_exercise_json)
+            mocked.get(self.collection_exercise_events_url, payload=self.collection_exercise_events_json)
+            mocked.get(self.party_url, payload=self.party_json)
+            mocked.get(self.survey_url, payload=self.survey_json)
+            mocked.post(self.case_events_url, status=500)
 
             response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
 

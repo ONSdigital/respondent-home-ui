@@ -5,7 +5,6 @@ import urllib
 import uuid
 from unittest import mock
 
-from aiohttp.client_exceptions import ClientConnectorError
 from aiohttp.test_utils import AioHTTPTestCase, unittest_run_loop
 from aioresponses import aioresponses
 
@@ -246,7 +245,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
             f"{self.app['IAC_URL']}/iacs/{self.iac_code}"
         )
         self.party_url = (
-            f"{self.app['PARTY_URL']}/party-api/v1/businesses/id/{self.party_id}"
+            f"{self.app['PARTY_URL']}/party-api/v1/businesses/id/{self.party_id}?verbose=True"
         )
         self.survey_url = (
             f"{self.app['SURVEY_URL']}/surveys/{self.survey_id}"
@@ -608,13 +607,6 @@ class TestGenerateEqURL(AioHTTPTestCase):
         from app import eq
 
         self.assertIsInstance(eq.EqPayloadConstructor(self.case_json, self.app), eq.EqPayloadConstructor)
-
-    @unittest_run_loop
-    async def test_build_no_mocks(self):
-        from app import eq
-
-        with self.assertRaises(ClientConnectorError):
-            await eq.EqPayloadConstructor(self.case_json, self.app).build()
 
     @unittest_run_loop
     async def test_build(self):

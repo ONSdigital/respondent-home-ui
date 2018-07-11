@@ -5,6 +5,7 @@ import uuid
 from unittest import mock
 from urllib.parse import urlsplit, parse_qs
 
+from aiohttp.client_exceptions import ClientConnectionError, ClientConnectorError
 from aiohttp.test_utils import AioHTTPTestCase, unittest_run_loop
 from aioresponses import aioresponses
 
@@ -160,6 +161,30 @@ class TestGenerateEqURL(AioHTTPTestCase):
         if hasattr(test_method, 'tearDown'):
             await test_method.tearDown(self)
 
+    def assertLogLine(self, watcher, event, **kwargs):
+        """
+        Helper method for asserting the contents of structlog records caught by self.assertLogs.
+
+        Fails if no match is found. A match is based on the main log message (event) and all additional
+        items passed in kwargs.
+
+        :param watcher: context manager returned by `with self.assertLogs(LOGGER, LEVEL)`
+        :param event: event logged; use empty string to ignore or no message
+        :param kwargs: other structlog key value pairs to assert for
+        """
+        for record in watcher.records:
+            message_json = json.loads(record.message)
+            try:
+                if (
+                    event in message_json.get('event', '')
+                    and all(message_json[key] == val for key, val in kwargs.items())
+                ):
+                    break
+            except KeyError:
+                pass
+        else:
+            self.fail(f'No matching log records present: {event}')
+
     def setUp(self):
         super().setUp()  # NB: setUp the server first so we can use self.app
         with open('tests/test_data/case/case.json') as fp:
@@ -255,14 +280,6 @@ class TestGenerateEqURL(AioHTTPTestCase):
             'iac1': self.iac1, 'iac2': self.iac2, 'iac3': self.iac3, 'action[save_continue]': '',
         }
 
-    def assertLogLine(self, watcher, event, **kwargs):
-        for record in watcher.records:
-            message_json = json.loads(record.message)
-            if event in message_json['event'] and all(message_json[key] == val for key, val in kwargs.items()):
-                break
-        else:
-            self.fail(f'No matching log records present: {event}')
-
     @unittest_run_loop
     async def test_get_index(self):
         response = await self.client.request("GET", "/")
@@ -276,10 +293,24 @@ class TestGenerateEqURL(AioHTTPTestCase):
             mocked.get(self.case_url, payload=self.case_json)
             mocked.post(self.case_events_url)
 
-            response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+            with self.assertLogs('respondent-home', 'INFO') as cm:
+                response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+            self.assertLogLine(cm, 'Redirecting to eQ')
 
         self.assertEqual(response.status, 302)
         self.assertIn(self.app['EQ_URL'], response.headers['location'])
+
+    @unittest_run_loop
+    async def test_post_index_connector_error(self):
+        with aioresponses(passthrough=[str(self.server._root)]) as mocked:
+            mocked.get(self.iac_url, exception=ClientConnectorError(mock.MagicMock(), mock.MagicMock()))
+
+            with self.assertLogs('respondent-home', 'ERROR') as cm:
+                response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+            self.assertLogLine(cm, "Service connection error")
+
+        self.assertEqual(response.status, 200)
+        self.assertIn(b'Service connection error', await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_no_iac_json(self):
@@ -299,22 +330,52 @@ class TestGenerateEqURL(AioHTTPTestCase):
             mocked.get(self.iac_url, payload=self.iac_json)
             mocked.get(self.case_url, status=403)
 
-            response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+            with self.assertLogs('app.case', 'ERROR') as cm:
+                response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+            self.assertLogLine(cm, "Error retrieving case", case_id=self.case_id, status_code=403)
 
         self.assertEqual(response.status, 200)
         self.assertIn(b'403 Server error', await response.content.read())
 
     @unittest_run_loop
-    async def test_post_index_with_build_no_mocks(self):
+    async def test_post_index_case_500(self):
+        with aioresponses(passthrough=[str(self.server._root)]) as mocked:
+            mocked.get(self.iac_url, payload=self.iac_json)
+            mocked.get(self.case_url, status=500)
+
+            with self.assertLogs('app.case', 'ERROR') as cm:
+                response = await self.client.request("POST", "/", data=self.form_data)
+            self.assertLogLine(cm, "Error retrieving case", case_id=self.case_id, status_code=500)
+
+        self.assertEqual(response.status, 200)
+        self.assertIn(b'500 Server error', await response.content.read())
+
+    @unittest_run_loop
+    async def test_post_index_case_connector_error(self):
+        with aioresponses(passthrough=[str(self.server._root)]) as mocked:
+            mocked.get(self.iac_url, payload=self.iac_json)
+            mocked.get(self.case_url, exception=ClientConnectorError(mock.MagicMock(), mock.MagicMock()))
+
+            with self.assertLogs('respondent-home', 'ERROR') as cm:
+                response = await self.client.request("POST", "/", data=self.form_data)
+            self.assertLogLine(cm, "Service connection error")
+
+        self.assertEqual(response.status, 200)
+        self.assertIn(b'Service connection error', await response.content.read())
+
+    @unittest_run_loop
+    async def test_post_index_with_build_connection_error(self):
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
             mocked.get(self.iac_url, payload=self.iac_json)
             mocked.get(self.case_url, payload=self.case_json)
-            mocked.post(self.case_events_url)
+            mocked.get(self.collection_instrument_url, exception=ClientConnectionError('Failed'))
 
-            response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+            with self.assertLogs('respondent-home', 'ERROR') as cm:
+                response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+            self.assertLogLine(cm, "Service connection error", message='Failed')
 
-        self.assertEqual(response.status, 500)
-        self.assertIn(b'500 Internal Server Error', await response.content.read())
+        self.assertEqual(response.status, 200)
+        self.assertIn(b'Service connection error', await response.content.read())
 
     @skip_encrypt
     @unittest_run_loop
@@ -331,7 +392,9 @@ class TestGenerateEqURL(AioHTTPTestCase):
             mocked.get(self.party_url, payload=self.party_json)
             mocked.get(self.survey_url, payload=self.survey_json)
 
-            response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+            with self.assertLogs('respondent-home', 'INFO') as cm:
+                response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+            self.assertLogLine(cm, 'Redirecting to eQ')
 
         self.assertEqual(response.status, 302)
         redirected_url = response.headers['location']
@@ -560,7 +623,9 @@ class TestGenerateEqURL(AioHTTPTestCase):
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
             mocked.get(self.iac_url, status=500)
 
-            response = await self.client.request("POST", "/", data=self.form_data)
+            with self.assertLogs('respondent-home', 'ERROR') as cm:
+                response = await self.client.request("POST", "/", data=self.form_data)
+            self.assertLogLine(cm, "Error in response", status_code=500)
 
         self.assertEqual(response.status, 200)
         self.assertIn(b'500 Server error', await response.content.read())
@@ -570,7 +635,9 @@ class TestGenerateEqURL(AioHTTPTestCase):
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
             mocked.get(self.iac_url, status=503)
 
-            response = await self.client.request("POST", "/", data=self.form_data)
+            with self.assertLogs('respondent-home', 'ERROR') as cm:
+                response = await self.client.request("POST", "/", data=self.form_data)
+            self.assertLogLine(cm, "Error in response", status_code=503)
 
         self.assertEqual(response.status, 200)
         self.assertIn(b'503 Server error', await response.content.read())
@@ -580,7 +647,9 @@ class TestGenerateEqURL(AioHTTPTestCase):
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
             mocked.get(self.iac_url, status=404)
 
-            response = await self.client.request("POST", "/", data=self.form_data)
+            with self.assertLogs('respondent-home', 'INFO') as cm:
+                response = await self.client.request("POST", "/", data=self.form_data)
+            self.assertLogLine(cm, "Attempt to use an invalid access code", client_ip=None)
 
         self.assertEqual(response.status, 200)
         self.assertIn(b'Please provide the unique access code', await response.content.read())
@@ -590,7 +659,9 @@ class TestGenerateEqURL(AioHTTPTestCase):
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
             mocked.get(self.iac_url, status=403)
 
-            response = await self.client.request("POST", "/", data=self.form_data)
+            with self.assertLogs('respondent-home', 'INFO') as cm:
+                response = await self.client.request("POST", "/", data=self.form_data)
+            self.assertLogLine(cm, "Unauthorized access to IAC service attempted", client_ip=None)
 
         self.assertEqual(response.status, 200)
         self.assertIn(b'not authorized', await response.content.read())
@@ -600,7 +671,9 @@ class TestGenerateEqURL(AioHTTPTestCase):
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
             mocked.get(self.iac_url, status=401)
 
-            response = await self.client.request("POST", "/", data=self.form_data)
+            with self.assertLogs('respondent-home', 'INFO') as cm:
+                response = await self.client.request("POST", "/", data=self.form_data)
+            self.assertLogLine(cm, "Unauthorized access to IAC service attempted", client_ip=None)
 
         self.assertEqual(response.status, 200)
         self.assertIn(b'not authorized', await response.content.read())
@@ -610,21 +683,12 @@ class TestGenerateEqURL(AioHTTPTestCase):
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
             mocked.get(self.iac_url, status=400)
 
-            response = await self.client.request("POST", "/", data=self.form_data)
+            with self.assertLogs('respondent-home', 'INFO') as cm:
+                response = await self.client.request("POST", "/", data=self.form_data)
+            self.assertLogLine(cm, "Client error when accessing IAC service", client_ip=None, status=400)
 
         self.assertEqual(response.status, 200)
         self.assertIn(b'Bad request', await response.content.read())
-
-    @unittest_run_loop
-    async def test_post_index_case_service_500(self):
-        with aioresponses(passthrough=[str(self.server._root)]) as mocked:
-            mocked.get(self.iac_url, payload=self.iac_json)
-            mocked.get(self.case_url, status=500)
-
-            response = await self.client.request("POST", "/", data=self.form_data)
-
-        self.assertEqual(response.status, 200)
-        self.assertIn(b'500 Server error', await response.content.read())
 
     def test_get_iac(self):
         # Given some post data
@@ -726,7 +790,9 @@ class TestGenerateEqURL(AioHTTPTestCase):
                 mocked.get(self.party_url, payload=self.party_json)
                 mocked.get(self.survey_url, payload=self.survey_json)
 
-                payload = await eq.EqPayloadConstructor(self.case_json, self.app).build()
+                with self.assertLogs('app.eq', 'INFO') as cm:
+                    payload = await eq.EqPayloadConstructor(self.case_json, self.app).build()
+                self.assertLogLine(cm, '', payload=payload)
 
         mocked_uuid4.assert_called()
         mocked_time.assert_called()

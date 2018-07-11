@@ -80,6 +80,7 @@ async def post_index(request):
                 flash(request, "Bad request. Please try again")
                 return aiohttp_jinja2.render_template("index.html", request, {})
             else:
+                logger.error("Error in response", url=resp.url, status_code=resp.status)
                 raise ex
 
         iac_json = await resp.json()

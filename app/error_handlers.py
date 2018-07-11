@@ -3,7 +3,8 @@ import logging
 
 import aiohttp_jinja2
 from aiohttp import web
-from aiohttp.client_exceptions import ContentTypeError, ClientResponseError, ClientConnectorError
+from aiohttp.client_exceptions import (
+    ClientResponseError, ClientConnectorError, ClientConnectionError, ContentTypeError)
 from structlog import wrap_logger
 
 from .exceptions import InvalidEqPayLoad
@@ -23,6 +24,8 @@ def create_error_middleware(overrides):
             return await override(request) if override else resp
         except InvalidEqPayLoad as ex:
             return await eq_error(request, ex.message)
+        except ClientConnectionError as ex:
+            return await connection_error(request, ex.args[0])
         except ClientConnectorError as ex:
             return await connection_error(request, ex.os_error.strerror)
         except ContentTypeError as ex:

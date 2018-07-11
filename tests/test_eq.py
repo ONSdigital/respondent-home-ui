@@ -392,15 +392,16 @@ class TestGenerateEqURL(AioHTTPTestCase):
             mocked.get(self.party_url, payload=self.party_json)
             mocked.get(self.survey_url, payload=self.survey_json)
 
-            with self.assertLogs('respondent-home', 'INFO') as cm:
+            with self.assertLogs('respondent-home', 'INFO') as logs_home, self.assertLogs('app.eq', 'INFO') as logs_eq:
                 response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
-            self.assertLogLine(cm, 'Redirecting to eQ')
+            self.assertLogLine(logs_home, 'Redirecting to eQ')
 
         self.assertEqual(response.status, 302)
         redirected_url = response.headers['location']
         self.assertTrue(redirected_url.startswith(self.app['EQ_URL']), redirected_url)  # outputs url on fail
         _, _, _, query, *_ = urlsplit(redirected_url)  # we only care about the query string
         token = json.loads(parse_qs(query)['token'][0])  # convert token to dict
+        self.assertLogLine(logs_eq, '', payload=token)  # make sure the payload is logged somewhere
         self.assertEqual(self.eq_payload.keys(), token.keys())  # fail early if payload keys differ
         for key in self.eq_payload.keys():
             if key in ['jti', 'tx_id', 'iat', 'exp']:

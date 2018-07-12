@@ -25,6 +25,8 @@ pytest-aiohttp = "*"
 pytest-cov = "*"
 aiohttp-devtools = "*"
 aioresponses = "*"
+requests = "*"
+retrying = "*"
 
 [requires]
 python_version = "3.6"

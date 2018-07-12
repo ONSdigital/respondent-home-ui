@@ -11,7 +11,7 @@ from aioresponses import aioresponses
 
 from app.app import create_app
 from app.eq import format_date
-from app.handlers import get_iac, _validate_case
+from app.handlers import join_iac, _validate_case
 from app.exceptions import InvalidEqPayLoad, InactiveCaseError
 
 
@@ -620,6 +620,18 @@ class TestGenerateEqURL(AioHTTPTestCase):
         self.assertIn(b'already been used', await response.content.read())
 
     @unittest_run_loop
+    async def test_post_index_iac_service_connection_error(self):
+        with aioresponses(passthrough=[str(self.server._root)]) as mocked:
+            mocked.get(self.iac_url, exception=ClientConnectionError('Failed'))
+
+            with self.assertLogs('respondent-home', 'ERROR') as cm:
+                response = await self.client.request("POST", "/", data=self.form_data)
+            self.assertLogLine(cm, "Client failed to connect to iac service")
+
+        self.assertEqual(response.status, 200)
+        self.assertIn(b'Service connection error', await response.content.read())
+
+    @unittest_run_loop
     async def test_post_index_iac_service_500(self):
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
             mocked.get(self.iac_url, status=500)
@@ -691,32 +703,32 @@ class TestGenerateEqURL(AioHTTPTestCase):
         self.assertEqual(response.status, 200)
         self.assertIn(b'Bad request', await response.content.read())
 
-    def test_get_iac(self):
+    def test_join_iac(self):
         # Given some post data
         post_data = {'iac1': '1234', 'iac2': '5678', 'iac3': '9012', 'action[save_continue]': ''}
 
-        # When get_iac is called
-        result = get_iac(post_data)
+        # When join_iac is called
+        result = join_iac(post_data)
 
         # Then a single string built from the iac values is returned
         self.assertEqual(result, post_data['iac1'] + post_data['iac2'] + post_data['iac3'])
 
-    def test_get_iac_missing(self):
+    def test_join_iac_missing(self):
         # Given some missing post data
         post_data = {'action[save_continue]': ''}
 
-        # When get_iac is called
+        # When join_iac is called
         with self.assertRaises(TypeError):
-            get_iac(post_data)
+            join_iac(post_data)
         # Then a TypeError is raised
 
-    def test_get_iac_some_missing(self):
+    def test_join_iac_some_missing(self):
         # Given some missing post data
         post_data = {'iac1': '1234', 'iac2': '5678', 'iac3': '', 'action[save_continue]': ''}
 
-        # When get_iac is called
+        # When join_iac is called
         with self.assertRaises(TypeError):
-            get_iac(post_data)
+            join_iac(post_data)
         # Then a TypeError is raised
 
     def test_correct_iso8601_date_format(self):

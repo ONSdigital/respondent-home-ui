@@ -284,6 +284,10 @@ class TestGenerateEqURL(AioHTTPTestCase):
     async def test_get_index(self):
         response = await self.client.request("GET", "/")
         self.assertEqual(response.status, 200)
+        contents = await response.content.read()
+        self.assertIn(b'Enter your unique access code below', contents)
+        self.assertEqual(contents.count(b'input-text'), 3)
+        self.assertIn(b'type="submit"', contents)
 
     @skip_build_eq
     @unittest_run_loop

@@ -11,7 +11,7 @@ from aioresponses import aioresponses
 
 from app.app import create_app
 from app.eq import format_date
-from app.handlers import join_iac, _validate_case
+from app.handlers import join_iac, validate_case
 from app.exceptions import InvalidEqPayLoad, InactiveCaseError
 
 
@@ -760,8 +760,8 @@ class TestGenerateEqURL(AioHTTPTestCase):
         # Given a dict with an active key and value
         case_json = {'active': True}
 
-        # When _validate_case is called
-        _validate_case(case_json)
+        # When validate_case is called
+        validate_case(case_json)
 
         # Nothing happens
 
@@ -769,9 +769,9 @@ class TestGenerateEqURL(AioHTTPTestCase):
         # Given a dict with an active key and value
         case_json = {'active': False}
 
-        # When _validate_case is called
+        # When validate_case is called
         with self.assertRaises(InactiveCaseError):
-            _validate_case(case_json)
+            validate_case(case_json)
 
         # Then an InactiveCaseError is raised
 
@@ -779,9 +779,9 @@ class TestGenerateEqURL(AioHTTPTestCase):
         # Given an empty dict
         case_json = {}
 
-        # When _validate_case is called
+        # When validate_case is called
         with self.assertRaises(InactiveCaseError):
-            _validate_case(case_json)
+            validate_case(case_json)
 
         # Then an InactiveCaseError is raised
 

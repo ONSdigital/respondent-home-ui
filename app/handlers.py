@@ -76,6 +76,17 @@ async def post_index(request):
 
     case = await get_case(case_id, request.app)
 
+    try:
+        assert case['sampleUnitType'] == 'H'
+    except AssertionError:
+        logger.error('Attempt to use unexpected sample unit type', sample_unit_type=case['sampleUnitType'])
+        flash(request, "Invalid access code")
+        return aiohttp_jinja2.render_template("index.html", request, {})
+    except KeyError:
+        logger.error('sampleUnitType missing from case response', client_ip=client_ip)
+        flash(request, "Bad response from server. Please try again")
+        return aiohttp_jinja2.render_template("index.html", request, {})
+
     eq_payload = await EqPayloadConstructor(case, request.app).build()
 
     token = encrypt(eq_payload, key_store=request.app['key_store'], key_purpose="authentication")
@@ -93,8 +104,8 @@ def validate_case(case_json):
 
 
 async def get_iac_details(request, iac: str, client_ip: str):
-    logger.debug("Attempting to retrieve case details from iac service", iac=iac, client_ip=client_ip)
     iac_url = f"{request.app['IAC_URL']}/iacs/{iac}"
+    logger.info(f"Making GET request to {iac_url}", iac=iac, client_ip=client_ip)
     try:
         async with request.app.http_session_pool.get(iac_url, auth=request.app["IAC_AUTH"]) as resp:
             logger.info("Received response from IAC", iac=iac, status_code=resp.status)

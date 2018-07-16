@@ -122,11 +122,6 @@ class EqPayloadConstructor(object):
         self._collex = await self._get_collection_exercise()
 
         try:
-            self._collex_user_description = self._collex["userDescription"]
-        except KeyError:
-            raise InvalidEqPayLoad(f"Could not retrieve user description for case {self._case_id}")
-
-        try:
             self._collex_period_id = self._collex["exerciseRef"]
         except KeyError:
             raise InvalidEqPayLoad(f"Could not retrieve period id for case {self._case_id}")
@@ -160,44 +155,27 @@ class EqPayloadConstructor(object):
         except KeyError:
             raise InvalidEqPayLoad(f"Could not retrieve ru_name for case {self._case_id}")
 
-        try:
-            self._trading_as = (
-                f"{self._party['tradstyle1']} {self._party['tradstyle2']} {self._party['tradstyle3']}"
-            )
-        except KeyError:
-            raise InvalidEqPayLoad(f"Could not retrieve trading as data for case {self._case_id}")
-
-        self._survey = await self._get_survey()
-
-        try:
-            self._survey_ref = self._survey["surveyRef"]
-        except KeyError:
-            raise InvalidEqPayLoad(f"No survey ref in collection exercise for case {self._case_id}")
-
         # TODO: Remove hardcoded language variables for payload when they become available in RAS/RM
         self._region_code = 'GB-ENG'
         self._language_code = 'en'
 
         self._payload = {
-            "jti": str(uuid4()),
-            "tx_id": self._tx_id,
-            "user_id": self._party_id,
+            "jti": str(uuid4()),  # required by eQ for creating a new claim
+            "tx_id": self._tx_id,  # not required by eQ (will generate if does not exist)
+            "user_id": self._party_id,  # required by eQ
             "iat": int(time.time()),
-            "exp": int(time.time() + (5 * 60)),
-            "eq_id": self._eq_id,
-            "period_str": self._collex_user_description,
-            "period_id": self._collex_period_id,
-            "form_type": self._form_type,
-            "collection_exercise_sid": self._collex_id,
-            "ru_ref": self._sample_unit_ref + self._checkletter,
-            "ru_name": self._ru_name,
-            "survey_id": self._survey_ref,
-            "case_id": self._case_id,
-            "case_ref": self._case_ref,
-            "account_service_url": self._account_service_url,
-            "trad_as": self._trading_as,
+            "exp": int(time.time() + (5 * 60)),  # required by eQ for creating a new claim
+            "eq_id": self._eq_id,  # required but currently only one social survey ('lms')
+            "period_id": self._collex_period_id,  # required by eQ
+            "form_type": self._form_type,  # required but only one ('1') formtype for lms
+            "collection_exercise_sid": self._collex_id,  # required by eQ
+            "ru_ref": self._sample_unit_ref + self._checkletter,  # required by eQ
+            "ru_name": self._ru_name,  # required by eQ
+            "case_id": self._case_id,  # not required by eQ but useful for downstream
+            "case_ref": self._case_ref,  # not required by eQ but useful for downstream
+            "account_service_url": self._account_service_url,  # required for save/continue
             "region_code": self._region_code,
-            "language_code": self._language_code
+            "language_code": self._language_code  # currently only 'en' or 'cy'
         }
 
         # Add any non null event dates that exist for this collection exercise
@@ -211,7 +189,7 @@ class EqPayloadConstructor(object):
 
     async def _make_request(self, request: Request):
         method, url, auth, func = request
-        logger.info(f"Making {method} request to {url} and handling with {func}")
+        logger.info(f"Making {method} request to {url} and handling with {func.__name__}")
         async with self._app.http_session_pool.request(method, url, auth=auth) as resp:
             func(resp)
             return await resp.json()
@@ -219,10 +197,6 @@ class EqPayloadConstructor(object):
     async def _get_party_by_id(self):
         url = self._party_url + self._party_id + "?verbose=True"
         return await self._make_request(Request("GET", url, self._app['PARTY_AUTH'], handle_response))
-
-    async def _get_survey(self):
-        url = self._survey_url + self._survey_id
-        return await self._make_request(Request("GET", url, self._app['SURVEY_AUTH'], handle_response))
 
     async def _get_collection_instrument(self):
         url = self._ci_url + self._ci_id

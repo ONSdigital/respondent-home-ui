@@ -882,20 +882,6 @@ class TestGenerateEqURL(AioHTTPTestCase):
                 await eq.EqPayloadConstructor(self.case_json, self.app).build()
 
     @unittest_run_loop
-    async def test_build_raises_InvalidEqPayLoad_missing_survey_id(self):
-        ce_json = self.collection_exercise_json.copy()
-        del ce_json['surveyId']
-
-        from app import eq  # NB: local import to avoid overwriting the patched version for some tests
-
-        with aioresponses() as mocked:
-            mocked.get(self.collection_instrument_url, payload=self.collection_instrument_json)
-            mocked.get(self.collection_exercise_url, payload=ce_json)
-
-            with self.assertRaises(InvalidEqPayLoad):
-                await eq.EqPayloadConstructor(self.case_json, self.app).build()
-
-    @unittest_run_loop
     async def test_build_raises_InvalidEqPayLoad_missing_sampleUnitRef(self):
         party_json = self.party_json.copy()
         del party_json['sampleUnitRef']

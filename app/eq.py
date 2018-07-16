@@ -62,7 +62,6 @@ class EqPayloadConstructor(object):
         self._ci_url = f"{app['COLLECTION_INSTRUMENT_URL']}/collection-instrument-api/1.0.2/collectioninstrument/id/"
         self._collex_url = f"{app['COLLECTION_EXERCISE_URL']}/collectionexercises/"
         self._party_url = f"{app['PARTY_URL']}/party-api/v1/businesses/id/"  # TODO: swap out for the sample service(?)
-        self._survey_url = f"{app['SURVEY_URL']}/surveys/"
 
         self._tx_id = str(uuid4())
         self._account_service_url = app["ACCOUNT_SERVICE_URL"]
@@ -130,11 +129,6 @@ class EqPayloadConstructor(object):
             self._collex_id = self._collex["id"]
         except KeyError:
             raise InvalidEqPayLoad(f"Could not retrieve ce id for case {self._case_id}")
-
-        try:
-            self._survey_id = self._collex["surveyId"]
-        except KeyError:
-            raise InvalidEqPayLoad(f"No survey id in collection exercise for case {self._case_id}")
 
         self._collex_events = await self._get_collection_exercise_events()
         self._collex_event_dates = self._get_collex_event_dates()

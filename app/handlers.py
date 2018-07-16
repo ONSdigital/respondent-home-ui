@@ -1,11 +1,12 @@
 import logging
 
 import aiohttp_jinja2
-from aiohttp.web import HTTPFound, Response
+from aiohttp.web import HTTPFound, Response, json_response
 from aiohttp.client_exceptions import ClientConnectionError, ClientConnectorError, ClientResponseError
 from sdc.crypto.encrypter import encrypt
 from structlog import wrap_logger
 
+from . import VERSION
 from .case import get_case, post_case_event
 from .eq import EqPayloadConstructor
 from .exceptions import InactiveCaseError
@@ -27,7 +28,11 @@ async def get_index(request, msg=None, redirect=False):
 
 
 async def get_info(request):
-    return Response(text="")
+    info = {
+        "name": 'respondent-home-ui',
+        "version": VERSION,
+    }
+    return json_response(info)
 
 
 def join_iac(data, expected_length=12):
@@ -56,7 +61,7 @@ async def post_index(request):
     iac_json = await get_iac_details(request, iac, client_ip)
 
     try:
-        _validate_case(iac_json)
+        validate_case(iac_json)
     except InactiveCaseError:
         logger.info("Attempt to use an inactive access code", client_ip=client_ip)
         flash(request, "The unique access code entered has already been used")
@@ -82,7 +87,7 @@ async def post_index(request):
     raise HTTPFound(request.app['EQ_URL'] + token)
 
 
-def _validate_case(case_json):
+def validate_case(case_json):
     if not case_json.get("active", False):
         raise InactiveCaseError
 

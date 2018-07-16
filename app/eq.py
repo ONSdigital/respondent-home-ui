@@ -76,6 +76,11 @@ class EqPayloadConstructor(object):
         except KeyError:
             raise InvalidEqPayLoad(f"No case ref in supplied case JSON")
 
+        try:
+            self._sample_unit_ref = case["caseGroup"]["sampleUnitRef"]
+        except KeyError:
+            raise InvalidEqPayLoad(f"Could not retrieve sample unit ref for case {self._case_id}")
+
         logger.info("Creating payload for JWT", case_id=self._case_id, tx_id=self._tx_id)
 
         try:
@@ -135,16 +140,6 @@ class EqPayloadConstructor(object):
         self._party = await self._get_party_by_id()
 
         try:
-            self._sample_unit_ref = self._party["sampleUnitRef"]
-        except KeyError:
-            raise InvalidEqPayLoad(f"Could not retrieve sample unit ref for case {self._case_id}")
-
-        try:
-            self._checkletter = self._party["checkletter"]
-        except KeyError:
-            raise InvalidEqPayLoad(f"Could not retrieve checkletter for case {self._case_id}")
-
-        try:
             self._ru_name = self._party["name"]
         except KeyError:
             raise InvalidEqPayLoad(f"Could not retrieve ru_name for case {self._case_id}")
@@ -163,7 +158,7 @@ class EqPayloadConstructor(object):
             "period_id": self._collex_period_id,  # required by eQ
             "form_type": self._form_type,  # required but only one ('1') formtype for lms
             "collection_exercise_sid": self._collex_id,  # required by eQ
-            "ru_ref": self._sample_unit_ref + self._checkletter,  # required by eQ
+            "ru_ref": self._sample_unit_ref,  # required by eQ
             "ru_name": self._ru_name,  # required by eQ
             "case_id": self._case_id,  # not required by eQ but useful for downstream
             "case_ref": self._case_ref,  # not required by eQ but useful for downstream

@@ -230,7 +230,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
             "period_id": self.collection_exercise_ref,
             "form_type": self.form_type,
             "collection_exercise_sid": self.collection_exercise_id,
-            "ru_ref": self.sample_unit_ref + 'C',
+            "ru_ref": self.sample_unit_ref,
             "ru_name": self.ru_name,
             "case_id": self.case_id,
             "case_ref": self.case_ref,
@@ -550,6 +550,38 @@ class TestGenerateEqURL(AioHTTPTestCase):
 
         self.assertEqual(response.status, 200)
         self.assertIn(b'Bad response', await response.content.read())
+
+    @unittest_run_loop
+    async def test_post_index_sampleUnitType_missing(self):
+        case_json = self.case_json.copy()
+        del case_json['sampleUnitType']
+
+        with aioresponses(passthrough=[str(self.server._root)]) as mocked:
+            mocked.get(self.iac_url, payload=self.iac_json)
+            mocked.get(self.case_url, payload=case_json)
+
+            with self.assertLogs('respondent-home', 'ERROR') as cm:
+                response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+            self.assertLogLine(cm, 'sampleUnitType missing from case response')
+
+        self.assertEqual(response.status, 200)
+        self.assertIn(b'Bad response', await response.content.read())
+
+    @unittest_run_loop
+    async def test_post_index_sampleUnitType_B_error(self):
+        case_json = self.case_json.copy()
+        case_json['sampleUnitType'] = 'B'
+
+        with aioresponses(passthrough=[str(self.server._root)]) as mocked:
+            mocked.get(self.iac_url, payload=self.iac_json)
+            mocked.get(self.case_url, payload=case_json)
+
+            with self.assertLogs('respondent-home', 'ERROR') as cm:
+                response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
+            self.assertLogLine(cm, 'Attempt to use unexpected sample unit type', sample_unit_type='B')
+
+        self.assertEqual(response.status, 200)
+        self.assertIn(b'Invalid access code', await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_malformed(self):
@@ -877,38 +909,6 @@ class TestGenerateEqURL(AioHTTPTestCase):
         with aioresponses() as mocked:
             mocked.get(self.collection_instrument_url, payload=self.collection_instrument_json)
             mocked.get(self.collection_exercise_url, payload=ce_json)
-
-            with self.assertRaises(InvalidEqPayLoad):
-                await eq.EqPayloadConstructor(self.case_json, self.app).build()
-
-    @unittest_run_loop
-    async def test_build_raises_InvalidEqPayLoad_missing_sampleUnitRef(self):
-        party_json = self.party_json.copy()
-        del party_json['sampleUnitRef']
-
-        from app import eq  # NB: local import to avoid overwriting the patched version for some tests
-
-        with aioresponses() as mocked:
-            mocked.get(self.collection_instrument_url, payload=self.collection_instrument_json)
-            mocked.get(self.collection_exercise_url, payload=self.collection_exercise_json)
-            mocked.get(self.collection_exercise_events_url, payload=self.collection_exercise_events_json)
-            mocked.get(self.party_url, payload=party_json)
-
-            with self.assertRaises(InvalidEqPayLoad):
-                await eq.EqPayloadConstructor(self.case_json, self.app).build()
-
-    @unittest_run_loop
-    async def test_build_raises_InvalidEqPayLoad_missing_checkletter(self):
-        party_json = self.party_json.copy()
-        del party_json['checkletter']
-
-        from app import eq  # NB: local import to avoid overwriting the patched version for some tests
-
-        with aioresponses() as mocked:
-            mocked.get(self.collection_instrument_url, payload=self.collection_instrument_json)
-            mocked.get(self.collection_exercise_url, payload=self.collection_exercise_json)
-            mocked.get(self.collection_exercise_events_url, payload=self.collection_exercise_events_json)
-            mocked.get(self.party_url, payload=party_json)
 
             with self.assertRaises(InvalidEqPayLoad):
                 await eq.EqPayloadConstructor(self.case_json, self.app).build()

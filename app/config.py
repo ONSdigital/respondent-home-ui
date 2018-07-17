@@ -45,8 +45,8 @@ class BaseConfig:
     IAC_URL = env("IAC_URL")
     IAC_AUTH = (env("IAC_USERNAME"), env("IAC_PASSWORD"))
 
-    PARTY_URL = env("PARTY_URL")
-    PARTY_AUTH = (env("PARTY_USERNAME"), env("PARTY_PASSWORD"))
+    SAMPLE_URL = env("SAMPLE_URL")
+    SAMPLE_AUTH = (env("SAMPLE_USERNAME"), env("SAMPLE_PASSWORD"))
 
     SURVEY_URL = env("SURVEY_URL")
     SURVEY_AUTH = (env("SURVEY_USERNAME"), env("SURVEY_PASSWORD"))
@@ -81,8 +81,8 @@ class DevelopmentConfig:
     IAC_URL = env.str("IAC_URL", default="http://0.0.0.0:8121")
     IAC_AUTH = (env.str("IAC_USERNAME", default="admin"), env.str("IAC_PASSWORD", default="secret"))
 
-    PARTY_URL = env("PARTY_URL", default="http://0.0.0.0:8081")
-    PARTY_AUTH = (env("PARTY_USERNAME", default="admin"), env("PARTY_PASSWORD", default="secret"))
+    SAMPLE_URL = env("SAMPLE_URL", default="http://0.0.0.0:8125")
+    SAMPLE_AUTH = (env("SAMPLE_USERNAME", default="admin"), env("SAMPLE_PASSWORD", default="secret"))
 
     SURVEY_URL = env("SURVEY_URL", default="http://0.0.0.0:8080")
     SURVEY_AUTH = (env("SURVEY_USERNAME", default="admin"), env("SURVEY_PASSWORD", default="secret"))
@@ -110,8 +110,8 @@ class TestingConfig:
     IAC_URL = "http://0.0.0.0:8121"
     IAC_AUTH = ("admin", "secret")
 
-    PARTY_URL = "http://0.0.0.0:8081"
-    PARTY_AUTH = ("admin", "secret")
+    SAMPLE_URL = "http://0.0.0.0:8125"
+    SAMPLE_AUTH = ("admin", "secret")
 
     SURVEY_URL = "http://0.0.0.0:8080"
     SURVEY_AUTH = ("admin", "secret")

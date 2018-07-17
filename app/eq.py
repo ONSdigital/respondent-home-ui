@@ -54,14 +54,14 @@ class EqPayloadConstructor(object):
 
     def __init__(self, case: dict, app: Application):
         """
-        Creates the payload needed to communicate with EQ, built from the Case, Collection Exercise, Party,
+        Creates the payload needed to communicate with EQ, built from the Case, Collection Exercise, Sample,
         Survey and Collection Instrument services
         """
 
         self._app = app
         self._ci_url = f"{app['COLLECTION_INSTRUMENT_URL']}/collection-instrument-api/1.0.2/collectioninstrument/id/"
         self._collex_url = f"{app['COLLECTION_EXERCISE_URL']}/collectionexercises/"
-        self._party_url = f"{app['PARTY_URL']}/party-api/v1/businesses/id/"  # TODO: swap out for the sample service(?)
+        self._sample_url = f"{app['SAMPLE_URL']}/samples/"
 
         self._tx_id = str(uuid4())
         self._account_service_url = app["ACCOUNT_SERVICE_URL"]
@@ -94,9 +94,9 @@ class EqPayloadConstructor(object):
             raise InvalidEqPayLoad(f"No collection id for case id {self._case_id}")
 
         try:
-            self._party_id = case["caseGroup"]["partyId"]
+            self._sample_unit_id = case["sampleUnitId"]
         except KeyError:
-            raise InvalidEqPayLoad(f"No party id for case {self._case_id}")
+            raise InvalidEqPayLoad(f"No sample unit id for case {self._case_id}")
 
     async def build(self):
         """__init__ is not a coroutine function, so I/O needs to go here"""
@@ -137,21 +137,21 @@ class EqPayloadConstructor(object):
 
         self._collex_events = await self._get_collection_exercise_events()
         self._collex_event_dates = self._get_collex_event_dates()
-        self._party = await self._get_party_by_id()
+        self._sample_attributes = await self._get_sample_attributes_by_id()
 
         try:
-            self._ru_name = self._party["name"]
+            self._ru_name = self._sample_attributes["attributes"]["Prem1"]
         except KeyError:
-            raise InvalidEqPayLoad(f"Could not retrieve ru_name for case {self._case_id}")
+            raise InvalidEqPayLoad(f"Could not retrieve ru_name (address) for case {self._case_id}")
 
         # TODO: Remove hardcoded language variables for payload when they become available in RAS/RM
         self._region_code = 'GB-ENG'
-        self._language_code = 'en'
+        self._language_code = 'en'  # sample attributes may have CountryCode that can be used here
 
         self._payload = {
             "jti": str(uuid4()),  # required by eQ for creating a new claim
             "tx_id": self._tx_id,  # not required by eQ (will generate if does not exist)
-            "user_id": self._party_id,  # required by eQ
+            "user_id": self._sample_unit_id,  # required by eQ
             "iat": int(time.time()),
             "exp": int(time.time() + (5 * 60)),  # required by eQ for creating a new claim
             "eq_id": self._eq_id,  # required but currently only one social survey ('lms')
@@ -159,7 +159,7 @@ class EqPayloadConstructor(object):
             "form_type": self._form_type,  # required but only one ('1') formtype for lms
             "collection_exercise_sid": self._collex_id,  # required by eQ
             "ru_ref": self._sample_unit_ref,  # required by eQ
-            "ru_name": self._ru_name,  # required by eQ
+            "ru_name": self._ru_name,  # required by eQ - household identifier (address)
             "case_id": self._case_id,  # not required by eQ but useful for downstream
             "case_ref": self._case_ref,  # not required by eQ but useful for downstream
             "account_service_url": self._account_service_url,  # required for save/continue
@@ -183,9 +183,9 @@ class EqPayloadConstructor(object):
             func(resp)
             return await resp.json()
 
-    async def _get_party_by_id(self):
-        url = self._party_url + self._party_id + "?verbose=True"
-        return await self._make_request(Request("GET", url, self._app['PARTY_AUTH'], handle_response))
+    async def _get_sample_attributes_by_id(self):
+        url = self._sample_url + self._sample_unit_id + "/attributes"
+        return await self._make_request(Request("GET", url, self._app['SAMPLE_AUTH'], handle_response))
 
     async def _get_collection_instrument(self):
         url = self._ci_url + self._ci_id

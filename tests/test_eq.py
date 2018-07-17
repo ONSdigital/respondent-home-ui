@@ -195,8 +195,8 @@ class TestGenerateEqURL(AioHTTPTestCase):
             self.collection_exercise_events_json = json.load(fp)
         with open('tests/test_data/collection_instrument/collection_instrument_eq.json') as fp:
             self.collection_instrument_json = json.load(fp)
-        with open('tests/test_data/party/party.json') as fp:
-            self.party_json = json.load(fp)
+        with open('tests/test_data/sample/sample_attributes.json') as fp:
+            self.sample_attributes_json = json.load(fp)
         with open('tests/test_data/survey/survey.json') as fp:
             self.survey_json = json.load(fp)
 
@@ -214,16 +214,16 @@ class TestGenerateEqURL(AioHTTPTestCase):
         self.iac_code = ''.join([str(n) for n in range(11)])
         self.iac1, self.iac2, self.iac3 = self.iac_code[:4], self.iac_code[4:8], self.iac_code[8:]
         self.iac_json = {'active': '1', 'caseId': self.case_id}
-        self.party_id = self.party_json['id']
-        self.ru_name = self.party_json['name']
-        self.sample_unit_ref = self.party_json['sampleUnitRef']
-        self.sample_unit_type = self.party_json['sampleUnitType']
+        self.ru_name = self.sample_attributes_json['attributes']['Prem1']
+        self.sample_unit_id = self.sample_attributes_json['id']
+        self.sample_unit_ref = self.case_json['caseGroup']['sampleUnitRef']
+        self.sample_unit_type = self.case_json['sampleUnitType']
         self.survey_id = self.survey_json['id']
         self.survey_ref = self.survey_json['surveyRef']
         self.eq_payload = {
             "jti": self.jti,
             "tx_id": self.jti,
-            "user_id": self.party_id,
+            "user_id": self.sample_unit_id,
             "iat": int(time.time()),
             "exp": int(time.time() + (5 * 60)),
             "eq_id": self.eq_id,
@@ -263,8 +263,8 @@ class TestGenerateEqURL(AioHTTPTestCase):
         self.iac_url = (
             f"{self.app['IAC_URL']}/iacs/{self.iac_code}"
         )
-        self.party_url = (
-            f"{self.app['PARTY_URL']}/party-api/v1/businesses/id/{self.party_id}?verbose=True"
+        self.sample_attributes_url = (
+            f"{self.app['SAMPLE_URL']}/samples/{self.sample_unit_id}/attributes"
         )
         self.survey_url = (
             f"{self.app['SURVEY_URL']}/surveys/{self.survey_id}"
@@ -387,7 +387,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
             mocked.get(self.collection_instrument_url, payload=self.collection_instrument_json)
             mocked.get(self.collection_exercise_url, payload=self.collection_exercise_json)
             mocked.get(self.collection_exercise_events_url, payload=self.collection_exercise_events_json)
-            mocked.get(self.party_url, payload=self.party_json)
+            mocked.get(self.sample_attributes_url, payload=self.sample_attributes_json)
             mocked.get(self.survey_url, payload=self.survey_json)
 
             with self.assertLogs('respondent-home', 'INFO') as logs_home, self.assertLogs('app.eq', 'INFO') as logs_eq:
@@ -496,7 +496,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
         self.assertIn(b'404 Server error', await response.content.read())
 
     @unittest_run_loop
-    async def test_post_index_with_build_party_403(self):
+    async def test_post_index_with_build_sample_403(self):
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
             # mocks for initial data setup in post
             mocked.get(self.iac_url, payload=self.iac_json)
@@ -506,7 +506,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
             mocked.get(self.collection_instrument_url, payload=self.collection_instrument_json)
             mocked.get(self.collection_exercise_url, payload=self.collection_exercise_json)
             mocked.get(self.collection_exercise_events_url, payload=self.collection_exercise_events_json)
-            mocked.get(self.party_url, status=403)
+            mocked.get(self.sample_attributes_url, status=403)
 
             with self.assertLogs('app.eq', 'ERROR') as cm:
                 response = await self.client.request("POST", "/", allow_redirects=False, data=self.form_data)
@@ -525,7 +525,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
             mocked.get(self.collection_instrument_url, payload=self.collection_instrument_json)
             mocked.get(self.collection_exercise_url, payload=self.collection_exercise_json)
             mocked.get(self.collection_exercise_events_url, payload=self.collection_exercise_events_json)
-            mocked.get(self.party_url, payload=self.party_json)
+            mocked.get(self.sample_attributes_url, payload=self.sample_attributes_json)
             mocked.get(self.survey_url, payload=self.survey_json)
             mocked.post(self.case_events_url, status=500)
 
@@ -809,7 +809,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
                 mocked.get(self.collection_instrument_url, payload=self.collection_instrument_json)
                 mocked.get(self.collection_exercise_url, payload=self.collection_exercise_json)
                 mocked.get(self.collection_exercise_events_url, payload=self.collection_exercise_events_json)
-                mocked.get(self.party_url, payload=self.party_json)
+                mocked.get(self.sample_attributes_url, payload=self.sample_attributes_json)
                 mocked.get(self.survey_url, payload=self.survey_json)
 
                 with self.assertLogs('app.eq', 'INFO') as cm:
@@ -915,8 +915,8 @@ class TestGenerateEqURL(AioHTTPTestCase):
 
     @unittest_run_loop
     async def test_build_raises_InvalidEqPayLoad_missing_name(self):
-        party_json = self.party_json.copy()
-        del party_json['name']
+        sample_json = self.sample_attributes_json.copy()
+        del sample_json['attributes']['Prem1']
 
         from app import eq  # NB: local import to avoid overwriting the patched version for some tests
 
@@ -924,7 +924,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
             mocked.get(self.collection_instrument_url, payload=self.collection_instrument_json)
             mocked.get(self.collection_exercise_url, payload=self.collection_exercise_json)
             mocked.get(self.collection_exercise_events_url, payload=self.collection_exercise_events_json)
-            mocked.get(self.party_url, payload=party_json)
+            mocked.get(self.sample_attributes_url, payload=sample_json)
 
             with self.assertRaises(InvalidEqPayLoad):
                 await eq.EqPayloadConstructor(self.case_json, self.app).build()

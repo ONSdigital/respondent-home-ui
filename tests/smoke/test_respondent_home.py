@@ -11,7 +11,7 @@ class TestRespondentHome(unittest.TestCase):
         url = os.getenv('RESPONDENT_HOME_URL')
 
         # When
-        resp = requests.get(url)
+        resp = requests.get(url, verify=False)
 
         # Then
         assert resp.status_code == 200, resp.status_code

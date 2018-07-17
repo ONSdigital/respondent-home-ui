@@ -22,11 +22,10 @@ class Config(dict):
 
 class BaseConfig:
     env = Env()
-    env = partial(env, default=None)
 
     HOST = env("HOST")
     PORT = env("PORT")
-    LOG_LEVEL = env("LOG_LEVEL")
+    LOG_LEVEL = env("LOG_LEVEL", default="INFO")
     STATIC_ROOT = "app/static"
 
     ACCOUNT_SERVICE_URL = env("ACCOUNT_SERVICE_URL")

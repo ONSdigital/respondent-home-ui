@@ -53,6 +53,17 @@ def test(ctx, clean=False):
 
 
 @task
+def smoke(ctx, clean=False):
+    """Run the tests."""
+    import pytest
+
+    if clean:
+        clean_pycache(ctx)
+    retcode = pytest.main(["tests/smoke"])
+    sys.exit(retcode)
+
+
+@task
 def clean_pycache(ctx):
     """Clear out __pycache__ directories."""
     run_command("find . -path '*/__pycache__/*' -delete", echo=True)

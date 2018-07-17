@@ -795,6 +795,66 @@ class TestGenerateEqURL(AioHTTPTestCase):
 
         self.assertIsInstance(eq.EqPayloadConstructor(self.case_json, self.app), eq.EqPayloadConstructor)
 
+    def test_create_eq_constructor_missing_case_id(self):
+        from app import eq
+
+        case_json = self.case_json.copy()
+        del case_json['id']
+
+        with self.assertRaises(InvalidEqPayLoad) as ex:
+            eq.EqPayloadConstructor(case_json, self.app)
+        self.assertIn('No case id in supplied case JSON', ex.exception.message)
+
+    def test_create_eq_constructor_missing_caseRef(self):
+        from app import eq
+
+        case_json = self.case_json.copy()
+        del case_json['caseRef']
+
+        with self.assertRaises(InvalidEqPayLoad) as ex:
+            eq.EqPayloadConstructor(case_json, self.app)
+        self.assertIn('No case ref in supplied case JSON', ex.exception.message)
+
+    def test_create_eq_constructor_missing_sample_unit_ref(self):
+        from app import eq
+
+        case_json = self.case_json.copy()
+        del case_json['caseGroup']['sampleUnitRef']
+
+        with self.assertRaises(InvalidEqPayLoad) as ex:
+            eq.EqPayloadConstructor(case_json, self.app)
+        self.assertIn(f'Could not retrieve sample unit ref for case {self.case_id}', ex.exception.message)
+
+    def test_create_eq_constructor_missing_ci_id(self):
+        from app import eq
+
+        case_json = self.case_json.copy()
+        del case_json['collectionInstrumentId']
+
+        with self.assertRaises(InvalidEqPayLoad) as ex:
+            eq.EqPayloadConstructor(case_json, self.app)
+        self.assertIn(f'No collectionInstrumentId value for case id {self.case_id}', ex.exception.message)
+
+    def test_create_eq_constructor_missing_ce_id(self):
+        from app import eq
+
+        case_json = self.case_json.copy()
+        del case_json["caseGroup"]["collectionExerciseId"]
+
+        with self.assertRaises(InvalidEqPayLoad) as ex:
+            eq.EqPayloadConstructor(case_json, self.app)
+        self.assertIn(f'No collection id for case id {self.case_id}', ex.exception.message)
+
+    def test_create_eq_constructor_missing_sample_unit_id(self):
+        from app import eq
+
+        case_json = self.case_json.copy()
+        del case_json["sampleUnitId"]
+
+        with self.assertRaises(InvalidEqPayLoad) as ex:
+            eq.EqPayloadConstructor(case_json, self.app)
+        self.assertIn(f'No sample unit id for case {self.case_id}', ex.exception.message)
+
     @unittest_run_loop
     async def test_build(self):
         self.maxDiff = None  # for full payload comparison when running this test

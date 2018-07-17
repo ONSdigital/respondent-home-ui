@@ -10,7 +10,7 @@ from aiohttp.test_utils import AioHTTPTestCase, unittest_run_loop
 from aioresponses import aioresponses
 
 from app.app import create_app
-from app.eq import format_date
+from app.eq import format_date, find_event_date_by_tag
 from app.handlers import join_iac, validate_case
 from app.exceptions import InvalidEqPayLoad, InactiveCaseError
 
@@ -928,3 +928,38 @@ class TestGenerateEqURL(AioHTTPTestCase):
 
             with self.assertRaises(InvalidEqPayLoad):
                 await eq.EqPayloadConstructor(self.case_json, self.app).build()
+
+    def test_find_event_date_by_tag(self):
+        find_mandatory_date = functools.partial(find_event_date_by_tag,
+                                                collex_events=self.collection_exercise_events_json,
+                                                collex_id=self.collection_exercise_id,
+                                                mandatory=True)
+        for tag, expected in [
+            ("ref_period_start", self.start_date),
+            ("ref_period_end", self.end_date),
+            ("return_by", self.return_by)
+        ]:
+            self.assertEqual(find_mandatory_date(tag), expected)
+
+    def test_find_event_date_by_tag_missing(self):
+        result = find_event_date_by_tag("ref_period_start",
+                                        [],
+                                        self.collection_exercise_id,
+                                        False)
+        self.assertIsNone(result)
+
+    def test_find_event_date_by_tag_missing_mandatory(self):
+        with self.assertRaises(InvalidEqPayLoad) as e:
+            find_event_date_by_tag("ref_period_start",
+                                   [],
+                                   self.collection_exercise_id,
+                                   True)
+        self.assertIn("ref_period_start", e.exception.message)
+
+    def test_find_event_date_by_tag_unexpected_mandatory(self):
+        with self.assertRaises(InvalidEqPayLoad) as e:
+            find_event_date_by_tag("unexpected",
+                                   self.collection_exercise_events_json,
+                                   self.collection_exercise_id,
+                                   True)
+        self.assertIn("unexpected", e.exception.message)

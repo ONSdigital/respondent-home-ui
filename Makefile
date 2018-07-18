@@ -7,7 +7,13 @@ RM_TOOLS_REPO_URL = https://github.com/ONSdigital/rm-tools.git
 install:
 	pipenv install --dev
 
-test: start_services wait_for_services setup integration_tests stop_services
+start_server:
+	pipenv run inv server
+
+run:
+	pipenv run inv run
+
+test: flake8 unittests start_services wait_for_services setup integration_tests stop_services
 
 start_services:
 	./start_ras_rm.sh ${RAS_RM_REPO_URL}
@@ -25,3 +31,9 @@ setup:
 
 integration_tests:
 	pipenv run python integration_tests.py
+
+unittests:
+	pipenv run inv unittests
+
+flake8:
+	pipenv run inv flake8

@@ -10,7 +10,7 @@ env = Env()
 
 @task
 def run(ctx, port=None):
-    port = port or env("PORT", default=8000)
+    port = port or env("PORT", default=9092)
     if not os.getenv('APP_SETTINGS'):
         os.environ['APP_SETTINGS'] = 'DevelopmentConfig'
     run_command(f"adev runserver app --port {port}", echo=True)
@@ -41,14 +41,22 @@ def flake8(ctx):
     run_command("flake8 app", echo=True)
 
 
+@task
+def unittests(ctx):
+    import pytest
+
+    return pytest.main(["tests"])
+
+
 @task(pre=[flake8])
 def test(ctx, clean=False):
     """Run the tests."""
-    import pytest
 
     if clean:
         clean_pycache(ctx)
-    retcode = pytest.main(["tests"])
+
+    retcode = unittests(ctx)
+
     sys.exit(retcode)
 
 

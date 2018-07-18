@@ -9,6 +9,8 @@ class TestRespondentHome(unittest.TestCase):
     def test_can_access_respondent_home_homepage(self):
         # Given
         url = os.getenv('RESPONDENT_HOME_URL')
+        if not url:
+            return
 
         # When
         resp = requests.get(url, verify=False)

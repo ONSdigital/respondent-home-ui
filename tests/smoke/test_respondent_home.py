@@ -10,7 +10,7 @@ class TestRespondentHome(unittest.TestCase):
         # Given
         url = os.getenv('RESPONDENT_HOME_URL')
         if not url:
-            return
+            self.skipTest('RESPONDENT_HOME_URL not set')
 
         # When
         resp = requests.get(url, verify=False)

@@ -105,15 +105,16 @@ class DemoRunner:
 
     def run(self):
         with aioresponses(passthrough=[]) as mocked:
-            # mocks for initial data setup in post
-            mocked.get(self.iac_url, payload=self.iac_json)
-            mocked.get(self.case_url, payload=self.case_json)
-            mocked.post(self.case_events_url)
-            # mocks for the payload builder
-            mocked.get(self.collection_instrument_url, payload=self.collection_instrument_json)
-            mocked.get(self.collection_exercise_url, payload=self.collection_exercise_json)
-            mocked.get(self.collection_exercise_events_url, payload=self.collection_exercise_events_json)
-            mocked.get(self.sample_attributes_url, payload=self.sample_attributes_json)
-            mocked.get(self.survey_url, payload=self.survey_json)
+            for _ in range(3):
+                # mocks for initial data setup in post
+                mocked.get(self.iac_url, payload=self.iac_json)
+                mocked.get(self.case_url, payload=self.case_json)
+                mocked.post(self.case_events_url)
+                # mocks for the payload builder
+                mocked.get(self.collection_instrument_url, payload=self.collection_instrument_json)
+                mocked.get(self.collection_exercise_url, payload=self.collection_exercise_json)
+                mocked.get(self.collection_exercise_events_url, payload=self.collection_exercise_events_json)
+                mocked.get(self.sample_attributes_url, payload=self.sample_attributes_json)
+                mocked.get(self.survey_url, payload=self.survey_json)
 
             web.run_app(self.app, port=self.app['PORT'])

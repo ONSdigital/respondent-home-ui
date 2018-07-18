@@ -37,3 +37,7 @@ unittests:
 
 flake8:
 	pipenv run inv flake8
+
+demo:
+	./start_eq.sh ${EQ_RUNNER_REPO_URL}
+	pipenv run inv demo

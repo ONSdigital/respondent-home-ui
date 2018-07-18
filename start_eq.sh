@@ -11,5 +11,5 @@ else
 fi;
 pushd tmp_eq_docker_dev
 docker-compose pull
-docker-compose up -d
+docker-compose up -d eq-survey-runner
 popd

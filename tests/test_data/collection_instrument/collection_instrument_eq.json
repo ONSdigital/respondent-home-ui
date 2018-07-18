@@ -1,8 +1,8 @@
 {
   "businesses": [],
   "classifiers": {
-    "eq_id": "2",
-    "form_type": "0001"
+    "eq_id": "lms",
+    "form_type": "1"
   },
   "exercises": [],
   "file_name": "EQ-File",

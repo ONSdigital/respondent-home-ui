@@ -76,3 +76,8 @@ def clean_pycache(ctx):
     """Clear out __pycache__ directories."""
     run_command("find . -path '*/__pycache__/*' -delete", echo=True)
     print("Cleaned up.")
+
+
+@task
+def demo(ctx):
+    run_command("python -m tests.demo")

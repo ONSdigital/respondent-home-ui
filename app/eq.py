@@ -55,7 +55,7 @@ class EqPayloadConstructor(object):
     def __init__(self, case: dict, app: Application):
         """
         Creates the payload needed to communicate with EQ, built from the Case, Collection Exercise, Sample,
-        Survey and Collection Instrument services
+        and Collection Instrument services
         """
 
         self._app = app

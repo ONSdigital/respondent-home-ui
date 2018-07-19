@@ -1,11 +1,39 @@
 import os
 import sys
 
+import requests
 from envparse import ConfigurationError, Env
 from invoke import task, run as run_command
+from requests import RequestException
+from retrying import retry
+
+from tests.config import Config
 
 
 env = Env()
+
+
+
+class HealthCheckException(Exception):
+    def __init__(self, service):
+        self.service = service
+
+    def __str__(self) -> str:
+        return f'Healthcheck fails for {self.service.lower()}'
+
+
+def retry_if_http_error(exception):
+    print(f'error has occurred: {str(exception)}')
+    return isinstance(exception, RequestException) or isinstance(exception, HealthCheckException)
+
+
+@retry(retry_on_exception=retry_if_http_error, wait_fixed=10000, stop_max_delay=600000, wrap_exception=True)
+def check_status(service, url):
+    try:
+        resp = requests.get(f'{url}/info')
+        resp.raise_for_status()
+    except Exception:
+        raise HealthCheckException(service)
 
 
 @task
@@ -45,34 +73,45 @@ def flake8(ctx):
 def unittests(ctx):
     import pytest
 
-    return pytest.main(["tests"])
+    return pytest.main(["tests/unit"])
 
 
 @task(pre=[flake8])
 def test(ctx, clean=False):
-    """Run the tests."""
+    """Run all the tests."""
 
     if clean:
-        clean_pycache(ctx)
+        cleanpy(ctx)
 
-    retcode = unittests(ctx)
+    retcode = unittests(ctx) and smoke(ctx) and integration(ctx)
 
     sys.exit(retcode)
 
 
 @task
 def smoke(ctx, clean=False):
-    """Run the tests."""
+    """Run the smoke tests."""
     import pytest
 
     if clean:
-        clean_pycache(ctx)
+        cleanpy(ctx)
     retcode = pytest.main(["tests/smoke"])
     sys.exit(retcode)
 
 
 @task
-def clean_pycache(ctx):
+def integration(ctx, clean=False):
+    """Run the integration tests."""
+    import pytest
+
+    if clean:
+        cleanpy(ctx)
+    retcode = pytest.main(["tests/integration"])
+    sys.exit(retcode)
+
+
+@task
+def cleanpy(ctx):
     """Clear out __pycache__ directories."""
     run_command("find . -path '*/__pycache__/*' -delete", echo=True)
     print("Cleaned up.")
@@ -81,3 +120,9 @@ def clean_pycache(ctx):
 @task
 def demo(ctx):
     run_command("python -m tests.demo")
+
+
+@task
+def wait(ctx):
+    [check_status(k, v) for k, v in dict(vars(Config)).items() if k.endswith('_SERVICE') or k.endswith('_UI')]
+    print('all services are up')

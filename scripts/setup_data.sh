@@ -9,7 +9,7 @@ if [ -d tmp_rm_tools ]; then
 else
     git clone -b social-test-setup --depth 1 --single-branch ${rm_tools_repo_url} tmp_rm_tools;
 fi;
-cp setup.env tmp_rm_tools/social-test-setup/.env
+cp tests/test_data/setup.env tmp_rm_tools/social-test-setup/.env
 cp tests/test_data/sample/social-survey-sample.csv tmp_rm_tools/social-test-setup/data/
 pushd tmp_rm_tools/social-test-setup
 pipenv install

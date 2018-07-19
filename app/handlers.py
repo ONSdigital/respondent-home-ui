@@ -54,7 +54,7 @@ async def post_index(request):
         logger.warn("Attempt to use a malformed access code", client_ip=client_ip)
         return await get_index(
             request,
-            msg="Please provide the unique access code printed on your invitation letter or form.",
+            msg="Please enter the 12 character unique access code provided to you by ONS.",
             redirect=True,
         )
 
@@ -115,7 +115,7 @@ async def get_iac_details(request, iac: str, client_ip: str):
             except ClientResponseError as ex:
                 if resp.status == 404:
                     logger.info("Attempt to use an invalid access code", client_ip=client_ip)
-                    flash(request, "Please provide the unique access code printed on your invitation letter or form.")
+                    flash(request, "Please enter the 12 character unique access code provided to you by ONS.")
                     raise HTTPFound("/")
                 elif resp.status in (401, 403):
                     logger.info("Unauthorized access to IAC service attempted", client_ip=client_ip)

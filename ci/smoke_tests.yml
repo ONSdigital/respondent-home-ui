@@ -1,0 +1,14 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: kennethreitz/pipenv
+
+inputs:
+- name: respondent-home-ui-source
+- name: ras-deploy
+
+run:
+  path: ras-deploy/scripts/respondent-home-ui/smoke_tests.sh

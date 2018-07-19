@@ -1,26 +1,38 @@
 {% extends "base.html" %}
+{% set messages=get_flashed_messages() %}
+{% block title %}{% if messages|length > 0 %}Error - {{ super() }}{% else %}{{ super() }}{% endif %}{% endblock %}
 {% block content %}
-{% for message in get_flashed_messages() %}
+{% if messages %}
   <div class="u-mt-s">
     <div class="panel panel--error">
       <div class="panel__header">
         <h1 class="panel__title venus">
-          This page has 1 error
+          {% trans count=messages|length %}
+          This page has {{ count }} error
+          {% pluralize %}
+          This page has {{ count }} errors
+          {% endtrans %}
         </h1>
       </div>
       <div class="panel__body">
         <p class="mars">
+        {% trans count=messages|length %}
         This <strong>must be corrected</strong> to continue.
+        {% pluralize %}
+        These <strong>must be corrected</strong> to continue.
+        {% endtrans %}
         </p>
         <ul class="list list--bare">
-          <li class="list__item mars">1)
+          {% for message in messages %}
+          <li class="list__item mars">{{ loop.index }})
             {{ message }}
           </li>
+          {% endfor %}
         </ul>
       </div>
     </div>
   </div>
-{% endfor %}
+{% endif %}
 
 <div>
 <h2 class="saturn u-mt-l u-mb-m">Welcome to the Online Household Study (Alpha)</h2>

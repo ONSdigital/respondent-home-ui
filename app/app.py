@@ -63,11 +63,13 @@ def create_app(config_name=None) -> web.Application:
     negotiation.setup(app)
 
     # Setup jinja2 environment
-    aiohttp_jinja2.setup(
+    env = aiohttp_jinja2.setup(
         app,
         loader=jinja2.PackageLoader("app", "templates"),
         context_processors=[flash.context_processor, aiohttp_jinja2.request_processor],
+        extensions=['jinja2.ext.i18n'],
     )
+    env.install_null_translations()
 
     # Set static folder location
     # TODO: Only turn on in dev environment

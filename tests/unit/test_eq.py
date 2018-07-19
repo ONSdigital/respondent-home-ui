@@ -596,7 +596,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
             self.assertLogLine(cm, "Attempt to use a malformed access code")
 
         self.assertEqual(response.status, 200)
-        self.assertIn(b'Please provide the unique access code', await response.content.read())
+        self.assertIn(b'Please enter the 12 character unique access code provided to you by ONS', await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_iac_active_missing(self):
@@ -674,7 +674,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
             self.assertLogLine(cm, "Attempt to use an invalid access code", client_ip=None)
 
         self.assertEqual(response.status, 200)
-        self.assertIn(b'Please provide the unique access code', await response.content.read())
+        self.assertIn(b'Please enter the 12 character unique access code provided to you by ONS', await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_iac_service_403(self):

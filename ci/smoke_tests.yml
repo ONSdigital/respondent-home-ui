@@ -8,7 +8,6 @@ image_resource:
 
 inputs:
 - name: respondent-home-ui-source
-- name: ras-deploy
 
 run:
-  path: ras-deploy/scripts/respondent-home-ui/smoke_tests.sh
+  path: respondent-home-ui-source/scripts/respondent-home-ui/smoke_tests.sh

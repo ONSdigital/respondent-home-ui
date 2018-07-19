@@ -10,4 +10,4 @@ inputs:
 - name: respondent-home-ui-source
 
 run:
-  path: respondent-home-ui-source/scripts/respondent-home-ui/smoke_tests.sh
+  path: respondent-home-ui-source/ci/smoke_tests.sh

@@ -16,21 +16,21 @@ run:
 test: flake8 unittests start_services wait_for_services setup integration_tests stop_services
 
 start_services:
-	./start_ras_rm.sh ${RAS_RM_REPO_URL}
-	./start_eq.sh ${EQ_RUNNER_REPO_URL}
+	./scripts/start_ras_rm.sh ${RAS_RM_REPO_URL}
+	./scripts/start_eq.sh ${EQ_RUNNER_REPO_URL}
 
 stop_services:
-	./stop_ras_rm.sh ${RAS_RM_REPO_URL}
-	./stop_eq.sh ${EQ_RUNNER_REPO_URL}
+	./scripts/stop_ras_rm.sh ${RAS_RM_REPO_URL}
+	./scripts/stop_eq.sh ${EQ_RUNNER_REPO_URL}
 
 wait_for_services:
-	pipenv run python wait_for_services.py
+	pipenv run inv wait
 
 setup:
-	./setup_data.sh ${RM_TOOLS_REPO_URL}
+	./scripts/setup_data.sh ${RM_TOOLS_REPO_URL}
 
 integration_tests:
-	pipenv run python integration_tests.py
+	pipenv run inv integration
 
 unittests:
 	pipenv run inv unittests
@@ -39,5 +39,5 @@ flake8:
 	pipenv run inv flake8
 
 demo:
-	./start_eq.sh ${EQ_RUNNER_REPO_URL}
+	./scripts/start_eq.sh ${EQ_RUNNER_REPO_URL}
 	pipenv run inv demo

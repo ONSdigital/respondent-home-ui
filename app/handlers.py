@@ -6,7 +6,7 @@ from aiohttp.client_exceptions import ClientConnectionError, ClientConnectorErro
 from sdc.crypto.encrypter import encrypt
 from structlog import wrap_logger
 
-from . import VERSION
+from . import BAD_CODE_MSG, BAD_RESPONSE_MSG, CODE_USED_MSG, INVALID_CODE_MSG, NOT_AUTHORIZED_MSG, VERSION
 from .case import get_case, post_case_event
 from .eq import EqPayloadConstructor
 from .exceptions import InactiveCaseError
@@ -54,7 +54,7 @@ async def post_index(request):
         logger.warn("Attempt to use a malformed access code", client_ip=client_ip)
         return await get_index(
             request,
-            msg="Please enter the 12 character unique access code provided to you by ONS.",
+            msg=BAD_CODE_MSG,
             redirect=True,
         )
 
@@ -64,14 +64,14 @@ async def post_index(request):
         validate_case(iac_json)
     except InactiveCaseError:
         logger.info("Attempt to use an inactive access code", client_ip=client_ip)
-        flash(request, "The unique access code entered has already been used")
+        flash(request, CODE_USED_MSG)
         return aiohttp_jinja2.render_template("index.html", request, {})
 
     try:
         case_id = iac_json["caseId"]
     except KeyError:
         logger.error('caseId missing from IAC response', client_ip=client_ip)
-        flash(request, "Bad response from server. Please try again")
+        flash(request, BAD_RESPONSE_MSG)
         return aiohttp_jinja2.render_template("index.html", request, {})
 
     case = await get_case(case_id, request.app)
@@ -80,11 +80,11 @@ async def post_index(request):
         assert case['sampleUnitType'] == 'H'
     except AssertionError:
         logger.error('Attempt to use unexpected sample unit type', sample_unit_type=case['sampleUnitType'])
-        flash(request, "Invalid access code")
+        flash(request, INVALID_CODE_MSG)
         return aiohttp_jinja2.render_template("index.html", request, {})
     except KeyError:
         logger.error('sampleUnitType missing from case response', client_ip=client_ip)
-        flash(request, "Bad response from server. Please try again")
+        flash(request, BAD_RESPONSE_MSG)
         return aiohttp_jinja2.render_template("index.html", request, {})
 
     eq_payload = await EqPayloadConstructor(case, request.app).build()
@@ -115,11 +115,11 @@ async def get_iac_details(request, iac: str, client_ip: str):
             except ClientResponseError as ex:
                 if resp.status == 404:
                     logger.info("Attempt to use an invalid access code", client_ip=client_ip)
-                    flash(request, "Please enter the 12 character unique access code provided to you by ONS.")
+                    flash(request, BAD_CODE_MSG)
                     raise HTTPFound("/")
                 elif resp.status in (401, 403):
                     logger.info("Unauthorized access to IAC service attempted", client_ip=client_ip)
-                    flash(request, "You are not authorized to access this service.")
+                    flash(request, NOT_AUTHORIZED_MSG)
                     raise HTTPFound("/")
                 elif 400 <= resp.status < 500:
                     logger.info(
@@ -127,7 +127,7 @@ async def get_iac_details(request, iac: str, client_ip: str):
                         client_ip=client_ip,
                         status=resp.status,
                     )
-                    flash(request, "Bad request. Please try again")
+                    flash(request, BAD_RESPONSE_MSG)
                     raise HTTPFound("/")
                 else:
                     logger.error("Error in response", url=resp.url, status_code=resp.status)

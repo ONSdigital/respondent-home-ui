@@ -7,6 +7,7 @@ from aiohttp.client_exceptions import (
     ClientResponseError, ClientConnectorError, ClientConnectionError, ContentTypeError)
 from structlog import wrap_logger
 
+from . import CONNECTION_ERROR_MSG, REDIRECT_FAILED_MSG, SERVER_ERROR_MSG
 from .exceptions import InvalidEqPayLoad
 from .flash import flash
 
@@ -38,24 +39,24 @@ def create_error_middleware(overrides):
 
 async def eq_error(request, message: str):
     logger.error("Service failed to build eQ payload", message=message)
-    flash(request, "Failed to redirect to survey")
+    flash(request, REDIRECT_FAILED_MSG)
     return aiohttp_jinja2.render_template("index.html", request, {})
 
 
 async def connection_error(request, message: str):
     logger.error("Service connection error", message=message)
-    flash(request, "Service connection error")
+    flash(request, CONNECTION_ERROR_MSG)
     return aiohttp_jinja2.render_template("index.html", request, {})
 
 
 async def payload_error(request, url: str):
     logger.error("Service failed to return expected JSON payload", url=url)
-    flash(request, "Server error")
+    flash(request, SERVER_ERROR_MSG)
     return aiohttp_jinja2.render_template("index.html", request, {})
 
 
 async def response_error(request, status: int):
-    flash(request, f"{status} Server error")
+    flash(request, f"{status} " + SERVER_ERROR_MSG)
     return aiohttp_jinja2.render_template("index.html", request, {})
 
 

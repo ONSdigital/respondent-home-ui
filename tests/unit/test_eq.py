@@ -9,10 +9,13 @@ from aiohttp.client_exceptions import ClientConnectionError, ClientConnectorErro
 from aiohttp.test_utils import AioHTTPTestCase, unittest_run_loop
 from aioresponses import aioresponses
 
+from app import (
+    BAD_CODE_MSG, BAD_RESPONSE_MSG, CODE_USED_MSG, INVALID_CODE_MSG, NOT_AUTHORIZED_MSG,
+    CONNECTION_ERROR_MSG, REDIRECT_FAILED_MSG, SERVER_ERROR_MSG)
 from app.app import create_app
 from app.eq import format_date, find_event_date_by_tag
-from app.handlers import join_iac, validate_case
 from app.exceptions import InvalidEqPayLoad, InactiveCaseError
+from app.handlers import join_iac, validate_case
 
 
 def skip_build_eq(func, *args, **kwargs):
@@ -308,7 +311,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
             self.assertLogLine(cm, "Service connection error")
 
         self.assertEqual(response.status, 200)
-        self.assertIn(b'Service connection error', await response.content.read())
+        self.assertIn(CONNECTION_ERROR_MSG.encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_no_iac_json(self):
@@ -320,7 +323,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
             self.assertLogLine(cm, "Service failed to return expected JSON payload")
 
         self.assertEqual(response.status, 200)
-        self.assertIn(b'Server error', await response.content.read())
+        self.assertIn(SERVER_ERROR_MSG.encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_case_403(self):
@@ -333,7 +336,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
             self.assertLogLine(cm, "Error retrieving case", case_id=self.case_id, status_code=403)
 
         self.assertEqual(response.status, 200)
-        self.assertIn(b'403 Server error', await response.content.read())
+        self.assertIn(f'403 {SERVER_ERROR_MSG}'.encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_case_500(self):
@@ -346,7 +349,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
             self.assertLogLine(cm, "Error retrieving case", case_id=self.case_id, status_code=500)
 
         self.assertEqual(response.status, 200)
-        self.assertIn(b'500 Server error', await response.content.read())
+        self.assertIn(f'500 {SERVER_ERROR_MSG}'.encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_case_connector_error(self):
@@ -359,7 +362,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
             self.assertLogLine(cm, "Service connection error")
 
         self.assertEqual(response.status, 200)
-        self.assertIn(b'Service connection error', await response.content.read())
+        self.assertIn(CONNECTION_ERROR_MSG.encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_with_build_connection_error(self):
@@ -373,7 +376,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
             self.assertLogLine(cm, "Service connection error", message='Failed')
 
         self.assertEqual(response.status, 200)
-        self.assertIn(b'Service connection error', await response.content.read())
+        self.assertIn(CONNECTION_ERROR_MSG.encode(), await response.content.read())
 
     @skip_encrypt
     @unittest_run_loop
@@ -422,7 +425,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
 
         # then error handler catches exception and flashes message to index
         self.assertEqual(response.status, 200)
-        self.assertIn(b'Failed to redirect to survey', await response.content.read())
+        self.assertIn(REDIRECT_FAILED_MSG.encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_with_build_ci_500(self):
@@ -439,7 +442,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
             self.assertLogLine(cm, "Error in response", status_code=500)
 
         self.assertEqual(response.status, 200)
-        self.assertIn(b'500 Server error', await response.content.read())
+        self.assertIn(f'500 {SERVER_ERROR_MSG}'.encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_with_build_ci_400(self):
@@ -456,7 +459,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
             self.assertLogLine(cm, "Error in response", status_code=400)
 
         self.assertEqual(response.status, 200)
-        self.assertIn(b'400 Server error', await response.content.read())
+        self.assertIn(f'400 {SERVER_ERROR_MSG}'.encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_with_build_ce_503(self):
@@ -474,7 +477,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
             self.assertLogLine(cm, "Error in response", status_code=503)
 
         self.assertEqual(response.status, 200)
-        self.assertIn(b'503 Server error', await response.content.read())
+        self.assertIn(f'503 {SERVER_ERROR_MSG}'.encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_with_build_events_404(self):
@@ -493,7 +496,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
             self.assertLogLine(cm, "Error in response", status_code=404)
 
         self.assertEqual(response.status, 200)
-        self.assertIn(b'404 Server error', await response.content.read())
+        self.assertIn(f'404 {SERVER_ERROR_MSG}'.encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_with_build_sample_403(self):
@@ -513,7 +516,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
             self.assertLogLine(cm, "Error in response", status_code=403)
 
         self.assertEqual(response.status, 200)
-        self.assertIn(b'403 Server error', await response.content.read())
+        self.assertIn(f'403 {SERVER_ERROR_MSG}'.encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_with_build_case_event_500(self):
@@ -534,7 +537,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
             self.assertLogLine(cm, "Error posting case event", status_code=500, case_id=self.case_id)
 
         self.assertEqual(response.status, 200)
-        self.assertIn(b'500 Server error', await response.content.read())
+        self.assertIn(f'500 {SERVER_ERROR_MSG}'.encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_caseid_missing(self):
@@ -549,7 +552,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
             self.assertLogLine(cm, 'caseId missing from IAC response')
 
         self.assertEqual(response.status, 200)
-        self.assertIn(b'Bad response', await response.content.read())
+        self.assertIn(BAD_RESPONSE_MSG.encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_sampleUnitType_missing(self):
@@ -565,7 +568,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
             self.assertLogLine(cm, 'sampleUnitType missing from case response')
 
         self.assertEqual(response.status, 200)
-        self.assertIn(b'Bad response', await response.content.read())
+        self.assertIn(BAD_RESPONSE_MSG.encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_sampleUnitType_B_error(self):
@@ -581,7 +584,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
             self.assertLogLine(cm, 'Attempt to use unexpected sample unit type', sample_unit_type='B')
 
         self.assertEqual(response.status, 200)
-        self.assertIn(b'Invalid access code', await response.content.read())
+        self.assertIn(INVALID_CODE_MSG.encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_malformed(self):
@@ -596,7 +599,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
             self.assertLogLine(cm, "Attempt to use a malformed access code")
 
         self.assertEqual(response.status, 200)
-        self.assertIn(b'Please enter the 12 character unique access code provided to you by ONS', await response.content.read())
+        self.assertIn(BAD_CODE_MSG.encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_iac_active_missing(self):
@@ -611,7 +614,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
             self.assertLogLine(cm, "Attempt to use an inactive access code")
 
         self.assertEqual(response.status, 200)
-        self.assertIn(b'already been used', await response.content.read())
+        self.assertIn(CODE_USED_MSG.encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_iac_inactive(self):
@@ -626,7 +629,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
             self.assertLogLine(cm, "Attempt to use an inactive access code")
 
         self.assertEqual(response.status, 200)
-        self.assertIn(b'already been used', await response.content.read())
+        self.assertIn(CODE_USED_MSG.encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_iac_service_connection_error(self):
@@ -638,7 +641,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
             self.assertLogLine(cm, "Client failed to connect to iac service")
 
         self.assertEqual(response.status, 200)
-        self.assertIn(b'Service connection error', await response.content.read())
+        self.assertIn(CONNECTION_ERROR_MSG.encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_iac_service_500(self):
@@ -650,7 +653,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
             self.assertLogLine(cm, "Error in response", status_code=500)
 
         self.assertEqual(response.status, 200)
-        self.assertIn(b'500 Server error', await response.content.read())
+        self.assertIn(f'500 {SERVER_ERROR_MSG}'.encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_iac_service_503(self):
@@ -662,7 +665,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
             self.assertLogLine(cm, "Error in response", status_code=503)
 
         self.assertEqual(response.status, 200)
-        self.assertIn(b'503 Server error', await response.content.read())
+        self.assertIn(f'503 {SERVER_ERROR_MSG}'.encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_iac_service_404(self):
@@ -674,7 +677,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
             self.assertLogLine(cm, "Attempt to use an invalid access code", client_ip=None)
 
         self.assertEqual(response.status, 200)
-        self.assertIn(b'Please enter the 12 character unique access code provided to you by ONS', await response.content.read())
+        self.assertIn(BAD_CODE_MSG.encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_iac_service_403(self):
@@ -686,7 +689,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
             self.assertLogLine(cm, "Unauthorized access to IAC service attempted", client_ip=None)
 
         self.assertEqual(response.status, 200)
-        self.assertIn(b'not authorized', await response.content.read())
+        self.assertIn(NOT_AUTHORIZED_MSG.encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_iac_service_401(self):
@@ -698,7 +701,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
             self.assertLogLine(cm, "Unauthorized access to IAC service attempted", client_ip=None)
 
         self.assertEqual(response.status, 200)
-        self.assertIn(b'not authorized', await response.content.read())
+        self.assertIn(NOT_AUTHORIZED_MSG.encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_iac_service_400(self):
@@ -710,7 +713,7 @@ class TestGenerateEqURL(AioHTTPTestCase):
             self.assertLogLine(cm, "Client error when accessing IAC service", client_ip=None, status=400)
 
         self.assertEqual(response.status, 200)
-        self.assertIn(b'Bad request', await response.content.read())
+        self.assertIn(BAD_RESPONSE_MSG.encode(), await response.content.read())
 
     def test_join_iac(self):
         # Given some post data

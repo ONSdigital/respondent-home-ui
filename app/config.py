@@ -2,6 +2,8 @@ from functools import partial
 
 from envparse import Env, ConfigurationError
 
+from app.session import generate_new_key
+
 
 class Config(dict):
 
@@ -54,6 +56,8 @@ class BaseConfig:
     SURVEY_URL = env("SURVEY_URL")
     SURVEY_AUTH = (env("SURVEY_USERNAME"), env("SURVEY_PASSWORD"))
 
+    SECRET_KEY = env("SECRET_KEY")
+
 
 class DevelopmentConfig:
     env = Env()
@@ -90,6 +94,8 @@ class DevelopmentConfig:
     SURVEY_URL = env("SURVEY_URL", default="http://0.0.0.0:8080")
     SURVEY_AUTH = (env("SURVEY_USERNAME", default="admin"), env("SURVEY_PASSWORD", default="secret"))
 
+    SECRET_KEY = env.str("SECRET_KEY", default=None) or generate_new_key()
+
 
 class TestingConfig:
     HOST = "0.0.0.0"
@@ -118,3 +124,5 @@ class TestingConfig:
 
     SURVEY_URL = "http://0.0.0.0:8080"
     SURVEY_AUTH = ("admin", "secret")
+
+    SECRET_KEY = generate_new_key()

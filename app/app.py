@@ -43,7 +43,7 @@ def create_app(config_name=None) -> web.Application:
     [app_config.__setitem__(key, BasicAuth(*app_config[key])) for key in app_config if key.endswith('_AUTH')]
 
     app = web.Application(
-        debug=settings.DEBUG, middlewares=[session.setup(), flash.flash_middleware]
+        debug=settings.DEBUG, middlewares=[session.setup(app_config["SECRET_KEY"]), flash.flash_middleware]
     )
 
     # Handle 500 errors

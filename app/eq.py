@@ -146,7 +146,7 @@ class EqPayloadConstructor(object):
 
         # TODO: Remove hardcoded language variables for payload when they become available in RAS/RM
         self._region_code = 'GB-ENG'
-        self._language_code = 'en'  # sample attributes may have CountryCode that can be used here
+        self._language_code = 'en'  # sample attributes do not currently have language details
 
         self._payload = {
             "jti": str(uuid4()),  # required by eQ for creating a new claim

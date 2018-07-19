@@ -13,7 +13,6 @@ from tests.config import Config
 env = Env()
 
 
-
 class HealthCheckException(Exception):
     def __init__(self, service):
         self.service = service
@@ -83,9 +82,9 @@ def test(ctx, clean=False):
     if clean:
         cleanpy(ctx)
 
-    retcode = unittests(ctx) and smoke(ctx) and integration(ctx)
+    return_code = unittests(ctx) or smoke(ctx) or integration(ctx)
 
-    sys.exit(retcode)
+    sys.exit(return_code)
 
 
 @task

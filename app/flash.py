@@ -4,6 +4,7 @@ from functools import partial
 from aiohttp import web
 from aiohttp_session import get_session
 
+
 SESSION_KEY = REQUEST_KEY = "flash"
 
 

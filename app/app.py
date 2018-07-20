@@ -69,6 +69,7 @@ def create_app(config_name=None) -> web.Application:
         context_processors=[flash.context_processor, aiohttp_jinja2.request_processor],
         extensions=['jinja2.ext.i18n'],
     )
+    # Required to add the default gettext and ngettext functions for rendering
     env.install_null_translations()
 
     # Set static folder location

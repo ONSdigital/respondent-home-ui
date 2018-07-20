@@ -1,5 +1,6 @@
 import logging
 import time
+import re
 from collections import namedtuple
 from uuid import uuid4
 
@@ -140,7 +141,12 @@ class EqPayloadConstructor(object):
         self._sample_attributes = await self._get_sample_attributes_by_id()
 
         try:
-            self._ru_name = self._sample_attributes["attributes"]["Prem1"]
+            self._sample_attributes = self._sample_attributes["attributes"]
+        except KeyError:
+            raise InvalidEqPayLoad(f"Could not retrieve attributes for case {self._case_id}")
+
+        try:
+            self._ru_name = self._sample_attributes["Prem1"]
         except KeyError:
             raise InvalidEqPayLoad(f"Could not retrieve ru_name (address) for case {self._case_id}")
 
@@ -164,8 +170,14 @@ class EqPayloadConstructor(object):
             "case_ref": self._case_ref,  # not required by eQ but useful for downstream
             "account_service_url": self._account_service_url,  # required for save/continue
             "region_code": self._region_code,
-            "language_code": self._language_code  # currently only 'en' or 'cy'
+            "language_code": self._language_code,  # currently only 'en' or 'cy'
+            "display_address": self.build_display_address(self._sample_attributes),  # built from the Prem attributes
         }
+
+        # Add all of the sample attributes to the payload
+        self._payload.update(
+            [(self.camel_to_snake(key), value) for key, value in self._sample_attributes.items()]
+        )
 
         # Add any non null event dates that exist for this collection exercise
         self._payload.update(
@@ -175,6 +187,31 @@ class EqPayloadConstructor(object):
         logger.info(payload=self._payload)
 
         return self._payload
+
+    @staticmethod
+    def camel_to_snake(s):
+        return re.sub("([A-Z0-9])", "_\\1", s).lower().lstrip('_')
+
+    @staticmethod
+    def build_display_address(sample_attributes):
+        """
+        Build `display_address` value by appending not-None (in order) prem values of sample attributes
+
+        :param sample_attributes: dictionary of attributes with Prem1, Prem2, Prem3, Prem4 keys present
+        :return: string of a single prem value or a combination of two
+        """
+        display_address = ''
+        for prem_key in ['Prem1', 'Prem2', 'Prem3', 'Prem4']:  # retain order of Prem values
+            try:
+                val = sample_attributes[prem_key]
+            except KeyError:
+                raise InvalidEqPayLoad(f"{prem_key} missing from sample attributes")
+            if val:
+                prev_display = display_address
+                display_address = f'{prev_display} {val}' if prev_display else val
+                if prev_display:
+                    break  # break once two prems have been added
+        return display_address
 
     async def _make_request(self, request: Request):
         method, url, auth, func = request

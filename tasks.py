@@ -125,3 +125,8 @@ def demo(ctx):
 def wait(ctx):
     [check_status(k, v) for k, v in dict(vars(Config)).items() if k.endswith('_SERVICE') or k.endswith('_UI')]
     print('all services are up')
+
+
+@task
+def coverage(ctx):
+    run_command("pytest tests/unit --cov app --cov-report html --ignore=node_modules")

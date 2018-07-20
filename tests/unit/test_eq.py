@@ -242,7 +242,17 @@ class TestGenerateEqURL(AioHTTPTestCase):
             "language_code": self.language_code,
             "return_by": self.return_by,
             "ref_p_end_date": self.end_date,
-            "ref_p_start_date": self.start_date
+            "ref_p_start_date": self.start_date,
+            "display_address": self.sample_attributes_json['attributes']['Prem1'],
+            "prem_1": self.sample_attributes_json['attributes']['Prem1'],
+            "prem_2": self.sample_attributes_json['attributes']['Prem2'],
+            "prem_3": self.sample_attributes_json['attributes']['Prem3'],
+            "prem_4": self.sample_attributes_json['attributes']['Prem4'],
+            "district": self.sample_attributes_json['attributes']['District'],
+            "post_town": self.sample_attributes_json['attributes']['PostTown'],
+            "postcode": self.sample_attributes_json['attributes']['Postcode'],
+            "country_code": self.sample_attributes_json['attributes']['CountryCode'],
+            "reference": self.sample_attributes_json['attributes']['Reference'],
         }
 
         self.case_url = (
@@ -992,6 +1002,23 @@ class TestGenerateEqURL(AioHTTPTestCase):
             with self.assertRaises(InvalidEqPayLoad):
                 await eq.EqPayloadConstructor(self.case_json, self.app).build()
 
+    @unittest_run_loop
+    async def test_build_raises_InvalidEqPayLoad_missing_attributes(self):
+        sample_json = self.sample_attributes_json.copy()
+        del sample_json['attributes']
+
+        from app import eq  # NB: local import to avoid overwriting the patched version for some tests
+
+        with aioresponses() as mocked:
+            mocked.get(self.collection_instrument_url, payload=self.collection_instrument_json)
+            mocked.get(self.collection_exercise_url, payload=self.collection_exercise_json)
+            mocked.get(self.collection_exercise_events_url, payload=self.collection_exercise_events_json)
+            mocked.get(self.sample_attributes_url, payload=sample_json)
+
+            with self.assertRaises(InvalidEqPayLoad) as ex:
+                await eq.EqPayloadConstructor(self.case_json, self.app).build()
+            self.assertIn(f'Could not retrieve attributes for case {self.case_id}', ex.exception.message)
+
     def test_find_event_date_by_tag(self):
         find_mandatory_date = functools.partial(find_event_date_by_tag,
                                                 collex_events=self.collection_exercise_events_json,
@@ -1026,3 +1053,122 @@ class TestGenerateEqURL(AioHTTPTestCase):
                                    self.collection_exercise_id,
                                    True)
         self.assertIn("unexpected", e.exception.message)
+
+    def test_camel_to_snake(self):
+        from app import eq
+
+        result = eq.EqPayloadConstructor.camel_to_snake('TestCase')
+        self.assertEqual(result, 'test_case')
+
+    def test_camel_to_snake_numbers(self):
+        from app import eq
+
+        result = eq.EqPayloadConstructor.camel_to_snake('Prem1')
+        self.assertEqual(result, 'prem_1')
+
+    def test_camel_to_snake_empty(self):
+        from app import eq
+
+        result = eq.EqPayloadConstructor.camel_to_snake('')
+        self.assertEqual(result, '')
+
+    def test_build_display_address(self):
+        from app import eq
+
+        result = eq.EqPayloadConstructor.build_display_address(self.sample_attributes_json['attributes'])
+        self.assertEqual(result, self.eq_payload['display_address'])
+
+    def test_build_display_address_raises(self):
+        from app import eq
+
+        attributes = self.sample_attributes_json['attributes'].copy()
+        del attributes['Prem2']
+
+        with self.assertRaises(InvalidEqPayLoad) as ex:
+            eq.EqPayloadConstructor.build_display_address(attributes)
+        self.assertIn("Prem2 missing from sample attributes", ex.exception.message)
+
+    def test_build_display_address_prems(self):
+        from app import eq
+
+        for attributes, expected in [
+            ({
+                "Prem1": "A House",
+                "Prem2": "",
+                "Prem3": "",
+                "Prem4": "",
+            }, "A House"),
+            ({
+                 "Prem1": "",
+                 "Prem2": "A Second House",
+                 "Prem3": "",
+                 "Prem4": "",
+            }, "A Second House"),
+            ({
+                 "Prem1": "",
+                 "Prem2": "",
+                 "Prem3": "A Third House",
+                 "Prem4": "",
+            }, "A Third House"),
+            ({
+                 "Prem1": "",
+                 "Prem2": "",
+                 "Prem3": "",
+                 "Prem4": "A Fourth House",
+            }, "A Fourth House"),
+            ({
+                "Prem1": "A House",
+                "Prem2": "On The Second Hill",
+                "Prem3": "",
+                "Prem4": "",
+            }, "A House On The Second Hill"),
+            ({
+                "Prem1": "A House",
+                "Prem2": "",
+                "Prem3": "On The Third Hill",
+                "Prem4": "",
+            }, "A House On The Third Hill"),
+            ({
+                "Prem1": "A House",
+                "Prem2": "",
+                "Prem3": "",
+                "Prem4": "On The Fourth Hill",
+            }, "A House On The Fourth Hill"),
+            ({
+                 "Prem1": "",
+                 "Prem2": "A Second House",
+                 "Prem3": "On The Third Hill",
+                 "Prem4": "",
+            }, "A Second House On The Third Hill"),
+            ({
+                 "Prem1": "",
+                 "Prem2": "A Second House",
+                 "Prem3": "",
+                 "Prem4": "On The Fourth Hill",
+            }, "A Second House On The Fourth Hill"),
+            ({
+                 "Prem1": "",
+                 "Prem2": "",
+                 "Prem3": "A Third House",
+                 "Prem4": "On The Fourth Hill",
+            }, "A Third House On The Fourth Hill"),
+            ({
+                 "Prem1": "A House",
+                 "Prem2": "On The Second Hill",
+                 "Prem3": "Down The Third Lane",
+                 "Prem4": "",
+            }, "A House On The Second Hill"),
+            ({
+                 "Prem1": "A House",
+                 "Prem4": "",
+                 "Prem2": "On The Third Hill",
+                 "Prem3": "Down The Fourth Lane",
+            }, "A House On The Third Hill"),
+            ({
+                 "Prem1": "",
+                 "Prem2": "A Second House",
+                 "Prem3": "On The Third Hill",
+                 "Prem4": "Down The Fourth Lane",
+             }, "A Second House On The Third Hill"),
+        ]:
+            self.assertEqual(eq.EqPayloadConstructor.build_display_address(attributes), expected)

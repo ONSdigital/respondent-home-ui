@@ -174,7 +174,7 @@ class EqPayloadConstructor(object):
             "display_address": self.build_display_address(self._sample_attributes),  # built from the Prem attributes
         }
 
-        # Add all of the sample attributes to the payload
+        # Add all of the sample attributes to the payload as camel case fields
         self._payload.update(
             [(self.camel_to_snake(key), value) for key, value in self._sample_attributes.items()]
         )

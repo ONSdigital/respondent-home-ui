@@ -17,6 +17,11 @@ To run this application in development use:
 
 and access using [http://localhost:9092](http://localhost:9092).
 
+## Tests
+To run the unit tests:
+
+  `make unittests`
+
 ## Docker
 Respondent Home is one part of the RAS/RM docker containers:
 

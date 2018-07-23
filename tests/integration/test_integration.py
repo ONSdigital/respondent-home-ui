@@ -37,7 +37,7 @@ class TestRespondentHome(unittest.TestCase):
         response = requests.get(url, auth=Config.BASIC_AUTH)
         response.raise_for_status()
         logger.debug('Successfully retrieved case', sample_unit_id=sample_unit_id)
-        return response.json()['iac']
+        return response.json()[0]['iac']
 
     @staticmethod
     def get_address_by_sample_unit_id(sample_unit_id):
@@ -67,6 +67,6 @@ class TestRespondentHome(unittest.TestCase):
         iac = self.get_iac_by_sample_unit_id(sample_unit_id)
         response = self.post_to_rh(iac)
 
-        assert response.status == 200
+        assert response.status_code == 200
         assert Config.EQ_SURVEY_RUNNER_URL in response.url
-        assert self.get_address_by_sample_unit_id(sample_unit_id) in response.content
+        assert self.get_address_by_sample_unit_id(sample_unit_id).encode() in response.content

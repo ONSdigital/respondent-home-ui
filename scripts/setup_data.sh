@@ -7,7 +7,7 @@ if [ -d tmp_rm_tools ]; then
     echo "tmp_rm_tools exists - pulling";
     cd tmp_rm_tools; git pull; cd -;
 else
-    git clone -b social-test-setup --depth 1 --single-branch ${rm_tools_repo_url} tmp_rm_tools;
+    git clone --depth 1 ${rm_tools_repo_url} tmp_rm_tools;
 fi;
 cp tests/test_data/setup.env tmp_rm_tools/social-test-setup/.env
 cp tests/test_data/sample/social-survey-sample.csv tmp_rm_tools/social-test-setup/data/

@@ -1,4 +1,5 @@
 import logging
+import time
 
 import requests
 from aiohttp.test_utils import AioHTTPTestCase, unittest_run_loop
@@ -16,7 +17,6 @@ class TestRespondentHome(AioHTTPTestCase):
     """
     Assumes services are running on the default ports with social data pre-loaded with `make setup`.
     """
-
     async def get_application(self):
         return create_app('TestingConfig')
 
@@ -56,11 +56,19 @@ class TestRespondentHome(AioHTTPTestCase):
         logger.debug('Successfully retrieved sample unit', sample_unit_id=sample_unit_id)
         return response.json()['sampleAttributes']['attributes']['Prem1']
 
+    @staticmethod
+    def poll_for_iac(sample_unit_id):
+        while True:
+            time.sleep(5)
+            iac = TestRespondentHome.get_iac_by_sample_unit_id(sample_unit_id)
+            if iac is not None:
+                return iac
+
     @unittest_run_loop
     async def test_can_access_respondent_home_homepage(self):
         sample_summary_id = self.get_first_sample_summary_id()
         sample_unit_id = self.get_first_sample_unit_id_by_summary(sample_summary_id)
-        iac = self.get_iac_by_sample_unit_id(sample_unit_id)
+        iac = self.poll_for_iac(sample_unit_id)
         iac1, iac2, iac3 = iac[:4], iac[4:8], iac[8:]
         form_data = {
             'iac1': iac1, 'iac2': iac2, 'iac3': iac3, 'action[save_continue]': '',

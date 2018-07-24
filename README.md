@@ -8,6 +8,7 @@ This repository contains the Python [AIOHTTP](http://docs.aiohttp.org/en/stable/
 
 ## Installation
 Install the required Python packages for running and testing Respondent Home within a virtual environment:
+
   `make install`
 
 ## Running
@@ -18,9 +19,15 @@ To run this application in development use:
 and access using [http://localhost:9092](http://localhost:9092).
 
 ## Tests
-To run the unit tests:
+To run the unit tests for Respondent Home:
 
   `make unittests`
+
+To bring up all the RAS/RM & eQ Runner services and run the integration tests against them and Respondent Home:
+
+  `make test`
+
+NB: Waiting for the services to be ready will likely take up to ten minutes.
 
 ## Docker
 Respondent Home is one part of the RAS/RM docker containers:

@@ -13,10 +13,10 @@ async def get_case(case_id: str, app: Application):
         try:
             response.raise_for_status()
         except ClientError as ex:
-            logger.error("Error retrieving case", case_id=case_id, url=response.url, status_code=response.status)
+            logger.error("Error retrieving case", case_id=case_id, url=str(response.url), status_code=response.status)
             raise ex
         else:
-            logger.debug("Successfully retrieved case", case_id=case_id, url=response.url)
+            logger.debug("Successfully retrieved case", case_id=case_id, url=str(response.url))
         return await response.json()
 
 
@@ -29,8 +29,8 @@ async def post_case_event(case_id: str, category: str, description: str, app: Ap
         try:
             response.raise_for_status()
         except ClientError as ex:
-            logger.error("Error posting case event", case_id=case_id, url=response.url, status_code=response.status)
+            logger.error("Error posting case event", case_id=case_id, url=str(response.url), status_code=response.status)
             raise ex
         else:
-            logger.debug("Successfully posted case event", case_id=case_id, url=response.url)
+            logger.debug("Successfully posted case event", case_id=case_id, url=str(response.url))
         return await response.json()

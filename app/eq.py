@@ -21,10 +21,10 @@ def handle_response(response):
     try:
         response.raise_for_status()
     except ClientError as ex:
-        logger.error("Error in response", url=response.url, status_code=response.status)
+        logger.error("Error in response", url=str(response.url), status_code=response.status)
         raise ex
     else:
-        logger.debug("Successfully connected to service", url=response.url)
+        logger.debug("Successfully connected to service", url=str(response.url))
 
 
 def find_event_date_by_tag(search_param: str, collex_events: dict, collex_id: str, mandatory: bool):

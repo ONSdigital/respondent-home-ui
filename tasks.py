@@ -37,6 +37,7 @@ def check_status(service, url):
 
 @task
 def run(ctx, port=None):
+    """Run the development server"""
     port = port or env("PORT", default=9092)
     if not os.getenv('APP_SETTINGS'):
         os.environ['APP_SETTINGS'] = 'DevelopmentConfig'
@@ -45,7 +46,7 @@ def run(ctx, port=None):
 
 @task
 def server(ctx, port=None, reload=True):
-    """Run the development server"""
+    """Run the gunicorn server"""
     try:
         port = port or env("PORT")
     except ConfigurationError:
@@ -70,6 +71,7 @@ def flake8(ctx):
 
 @task
 def unittests(ctx):
+    """Run the unit tests"""
     import pytest
 
     return pytest.main(["tests/unit"])
@@ -81,9 +83,7 @@ def test(ctx, clean=False):
 
     if clean:
         cleanpy(ctx)
-
     return_code = unittests(ctx) or smoke(ctx) or integration(ctx)
-
     sys.exit(return_code)
 
 
@@ -118,15 +118,18 @@ def cleanpy(ctx):
 
 @task
 def demo(ctx):
+    """Run the demo server"""
     run_command("python -m tests.demo")
 
 
 @task
 def wait(ctx):
+    """Wait for all the test services to be healthy"""
     [check_status(k, v) for k, v in dict(vars(Config)).items() if k.endswith('_SERVICE') or k.endswith('_UI')]
     print('all services are up')
 
 
 @task
 def coverage(ctx):
+    """Calculate coverage and render to HTML"""
     run_command("pytest tests/unit --cov app --cov-report html --ignore=node_modules")

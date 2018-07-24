@@ -1,16 +1,24 @@
 import logging
-import unittest
+import time
 
 import requests
+from aiohttp.test_utils import AioHTTPTestCase, unittest_run_loop
 from structlog import wrap_logger
 
+from app.app import create_app
 from tests.config import Config
 
 
 logger = wrap_logger(logging.getLogger(__name__))
 
 
-class TestRespondentHome(unittest.TestCase):
+class TestRespondentHome(AioHTTPTestCase):
+
+    """
+    Assumes services are running on the default ports with social data pre-loaded with `make setup`.
+    """
+    async def get_application(self):
+        return create_app('TestingConfig')
 
     @staticmethod
     def get_first_sample_summary_id():
@@ -37,7 +45,7 @@ class TestRespondentHome(unittest.TestCase):
         response = requests.get(url, auth=Config.BASIC_AUTH)
         response.raise_for_status()
         logger.debug('Successfully retrieved case', sample_unit_id=sample_unit_id)
-        return response.json()['iac']
+        return response.json()[0]['iac']
 
     @staticmethod
     def get_address_by_sample_unit_id(sample_unit_id):
@@ -49,24 +57,24 @@ class TestRespondentHome(unittest.TestCase):
         return response.json()['sampleAttributes']['attributes']['Prem1']
 
     @staticmethod
-    def post_to_rh(iac_code):
-        logger.debug('Posting iac to respondent home', iac=iac_code)
-        iac1, iac2, iac3 = iac_code[:4], iac_code[4:8], iac_code[8:]
+    def poll_for_iac(sample_unit_id):
+        while True:
+            time.sleep(5)
+            iac = TestRespondentHome.get_iac_by_sample_unit_id(sample_unit_id)
+            if iac is not None:
+                return iac
+
+    @unittest_run_loop
+    async def test_can_access_respondent_home_homepage(self):
+        sample_summary_id = self.get_first_sample_summary_id()
+        sample_unit_id = self.get_first_sample_unit_id_by_summary(sample_summary_id)
+        iac = self.poll_for_iac(sample_unit_id)
+        iac1, iac2, iac3 = iac[:4], iac[4:8], iac[8:]
         form_data = {
             'iac1': iac1, 'iac2': iac2, 'iac3': iac3, 'action[save_continue]': '',
         }
-        url = f'{Config.RESPONDENT_HOME_SERVICE}/'
-        response = requests.post(url, data=form_data)
-        response.raise_for_status()
-        logger.debug('Posted iac to respondent home')
-        return response
+        response = await self.client.request("POST", "/", data=form_data)
 
-    def test_can_access_respondent_home_homepage(self):
-        sample_summary_id = self.get_first_sample_summary_id()
-        sample_unit_id = self.get_first_sample_unit_id_by_summary(sample_summary_id)
-        iac = self.get_iac_by_sample_unit_id(sample_unit_id)
-        response = self.post_to_rh(iac)
-
-        assert response.status == 200
-        assert Config.EQ_SURVEY_RUNNER_URL in response.url
-        assert self.get_address_by_sample_unit_id(sample_unit_id) in response.content
+        self.assertEqual(response.status, 200)
+        self.assertIn(Config.EQ_SURVEY_RUNNER_URL, str(response.url))
+        self.assertIn(self.get_address_by_sample_unit_id(sample_unit_id).encode(), await response.content.read())

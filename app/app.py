@@ -56,6 +56,7 @@ def create_app(config_name=None) -> web.Application:
     logger_initial_config(service_name="respondent-home", log_level=app["LOG_LEVEL"])
 
     logger.info("Logging configured", log_level=app['LOG_LEVEL'])
+
     # Set up routes
     routes.setup(app)
 

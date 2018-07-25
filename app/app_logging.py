@@ -18,7 +18,7 @@ def logger_initial_config(
     if not logger_format:
         logger_format = "%(message)s"
     if not service_name:
-        service_name = os.getenv("NAME", "ras-secure-message")
+        service_name = os.getenv("NAME", "respondent-home")
     try:
         indent = int(os.getenv("JSON_INDENT_LOGGING"))
     except TypeError:

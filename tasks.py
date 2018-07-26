@@ -99,12 +99,14 @@ def smoke(ctx, clean=False):
 
 
 @task
-def integration(ctx, clean=False):
+def integration(ctx, clean=False, live=False):
     """Run the integration tests."""
     import pytest
 
     if clean:
         cleanpy(ctx)
+    if live:
+        os.environ['LIVE_TEST'] = 'true'
     retcode = pytest.main(["tests/integration"])
     sys.exit(retcode)
 

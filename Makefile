@@ -15,7 +15,7 @@ run:
 
 test: flake8 unittests start_services wait_for_services setup integration_tests stop_services
 
-live_test: live_integration_tests
+live_test: start_services wait_for_services setup integration_tests stop_services
 
 start_services:
 	./scripts/start_ras_rm.sh ${RAS_RM_REPO_URL}

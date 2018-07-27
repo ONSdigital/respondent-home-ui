@@ -21,17 +21,18 @@ class TestRespondentHome(AioHTTPTestCase):
     """
     async def get_application(self):
         self.live_test = env.bool('LIVE_TEST', default=False)
+        # Social Test 1 can be identified with 500 sample units
         self.sample_size = env.int('SAMPLE_SIZE', default=500)
         return create_app('BaseConfig' if self.live_test else 'TestingConfig')
 
-    def get_sample_summary_id_from_count(self, unit_count=500):
+    def get_sample_summary_id_from_kwargs(self, **kwargs):
         logger.debug('Retrieving sample summaries')
         url = f'{self.app["SAMPLE_URL"]}/samples/samplesummaries'
         response = requests.get(url, auth=self.app["SAMPLE_AUTH"][:2])
         response.raise_for_status()
         logger.debug('Successfully retrieved sample summaries')
         for sample_summary in response.json():
-            if sample_summary['totalSampleUnits'] == unit_count:
+            if all(sample_summary[key] == val for key, val in kwargs.items()):
                 return sample_summary['id']
 
     def get_first_sample_summary_id(self):
@@ -86,8 +87,7 @@ class TestRespondentHome(AioHTTPTestCase):
     @unittest_run_loop
     async def test_can_access_respondent_home_homepage(self):
         if self.live_test:
-            # Social Test 1 can be identified with 500 sample units
-            sample_summary_id = self.get_sample_summary_id_from_count(self.sample_size)
+            sample_summary_id = self.get_sample_summary_id_from_kwargs(totalSampleUnits=self.sample_size)
         else:
             # Any old summary should do against test data
             sample_summary_id = self.get_first_sample_summary_id()

@@ -1,15 +1,16 @@
 import logging
-import os
 import time
 
 import requests
 from aiohttp.test_utils import AioHTTPTestCase, unittest_run_loop
+from envparse import Env
 from structlog import wrap_logger
 
 from app.app import create_app
 from app.case import get_case
 
 
+env = Env()
 logger = wrap_logger(logging.getLogger(__name__))
 
 
@@ -19,8 +20,8 @@ class TestRespondentHome(AioHTTPTestCase):
     Assumes services are running on the default ports with social data pre-loaded with `make setup`.
     """
     async def get_application(self):
-        self.live_test = os.environ.get('LIVE_TEST', False)
-        self.sample_size = os.environ.get('SAMPLE_SIZE', 500)
+        self.live_test = env.bool('LIVE_TEST', default=False)
+        self.sample_size = env.int('SAMPLE_SIZE', default=500)
         return create_app('BaseConfig' if self.live_test else 'TestingConfig')
 
     def get_sample_summary_id_from_count(self, unit_count=500):

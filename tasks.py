@@ -45,7 +45,7 @@ def run(ctx, port=None):
 
 
 @task
-def server(ctx, port=None, reload=True):
+def server(ctx, port=None, reload=True, debug=False, production=True):
     """Run the gunicorn server"""
     try:
         port = port or env("PORT")
@@ -53,9 +53,15 @@ def server(ctx, port=None, reload=True):
         print('Port not set. Use `inv server --port=[INT]` or set the PORT environment variable.')
         sys.exit(1)
 
+    log_level = 'DEBUG' if debug else 'INFO'
+
+    if production:
+        os.environ['APP_SETTINGS'] = 'ProductionConfig'
+
     command = (
         'gunicorn "app.app:create_app()" -w 4 '
-        f"--bind 0.0.0.0:{port} --worker-class aiohttp.worker.GunicornWebWorker --access-logfile - --log-level DEBUG"
+        f"--bind 0.0.0.0:{port} --worker-class aiohttp.worker.GunicornWebWorker "
+        f"--access-logfile - --log-level {log_level}"
     )
 
     if reload:

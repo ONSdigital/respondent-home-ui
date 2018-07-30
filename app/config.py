@@ -59,6 +59,10 @@ class BaseConfig:
     SECRET_KEY = env("SECRET_KEY")
 
 
+class ProductionConfig(BaseConfig):
+    pass
+
+
 class DevelopmentConfig:
     env = Env()
     HOST = env.str("HOST", default="0.0.0.0")

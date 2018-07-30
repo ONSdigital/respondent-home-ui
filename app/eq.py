@@ -150,8 +150,12 @@ class EqPayloadConstructor(object):
         except KeyError:
             raise InvalidEqPayLoad(f"Could not retrieve ru_name (address) for case {self._case_id}")
 
+        try:
+            self._country_code = self._sample_attributes["CountryCode"]
+        except KeyError:
+            raise InvalidEqPayLoad(f"Could not retrieve country_code for case {self._case_id}")
+
         # TODO: Remove hardcoded language variables for payload when they become available in RAS/RM
-        self._region_code = 'GB-ENG'
         self._language_code = 'en'  # sample attributes do not currently have language details
 
         self._payload = {
@@ -169,7 +173,7 @@ class EqPayloadConstructor(object):
             "case_id": self._case_id,  # not required by eQ but useful for downstream
             "case_ref": self._case_ref,  # not required by eQ but useful for downstream
             "account_service_url": self._account_service_url,  # required for save/continue
-            "region_code": self._region_code,
+            "country_code": self._country_code,
             "language_code": self._language_code,  # currently only 'en' or 'cy'
             "display_address": self.build_display_address(self._sample_attributes),  # built from the Prem attributes
         }

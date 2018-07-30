@@ -1,8 +1,10 @@
 import logging
 import time
+from unittest.mock import Mock
 
 import requests
 from aiohttp.test_utils import AioHTTPTestCase, unittest_run_loop
+from aioresponses import aioresponses
 from envparse import Env
 from structlog import wrap_logger
 
@@ -109,10 +111,28 @@ class TestRespondentHome(AioHTTPTestCase):
         form_data = {
             'iac1': iac1, 'iac2': iac2, 'iac3': iac3, 'action[save_continue]': '',
         }
-        response = await self.client.request("POST", "/", allow_redirects=False, data=form_data)
 
-        self.assertEqual(response.status, 302)
+        service_urls = [
+            self.app[url]
+            for url in self.app
+            if url.isupper()
+            and not url.startswith('CASE')  # skip on case service so we can mock the POSTing of a case event
+            and url.endswith('URL')
+        ]
+        # allow all other service requests to keep integration test as close to normal as possible
+        with aioresponses(passthrough=([str(self.server._root)] + service_urls)) as mocked:
+            # we can mock the getting of a case as the same request was already performed above
+            mocked.get(f"{self.app['CASE_URL']}/cases/{case['id']}", payload=case)
+            # mocking this prevents the transition from `NOTSTARTED` to `INPROGRESS`
+            mocked.post(f"{self.app['CASE_URL']}/cases/{case['id']}/events")
+            response = await self.client.request("POST", "/", allow_redirects=False, data=form_data)
+
+        self.assertEqual(response.status, 302)  # Response should be a redirect to eQ
         location = response.headers['location']
-        self.assertIn(self.app['EQ_URL'], location)  # Check that the redirect location is correct
+        self.assertIn(self.app['EQ_URL'], location)  # Check that the redirect location is to eQ
         response = requests.get(location)  # Follow the redirect location to check contents
-        self.assertIn(self.get_address_by_sample_unit_id(sample_unit_id).encode(), response.content)
+        address = self.get_address_by_sample_unit_id(sample_unit_id).encode()
+        self.assertIn(address, response.content)  # Use the household address as a simple point of verification
+        case_response = await get_case(case['id'], self.app)
+        case_state = case_response['caseGroup']['caseGroupStatus']
+        self.assertEqual(case_state, 'NOTSTARTED')  # Ensure the case status has not transitioned

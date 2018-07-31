@@ -180,6 +180,7 @@ class EqPayloadConstructor(object):
         )
 
         # Add any non null event dates that exist for this collection exercise
+        # NB: for LMS the event dates are optional
         self._payload.update(
             [(key, value) for key, value in self._collex_event_dates.items() if value is not None]
         )
@@ -239,12 +240,12 @@ class EqPayloadConstructor(object):
     def _get_collex_event_dates(self):
         return {
             "ref_p_start_date": find_event_date_by_tag(
-                "ref_period_start", self._collex_events, self._collex_id, True
+                "ref_period_start", self._collex_events, self._collex_id, False
             ),
             "ref_p_end_date": find_event_date_by_tag(
-                "ref_period_end", self._collex_events, self._collex_id, True
+                "ref_period_end", self._collex_events, self._collex_id, False
             ),
             "return_by": find_event_date_by_tag(
-                "return_by", self._collex_events, self._collex_id, True
+                "return_by", self._collex_events, self._collex_id, False
             ),
         }

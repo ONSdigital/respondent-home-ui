@@ -14,12 +14,12 @@ aiohttp-session = {extras = ["secure"]}
 cchardet = "*"
 aiodns = "*"
 "iso8601" = "*"
+invoke = "*"
 
 [dev-packages]
 codecov = "*"
 coverage = "*"
 ipython = "*"
-invoke = "*"
 "flake8" = "*"
 pytest-aiohttp = "*"
 pytest-cov = "*"

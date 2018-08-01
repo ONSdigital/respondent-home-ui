@@ -198,16 +198,16 @@ class EqPayloadConstructor(object):
         Build `display_address` value by appending not-None (in order) values of sample attributes
 
         :param sample_attributes: dictionary of address attributes
-        :return: string of a single prem value or a combination of two
+        :return: string of a single address attribute or a combination of two
         """
         display_address = ''
-        for prem_key in ['Prem1', 'Prem2', 'Prem3', 'Prem4', 'District', 'PostTown', 'Postcode']:  # retain order of Prem values
+        for prem_key in ['Prem1', 'Prem2', 'Prem3', 'Prem4', 'District', 'PostTown', 'Postcode']:  # retain order of address attributes
             val = sample_attributes.get(prem_key)
             if val:
                 prev_display = display_address
                 display_address = f'{prev_display}, {val}' if prev_display else val
                 if prev_display:
-                    break  # break once two prems have been added
+                    break  # break once two address attributes have been added
         if not display_address:
             raise InvalidEqPayLoad("Displayable address not in sample attributes")
         return display_address

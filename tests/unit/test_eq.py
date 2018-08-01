@@ -292,8 +292,9 @@ class TestEq(RHTestCase):
 
         attributes = {}
 
-        with self.assertRaises(InvalidEqPayLoad):
+        with self.assertRaises(InvalidEqPayLoad) as ex:
             eq.EqPayloadConstructor.build_display_address(attributes)
+            self.assertIn("Displayable address not in sample attributes", ex.exception.message)
 
     def test_build_display_address_prems(self):
         from app import eq

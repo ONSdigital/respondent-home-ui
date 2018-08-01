@@ -1,38 +1,11 @@
 import os
 import sys
 
-import requests
 from envparse import ConfigurationError, Env
 from invoke import task, run as run_command
-from requests import RequestException
-from retrying import retry
-
-from tests.config import Config
 
 
 env = Env()
-
-
-class HealthCheckException(Exception):
-    def __init__(self, service):
-        self.service = service
-
-    def __str__(self) -> str:
-        return f'Healthcheck fails for {self.service.lower()}'
-
-
-def retry_if_http_error(exception):
-    print(f'error has occurred: {str(exception)}')
-    return isinstance(exception, RequestException) or isinstance(exception, HealthCheckException)
-
-
-@retry(retry_on_exception=retry_if_http_error, wait_fixed=10000, stop_max_delay=600000, wrap_exception=True)
-def check_status(service, url):
-    try:
-        resp = requests.get(f'{url}/info')
-        resp.raise_for_status()
-    except Exception:
-        raise HealthCheckException(service)
 
 
 @task
@@ -45,7 +18,7 @@ def run(ctx, port=None):
 
 
 @task
-def server(ctx, port=None, reload=True):
+def server(ctx, port=None, reload=True, debug=False, production=True):
     """Run the gunicorn server"""
     try:
         port = port or env("PORT")
@@ -53,9 +26,15 @@ def server(ctx, port=None, reload=True):
         print('Port not set. Use `inv server --port=[INT]` or set the PORT environment variable.')
         sys.exit(1)
 
+    log_level = 'DEBUG' if debug else 'INFO'
+
+    if production:
+        os.environ['APP_SETTINGS'] = 'ProductionConfig'
+
     command = (
         'gunicorn "app.app:create_app()" -w 4 '
-        f"--bind 0.0.0.0:{port} --worker-class aiohttp.worker.GunicornWebWorker --access-logfile - --log-level DEBUG"
+        f"--bind 0.0.0.0:{port} --worker-class aiohttp.worker.GunicornWebWorker "
+        f"--access-logfile - --log-level {log_level}"
     )
 
     if reload:
@@ -126,8 +105,8 @@ def demo(ctx):
 
 @task
 def wait(ctx):
-    """Wait for all the test services to be healthy"""
-    [check_status(k, v) for k, v in dict(vars(Config)).items() if k.endswith('_SERVICE') or k.endswith('_UI')]
+    from tests.wait_for_services import check_all_services
+    check_all_services()
     print('all services are up')
 
 

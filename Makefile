@@ -7,7 +7,7 @@ RM_TOOLS_REPO_URL = https://github.com/ONSdigital/rm-tools.git
 install:
 	pipenv install --dev
 
-start_server:
+serve:
 	pipenv run inv server
 
 run:

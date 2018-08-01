@@ -71,7 +71,7 @@ class DevelopmentConfig:
     STATIC_ROOT = "app/static"
 
     ACCOUNT_SERVICE_URL = env.str("ACCOUNT_SERVICE_URL", default="http://localhost:9092")
-    EQ_URL = env.str("EQ_URL", default="http://localhost:5000/session?token=")
+    EQ_URL = env.str("EQ_URL", default="http://localhost:5000")
     JSON_SECRET_KEYS = env.str("JSON_SECRET_KEYS", default=None) or open("./tests/test_data/test_keys.json").read()
 
     COLLECTION_EXERCISE_URL = env.str("COLLECTION_EXERCISE_URL", default="http://localhost:8145")
@@ -108,7 +108,7 @@ class TestingConfig:
     STATIC_ROOT = "app/static"
 
     ACCOUNT_SERVICE_URL = "http://localhost:9092"
-    EQ_URL = "http://localhost:5000/session?token="
+    EQ_URL = "http://localhost:5000"
     JSON_SECRET_KEYS = open("./tests/test_data/test_keys.json").read()
 
     COLLECTION_EXERCISE_URL = "http://localhost:8145"

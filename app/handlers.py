@@ -95,7 +95,7 @@ async def post_index(request):
     await post_case_event(case_id, 'EQ_LAUNCH', description, request.app)
 
     logger.info('Redirecting to eQ', client_ip=client_ip)
-    raise HTTPFound(request.app['EQ_URL'] + token)
+    raise HTTPFound(f"{request.app['EQ_URL']}/session?token={token}")
 
 
 def validate_case(case_json):

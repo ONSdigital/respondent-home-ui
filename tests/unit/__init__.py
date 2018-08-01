@@ -233,7 +233,7 @@ class RHTestCase(AioHTTPTestCase):
             "return_by": self.return_by,
             "ref_p_end_date": self.end_date,
             "ref_p_start_date": self.start_date,
-            "display_address": self.sample_attributes_json['attributes']['Prem1'],
+            "display_address": f"{self.sample_attributes_json['attributes']['Prem1']}, {self.sample_attributes_json['attributes']['PostTown']}",
             "prem_1": self.sample_attributes_json['attributes']['Prem1'],
             "prem_2": self.sample_attributes_json['attributes']['Prem2'],
             "prem_3": self.sample_attributes_json['attributes']['Prem3'],

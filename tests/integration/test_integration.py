@@ -1,14 +1,18 @@
 import logging
 import time
+from unittest.mock import Mock
 
 import requests
 from aiohttp.test_utils import AioHTTPTestCase, unittest_run_loop
+from aioresponses import aioresponses
+from envparse import Env
 from structlog import wrap_logger
 
 from app.app import create_app
-from tests.config import Config
+from app.case import get_case
 
 
+env = Env()
 logger = wrap_logger(logging.getLogger(__name__))
 
 
@@ -18,63 +22,117 @@ class TestRespondentHome(AioHTTPTestCase):
     Assumes services are running on the default ports with social data pre-loaded with `make setup`.
     """
     async def get_application(self):
-        return create_app('TestingConfig')
+        self.live_test = env.bool('LIVE_TEST', default=False)
+        # Social Test 1 can be identified with 500 sample units
+        self.sample_size = env.int('SAMPLE_SIZE', default=500)
+        return create_app('BaseConfig' if self.live_test else 'TestingConfig')
 
-    @staticmethod
-    def get_first_sample_summary_id():
+    def get_sample_summary_id_from_kwargs(self, **kwargs):
         logger.debug('Retrieving sample summaries')
-        url = f'{Config.SAMPLE_SERVICE}/samples/samplesummaries'
-        response = requests.get(url, auth=Config.BASIC_AUTH)
+        url = f'{self.app["SAMPLE_URL"]}/samples/samplesummaries'
+        response = requests.get(url, auth=self.app["SAMPLE_AUTH"][:2])
+        response.raise_for_status()
+        logger.debug('Successfully retrieved sample summaries')
+        for sample_summary in response.json():
+            if all(sample_summary[key] == val for key, val in kwargs.items()):
+                return sample_summary['id']
+
+    def get_first_sample_summary_id(self):
+        logger.debug('Retrieving sample summaries')
+        url = f'{self.app["SAMPLE_URL"]}/samples/samplesummaries'
+        response = requests.get(url, auth=self.app["SAMPLE_AUTH"][:2])
         response.raise_for_status()
         logger.debug('Successfully retrieved sample summaries')
         return response.json()[0]['id']
 
-    @staticmethod
-    def get_first_sample_unit_id_by_summary(sample_summary_id):
+    def get_first_sample_unit_id_by_summary(self, sample_summary_id):
         logger.debug('Retrieving sample unit id', sample_summary_id=sample_summary_id)
-        url = f'{Config.SAMPLE_SERVICE}/samples/{sample_summary_id}/sampleunits'
-        response = requests.get(url, auth=Config.BASIC_AUTH)
+        url = f'{self.app["SAMPLE_URL"]}/samples/{sample_summary_id}/sampleunits'
+        response = requests.get(url, auth=self.app["SAMPLE_AUTH"][:2])
         response.raise_for_status()
         logger.debug('Successfully retrieved sample units', sample_summary_id=sample_summary_id)
         return response.json()[0]['id']
 
-    @staticmethod
-    def get_iac_by_sample_unit_id(sample_unit_id):
+    def get_actionable_case_by_sample_unit_id(self, sample_unit_id):
         logger.debug('Retrieving case by id', sample_unit_id=sample_unit_id)
-        url = f'{Config.CASE_SERVICE}/cases?sampleUnitId={sample_unit_id}&iac=true'
-        response = requests.get(url, auth=Config.BASIC_AUTH)
+        url = f'{self.app["CASE_URL"]}/cases?sampleUnitId={sample_unit_id}&iac=true'
+        response = requests.get(url, auth=self.app["CASE_AUTH"][:2])
         response.raise_for_status()
         logger.debug('Successfully retrieved case', sample_unit_id=sample_unit_id)
-        return response.json()[0]['iac']
+        for case in response.json():
+            if case['state'] == 'ACTIONABLE':
+                return case
 
-    @staticmethod
-    def get_address_by_sample_unit_id(sample_unit_id):
+    def get_address_by_sample_unit_id(self, sample_unit_id):
         logger.debug('Retrieving sample unit', sample_unit_id=sample_unit_id)
-        url = f'{Config.SAMPLE_SERVICE}/samples/{sample_unit_id}'
-        response = requests.get(url, auth=Config.BASIC_AUTH)
+        url = f'{self.app["SAMPLE_URL"]}/samples/{sample_unit_id}'
+        response = requests.get(url, auth=self.app["SAMPLE_AUTH"][:2])
         response.raise_for_status()
         logger.debug('Successfully retrieved sample unit', sample_unit_id=sample_unit_id)
         return response.json()['sampleAttributes']['attributes']['Prem1']
 
-    @staticmethod
-    def poll_for_iac(sample_unit_id):
-        while True:
-            time.sleep(5)
-            iac = TestRespondentHome.get_iac_by_sample_unit_id(sample_unit_id)
+    def poll_case_for_iac(self, case, retries=20):
+        for _ in range(retries):
+            iac = case['iac']
             if iac is not None:
                 return iac
+            time.sleep(3)
+            case = get_case(case['id'], self.app)
+
+    def poll_for_actionable_case(self, sample_unit_id, retries=20):
+        for _ in range(retries):
+            case = self.get_actionable_case_by_sample_unit_id(sample_unit_id)
+            if case is not None:
+                return case
+            time.sleep(3)
 
     @unittest_run_loop
     async def test_can_access_respondent_home_homepage(self):
-        sample_summary_id = self.get_first_sample_summary_id()
+        if self.live_test:
+            sample_summary_id = self.get_sample_summary_id_from_kwargs(totalSampleUnits=self.sample_size)
+        else:
+            # Any old summary should do against test data
+            sample_summary_id = self.get_first_sample_summary_id()
+        if sample_summary_id is None:
+            self.fail('No sample summary found')
+
         sample_unit_id = self.get_first_sample_unit_id_by_summary(sample_summary_id)
-        iac = self.poll_for_iac(sample_unit_id)
+        if sample_unit_id is None:
+            self.fail('No sample unit id found')
+
+        case = self.poll_for_actionable_case(sample_unit_id)
+        if case is None:
+            self.fail('No ACTIONABLE case found')
+
+        iac = self.poll_case_for_iac(case)
+        if iac is None:
+            self.fail('No IAC for case found')
         iac1, iac2, iac3 = iac[:4], iac[4:8], iac[8:]
         form_data = {
             'iac1': iac1, 'iac2': iac2, 'iac3': iac3, 'action[save_continue]': '',
         }
-        response = await self.client.request("POST", "/", data=form_data)
 
-        self.assertEqual(response.status, 200)
-        self.assertIn(Config.EQ_SURVEY_RUNNER_URL, str(response.url))
-        self.assertIn(self.get_address_by_sample_unit_id(sample_unit_id).encode(), await response.content.read())
+        service_urls = [
+            self.app[url]
+            for url in self.app
+            if url.isupper()
+            and not url.startswith('CASE')  # skip on case service so we can mock the POSTing of a case event
+            and url.endswith('URL')
+        ]
+        # allow all other service requests to keep integration test as close to normal as possible
+        with aioresponses(passthrough=([str(self.server._root)] + service_urls)) as mocked:
+            # we can mock the getting of a case as the same request was already performed above
+            mocked.get(f"{self.app['CASE_URL']}/cases/{case['id']}", payload=case)
+            # mocking this prevents the transition from `NOTSTARTED` to `INPROGRESS`
+            mocked.post(f"{self.app['CASE_URL']}/cases/{case['id']}/events")
+            response = await self.client.request("POST", "/", allow_redirects=False, data=form_data)
+
+        self.assertEqual(response.status, 302)  # Response should be a redirect to eQ
+        location = response.headers['location']
+        self.assertIn(self.app['EQ_URL'], location)  # Check that the redirect location is to eQ
+        response = requests.get(location)  # Follow the redirect location to check contents
+        address = self.get_address_by_sample_unit_id(sample_unit_id).encode()
+        self.assertIn(address, response.content)  # Use the household address as a simple point of verification
+        case_response = await get_case(case['id'], self.app)
+        case_state = case_response['caseGroup']['caseGroupStatus']
+        self.assertEqual(case_state, 'NOTSTARTED')  # Ensure the case status has not transitioned

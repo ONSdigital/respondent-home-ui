@@ -9,7 +9,9 @@ logger = wrap_logger(logging.getLogger(__name__))
 
 
 async def get_case(case_id: str, app: Application):
-    async with app.http_session_pool.get(f"{app['CASE_URL']}/cases/{case_id}", auth=app["CASE_AUTH"]) as response:
+    url = f"{app['CASE_URL']}/cases/{case_id}"
+    logger.info(f"Making GET request to {url}")
+    async with app.http_session_pool.get(url, auth=app["CASE_AUTH"]) as response:
         try:
             response.raise_for_status()
         except ClientError as ex:
@@ -21,8 +23,10 @@ async def get_case(case_id: str, app: Application):
 
 
 async def post_case_event(case_id: str, category: str, description: str, app: Application):
+    url = f"{app['CASE_URL']}/cases/{case_id}/events"
+    logger.info(f"Making POST request to {url}")
     async with app.http_session_pool.post(
-        f"{app['CASE_URL']}/cases/{case_id}/events",
+        url,
         auth=app["CASE_AUTH"],
         json={'description': description, 'category': category, 'createdBy': 'RESPONDENT_HOME'}
     ) as response:

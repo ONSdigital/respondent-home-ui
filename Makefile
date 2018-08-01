@@ -15,6 +15,8 @@ run:
 
 test: flake8 unittests start_services wait_for_services setup integration_tests stop_services
 
+live_test: start_services wait_for_services setup integration_tests stop_services
+
 start_services:
 	./scripts/start_ras_rm.sh ${RAS_RM_REPO_URL}
 	./scripts/start_eq.sh ${EQ_RUNNER_REPO_URL}
@@ -31,6 +33,9 @@ setup:
 
 integration_tests:
 	pipenv run inv integration
+
+live_integration_tests:
+	pipenv run inv integration --live
 
 unittests:
 	pipenv run inv unittests

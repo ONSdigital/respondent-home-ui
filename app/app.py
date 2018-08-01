@@ -37,6 +37,7 @@ def create_app(config_name=None) -> web.Application:
     app_config = config.Config()
     app_config.from_object(settings)
 
+    # NB: raises ConfigurationError if an object attribute is None
     app_config.from_object(getattr(config, config_name or app_config["ENV"]))
 
     # Create basic auth for services

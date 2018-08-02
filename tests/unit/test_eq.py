@@ -315,12 +315,11 @@ class TestEq(RHTestCase):
     def test_build_display_address_raises(self):
         from app import eq
 
-        attributes = self.sample_attributes_json['attributes'].copy()
-        del attributes['Prem2']
+        attributes = {}
 
         with self.assertRaises(InvalidEqPayLoad) as ex:
             eq.EqPayloadConstructor.build_display_address(attributes)
-        self.assertIn("Prem2 missing from sample attributes", ex.exception.message)
+            self.assertIn("Displayable address not in sample attributes", ex.exception.message)
 
     def test_build_display_address_prems(self):
         from app import eq
@@ -355,55 +354,82 @@ class TestEq(RHTestCase):
                 "Prem2": "On The Second Hill",
                 "Prem3": "",
                 "Prem4": "",
-            }, "A House On The Second Hill"),
+            }, "A House, On The Second Hill"),
             ({
                 "Prem1": "A House",
                 "Prem2": "",
                 "Prem3": "On The Third Hill",
                 "Prem4": "",
-            }, "A House On The Third Hill"),
+            }, "A House, On The Third Hill"),
             ({
                 "Prem1": "A House",
                 "Prem2": "",
                 "Prem3": "",
                 "Prem4": "On The Fourth Hill",
-            }, "A House On The Fourth Hill"),
+            }, "A House, On The Fourth Hill"),
             ({
                  "Prem1": "",
                  "Prem2": "A Second House",
                  "Prem3": "On The Third Hill",
                  "Prem4": "",
-            }, "A Second House On The Third Hill"),
+            }, "A Second House, On The Third Hill"),
             ({
                  "Prem1": "",
                  "Prem2": "A Second House",
                  "Prem3": "",
                  "Prem4": "On The Fourth Hill",
-            }, "A Second House On The Fourth Hill"),
+            }, "A Second House, On The Fourth Hill"),
             ({
                  "Prem1": "",
                  "Prem2": "",
                  "Prem3": "A Third House",
                  "Prem4": "On The Fourth Hill",
-            }, "A Third House On The Fourth Hill"),
+            }, "A Third House, On The Fourth Hill"),
             ({
                  "Prem1": "A House",
                  "Prem2": "On The Second Hill",
                  "Prem3": "Down The Third Lane",
                  "Prem4": "",
-            }, "A House On The Second Hill"),
+            }, "A House, On The Second Hill"),
             ({
                  "Prem1": "A House",
                  "Prem4": "",
                  "Prem2": "On The Third Hill",
                  "Prem3": "Down The Fourth Lane",
-            }, "A House On The Third Hill"),
+            }, "A House, On The Third Hill"),
             ({
                  "Prem1": "",
                  "Prem2": "A Second House",
                  "Prem3": "On The Third Hill",
                  "Prem4": "Down The Fourth Lane",
-             }, "A Second House On The Third Hill"),
+             }, "A Second House, On The Third Hill"),
+            ({
+                 "Prem1": "",
+                 "Prem2": "",
+                 "Prem3": "",
+                 "Prem4": "Another House",
+                 "District": "",
+                 "PostTown": "",
+                 "Postcode": "AA1 2BB"
+             }, "Another House, AA1 2BB"),
+            ({
+                 "Prem1": "",
+                 "Prem2": "",
+                 "Prem3": "",
+                 "Prem4": "Another House",
+                 "District": "",
+                 "PostTown": "In Brizzle",
+                 "Postcode": ""
+             }, "Another House, In Brizzle"),
+            ({
+                 "Prem1": "",
+                 "Prem2": "",
+                 "Prem3": "",
+                 "Prem4": "Another House",
+                 "District": "In The Shire",
+                 "PostTown": "",
+                 "Postcode": ""
+             }, "Another House, In The Shire"),
         ]:
             self.assertEqual(eq.EqPayloadConstructor.build_display_address(attributes), expected)
 

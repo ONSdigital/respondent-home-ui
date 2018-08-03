@@ -10,6 +10,8 @@ This repository contains the Python [AIOHTTP](http://docs.aiohttp.org/en/stable/
 
 The fields required to launch an eQ survey is documented in the [ons-schema-definitions](http://ons-schema-definitions.readthedocs.io/en/latest/respondent_management_to_electronic_questionnaire.html#required-fields).
 
+Currently, the only social survey that is targeted is LMS 1. The full schema of which exists in the eQ Survey Runner repository [here](https://github.com/ONSdigital/eq-survey-runner/blob/master/data/en/lms_1.json).
+
 ## Installation
 Install the required Python packages for running and testing Respondent Home within a virtual environment:
 

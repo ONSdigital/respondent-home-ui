@@ -6,6 +6,10 @@ them to the [ONS eQ Survey Runner](https://github.com/ONSdigital/eq-survey-runne
 
 This repository contains the Python [AIOHTTP](http://docs.aiohttp.org/en/stable/) application that is the user interface for the Respondent Home product.
 
+## Payload
+
+The fields required to launch an eQ survey is documented in the [ons-schema-definitions](http://ons-schema-definitions.readthedocs.io/en/latest/respondent_management_to_electronic_questionnaire.html#required-fields).
+
 ## Installation
 Install the required Python packages for running and testing Respondent Home within a virtual environment:
 

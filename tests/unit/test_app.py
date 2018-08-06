@@ -4,6 +4,7 @@ from unittest import TestCase
 
 from aiohttp.web_app import Application
 from aiohttp.test_utils import AioHTTPTestCase, unittest_run_loop
+from aioresponses import aioresponses
 from envparse import ConfigurationError, env
 
 from app.app import create_app
@@ -38,3 +39,23 @@ class TestCreateAppMissingConfig(TestCase):
         env.read_envfile(self.env_file)
         reload(config)
         self.assertIsInstance(create_app(self.config), Application)
+
+
+class TestCheckServices(AioHTTPTestCase):
+
+    config = 'TestingConfig'
+
+    async def get_application(self):
+        return create_app(self.config)
+
+    @unittest_run_loop
+    async def test_check_services(self):
+        with aioresponses() as mocked:
+            for service_url in self.app.service_status_urls.values():
+                mocked.get(service_url)
+            self.assertTrue(await self.app.check_services())
+
+    @unittest_run_loop
+    async def test_check_services_failed(self):
+        with aioresponses():
+            self.assertFalse(await self.app.check_services())

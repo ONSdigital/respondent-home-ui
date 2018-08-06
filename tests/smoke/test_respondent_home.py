@@ -26,7 +26,7 @@ class TestRespondentHome(unittest.TestCase):
             self.skipTest('RESPONDENT_HOME_URL not set')
 
         # When
-        resp = requests.get(f'{url}/info', verify=False).json()
+        resp = requests.get(f'{url}/info?check=true', verify=False).json()
 
         # Then
         self.assertEqual(resp['ready'], True, resp)

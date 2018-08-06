@@ -35,6 +35,7 @@ async def on_cleanup(app):
 async def check_services(app):
     for service_name in app.services:
         url = app.service_status_urls[service_name]
+        logger.info(f"Making health check GET request to {url}")
         try:
             async with app.http_session_pool.get(url) as resp:
                 resp.raise_for_status()
@@ -42,6 +43,7 @@ async def check_services(app):
             logger.error('Failed to connect to required service', config=service_name, url=url)
             return False
     else:
+        logger.info('All required services are healthy')
         return True
 
 

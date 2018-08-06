@@ -3,8 +3,9 @@ import types
 
 import aiohttp_jinja2
 import jinja2
-from aiohttp import BasicAuth, ClientSession, web
+from aiohttp import BasicAuth, ClientSession, ClientTimeout
 from aiohttp.client_exceptions import ClientConnectionError, ClientConnectorError, ClientResponseError
+from aiohttp.web import Application
 from aiohttp_utils import negotiation
 from structlog import wrap_logger
 
@@ -25,7 +26,7 @@ server_logger.setLevel("INFO")
 
 
 async def on_startup(app):
-    app.http_session_pool = ClientSession()
+    app.http_session_pool = ClientSession(timeout=ClientTimeout(total=30))
 
 
 async def on_cleanup(app):
@@ -47,7 +48,7 @@ async def check_services(app):
         return True
 
 
-def create_app(config_name=None) -> web.Application:
+def create_app(config_name=None) -> Application:
     """App factory. Sets up routes and all plugins.
     """
     app_config = config.Config()
@@ -59,7 +60,7 @@ def create_app(config_name=None) -> web.Application:
     # Create basic auth for services
     [app_config.__setitem__(key, BasicAuth(*app_config[key])) for key in app_config if key.endswith('_AUTH')]
 
-    app = web.Application(
+    app = Application(
         debug=settings.DEBUG, middlewares=[session.setup(app_config["SECRET_KEY"]), flash.flash_middleware]
     )
 
@@ -73,11 +74,11 @@ def create_app(config_name=None) -> web.Application:
     app.services = [service_name
                     for service_name in app_config
                     if service_name.endswith('URL')
-                    and service_name != 'ACCOUNT_SERVICE_URL']  # excludes itself to avoid recursion
+                    and service_name not in ('ACCOUNT_SERVICE_URL', 'EQ_URL')]  # excludes itself to avoid recursion
 
     # Store a dict of health check urls for required services
     app.service_status_urls = {
-        service_name: app_config[service_name] + ('/status' if service_name.startswith('EQ') else '/info')
+        service_name: f"{app_config[service_name]}/info"
         for service_name in app.services}
 
     # Monkey patch the check_services function as a method to the app object

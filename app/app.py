@@ -1,9 +1,10 @@
 import logging
+import types
 
 import aiohttp_jinja2
 import jinja2
-from aiohttp import BasicAuth, ClientSession
-from aiohttp import web
+from aiohttp import BasicAuth, ClientSession, web
+from aiohttp.client_exceptions import ClientConnectionError, ClientConnectorError, ClientResponseError
 from aiohttp_utils import negotiation
 from structlog import wrap_logger
 
@@ -31,6 +32,19 @@ async def on_cleanup(app):
     await app.http_session_pool.close()
 
 
+async def check_services(app):
+    for service_name in app.services:
+        url = app.service_status_urls[service_name]
+        try:
+            async with app.http_session_pool.get(url) as resp:
+                resp.raise_for_status()
+        except (ClientConnectorError, ClientConnectionError, ClientResponseError):
+            logger.error('Failed to connect to required service', config=service_name, url=url)
+            return False
+    else:
+        return True
+
+
 def create_app(config_name=None) -> web.Application:
     """App factory. Sets up routes and all plugins.
     """
@@ -50,8 +64,22 @@ def create_app(config_name=None) -> web.Application:
     # Handle 500 errors
     error_handlers.setup(app)
 
-    # Store uppercased configuration variables on app
+    # Store upper-cased configuration variables on app
     app.update(app_config)
+
+    # Store a convenience list of service names
+    app.services = [service_name
+                    for service_name in app_config
+                    if service_name.endswith('URL')
+                    and service_name != 'ACCOUNT_SERVICE_URL']  # excludes itself to avoid recursion
+
+    # Store a dict of health check urls for required services
+    app.service_status_urls = {
+        service_name: app_config[service_name] + ('/status' if service_name.startswith('EQ') else '/info')
+        for service_name in app.services}
+
+    # Monkey patch the check_services function as a method to the app object
+    app.check_services = types.MethodType(check_services, app)
 
     # Bind logger
     logger_initial_config(service_name="respondent-home", log_level=app["LOG_LEVEL"])

@@ -16,5 +16,17 @@ class TestRespondentHome(unittest.TestCase):
         resp = requests.get(url, verify=False)
 
         # Then
-        assert resp.status_code == 200, resp.status_code
-        assert 'Welcome to the Online Household Study' in resp.text
+        self.assertEqual(resp.status_code, 200, resp.status_code)
+        self.assertIn('Welcome to the Online Household Study', resp.text)
+
+    def test_can_access_required_services(self):
+        # Given
+        url = os.getenv('RESPONDENT_HOME_URL')
+        if not url:
+            self.skipTest('RESPONDENT_HOME_URL not set')
+
+        # When
+        resp = requests.get(f'{url}/info', verify=False).json()
+
+        # Then
+        self.assertEqual(resp['ready'], True, resp)

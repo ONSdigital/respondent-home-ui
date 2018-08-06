@@ -31,6 +31,7 @@ async def get_info(request):
     info = {
         "name": 'respondent-home-ui',
         "version": VERSION,
+        "ready": await request.app.check_services(),
     }
     return json_response(info)
 

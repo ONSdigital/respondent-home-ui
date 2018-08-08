@@ -1,9 +1,11 @@
 import logging
+import types
 
 import aiohttp_jinja2
 import jinja2
-from aiohttp import BasicAuth, ClientSession
-from aiohttp import web
+from aiohttp import BasicAuth, ClientSession, ClientTimeout
+from aiohttp.client_exceptions import ClientConnectionError, ClientConnectorError, ClientResponseError
+from aiohttp.web import Application
 from aiohttp_utils import negotiation
 from structlog import wrap_logger
 
@@ -24,14 +26,29 @@ server_logger.setLevel("INFO")
 
 
 async def on_startup(app):
-    app.http_session_pool = ClientSession()
+    app.http_session_pool = ClientSession(timeout=ClientTimeout(total=30))
 
 
 async def on_cleanup(app):
     await app.http_session_pool.close()
 
 
-def create_app(config_name=None) -> web.Application:
+async def check_services(app: Application) -> bool:
+    for service_name in app.service_status_urls:
+        url = app.service_status_urls[service_name]
+        logger.info(f"Making health check GET request to {url}")
+        try:
+            async with app.http_session_pool.get(url) as resp:
+                resp.raise_for_status()
+        except (ClientConnectorError, ClientConnectionError, ClientResponseError):
+            logger.error('Failed to connect to required service', config=service_name, url=url)
+            return False
+    else:
+        logger.info('All required services are healthy')
+        return True
+
+
+def create_app(config_name=None) -> Application:
     """App factory. Sets up routes and all plugins.
     """
     app_config = config.Config()
@@ -43,15 +60,22 @@ def create_app(config_name=None) -> web.Application:
     # Create basic auth for services
     [app_config.__setitem__(key, BasicAuth(*app_config[key])) for key in app_config if key.endswith('_AUTH')]
 
-    app = web.Application(
+    app = Application(
         debug=settings.DEBUG, middlewares=[session.setup(app_config["SECRET_KEY"]), flash.flash_middleware]
     )
 
     # Handle 500 errors
     error_handlers.setup(app)
 
-    # Store uppercased configuration variables on app
+    # Store upper-cased configuration variables on app
     app.update(app_config)
+
+    # Store a dict of health check urls for required services
+    app.service_status_urls = app_config.get_service_urls_mapped_with_path(path='/info',
+                                                                           excludes=['ACCOUNT_SERVICE_URL', 'EQ_URL'])
+
+    # Monkey patch the check_services function as a method to the app object
+    app.check_services = types.MethodType(check_services, app)
 
     # Bind logger
     logger_initial_config(service_name="respondent-home", log_level=app["LOG_LEVEL"])

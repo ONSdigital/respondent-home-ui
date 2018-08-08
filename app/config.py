@@ -15,6 +15,12 @@ class Config(dict):
                     raise ConfigurationError(f'{key} not set')
                 self[key] = config
 
+    def get_service_urls_mapped_with_path(self, path='/', suffix='URL', excludes=None) -> dict:
+        return {service_name: f"{self[service_name]}{path}"
+                for service_name in self
+                if service_name.endswith(suffix)
+                and service_name not in (excludes if excludes else [])}
+
     def __getattr__(self, name):
         try:
             return self[name]

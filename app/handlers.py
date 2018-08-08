@@ -32,6 +32,8 @@ async def get_info(request):
         "name": 'respondent-home-ui',
         "version": VERSION,
     }
+    if 'check' in request.query:
+        info["ready"] = await request.app.check_services()
     return json_response(info)
 
 

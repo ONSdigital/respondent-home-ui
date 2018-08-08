@@ -8,9 +8,9 @@ class TestRespondentHome(unittest.TestCase):
 
     def test_can_access_respondent_home_homepage(self):
         # Given
-        url = os.getenv('RESPONDENT_HOME_URL')
+        url = os.getenv('ACCOUNT_SERVICE_URL')
         if not url:
-            self.skipTest('RESPONDENT_HOME_URL not set')
+            self.fail('ACCOUNT_SERVICE_URL not set')
 
         # When
         resp = requests.get(url, verify=False)
@@ -21,9 +21,9 @@ class TestRespondentHome(unittest.TestCase):
 
     def test_can_access_required_services(self):
         # Given
-        url = os.getenv('RESPONDENT_HOME_URL')
+        url = os.getenv('ACCOUNT_SERVICE_URL')
         if not url:
-            self.skipTest('RESPONDENT_HOME_URL not set')
+            self.fail('ACCOUNT_SERVICE_URL not set')
 
         # When
         resp = requests.get(f'{url}/info?check=true', verify=False).json()

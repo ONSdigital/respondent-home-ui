@@ -33,8 +33,8 @@ async def on_cleanup(app):
     await app.http_session_pool.close()
 
 
-async def check_services(app):
-    for service_name in app.services:
+async def check_services(app: Application) -> bool:
+    for service_name in app.service_status_urls:
         url = app.service_status_urls[service_name]
         logger.info(f"Making health check GET request to {url}")
         try:
@@ -70,16 +70,9 @@ def create_app(config_name=None) -> Application:
     # Store upper-cased configuration variables on app
     app.update(app_config)
 
-    # Store a convenience list of service names
-    app.services = [service_name
-                    for service_name in app_config
-                    if service_name.endswith('URL')
-                    and service_name not in ('ACCOUNT_SERVICE_URL', 'EQ_URL')]  # excludes itself to avoid recursion
-
     # Store a dict of health check urls for required services
-    app.service_status_urls = {
-        service_name: f"{app_config[service_name]}/info"
-        for service_name in app.services}
+    app.service_status_urls = app_config.get_service_urls_mapped_with_path(path='/info',
+                                                                           excludes=['ACCOUNT_SERVICE_URL', 'EQ_URL'])
 
     # Monkey patch the check_services function as a method to the app object
     app.check_services = types.MethodType(check_services, app)

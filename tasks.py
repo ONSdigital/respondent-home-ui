@@ -67,12 +67,12 @@ def test(ctx, clean=False):
 
 
 @task
-def smoke(ctx, clean=False):
+def smoke(ctx, local=False):
     """Run the smoke tests."""
     import pytest
 
-    if clean:
-        cleanpy(ctx)
+    if local:
+        os.environ['RESPONDENT_HOME_URL'] = "http://localhost:9092"
     retcode = pytest.main(["tests/smoke"])
     sys.exit(retcode)
 

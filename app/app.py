@@ -55,7 +55,8 @@ def create_app(config_name=None) -> Application:
     app_config.from_object(settings)
 
     # NB: raises ConfigurationError if an object attribute is None
-    app_config.from_object(getattr(config, config_name or app_config["ENV"]))
+    config_name = (config_name or app_config["ENV"])
+    app_config.from_object(getattr(config, config_name))
 
     # Create basic auth for services
     [app_config.__setitem__(key, BasicAuth(*app_config[key])) for key in app_config if key.endswith('_AUTH')]
@@ -109,6 +110,6 @@ def create_app(config_name=None) -> Application:
     app.on_startup.append(on_startup)
     app.on_cleanup.append(on_cleanup)
 
-    logger.info("App setup complete", config=app_config["ENV"])
+    logger.info("App setup complete", config=config_name)
 
     return app

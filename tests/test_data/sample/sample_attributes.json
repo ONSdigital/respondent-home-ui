@@ -1,14 +1,13 @@
 {
   "id": "519bb700-1bd9-432d-9db7-d34ea1727415",
   "attributes": {
-    "Prem1": "14 ASHMEAD VIEW",
-    "Prem2": null,
-    "Prem3": null,
-    "Prem4": null,
-    "District": null,
-    "PostTown": "STOCKTON-ON-TEES",
-    "Postcode": "TS184QG",
-    "CountryCode": "E",
-    "Reference": "LMS0001"
+    "ADDRESS_LINE1": "Tredegar House",
+    "ADDRESS_LINE2": null,
+    "LOCALITY": null,
+    "TOWN_NAME": "Newport",
+    "POSTCODE": "NV184QG",
+    "COUNTRY": "E",
+    "TLA": "LMS",
+    "REFERENCE": "0001"
   }
 }

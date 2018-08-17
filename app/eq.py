@@ -146,12 +146,12 @@ class EqPayloadConstructor(object):
             raise InvalidEqPayLoad(f"Could not retrieve attributes for case {self._case_id}")
 
         try:
-            self._ru_name = self._sample_attributes["Prem1"]
+            self._ru_name = self._sample_attributes["ADDRESS_LINE1"]
         except KeyError:
             raise InvalidEqPayLoad(f"Could not retrieve ru_name (address) for case {self._case_id}")
 
         try:
-            self._country_code = self._sample_attributes["CountryCode"]
+            self._country_code = self._sample_attributes["COUNTRY"]
         except KeyError:
             raise InvalidEqPayLoad(f"Could not retrieve country_code for case {self._case_id}")
 
@@ -206,7 +206,7 @@ class EqPayloadConstructor(object):
         :return: string of a single address attribute or a combination of two
         """
         display_address = ''
-        for prem_key in ['Prem1', 'Prem2', 'Prem3', 'Prem4', 'District', 'PostTown', 'Postcode']:  # retain order of address attributes
+        for prem_key in ['ADDRESS_LINE1', 'ADDRESS_LINE2', 'LOCALITY', 'TOWN_NAME', 'POSTCODE']:  # retain order of address attributes
             val = sample_attributes.get(prem_key)
             if val:
                 prev_display = display_address

@@ -288,19 +288,19 @@ class TestEq(RHTestCase):
                                    True)
         self.assertIn("unexpected", e.exception.message)
 
-    def test_camel_to_snake(self):
+    def test_caps_to_snake(self):
         from app import eq
 
         result = eq.EqPayloadConstructor.caps_to_snake('TEST_CASE')
         self.assertEqual(result, 'test_case')
 
-    def test_camel_to_snake_numbers(self):
+    def test_caps_to_snake_numbers(self):
         from app import eq
 
         result = eq.EqPayloadConstructor.caps_to_snake('ADDRESS_LINE1')
         self.assertEqual(result, 'address_line1')
 
-    def test_camel_to_snake_empty(self):
+    def test_caps_to_snake_empty(self):
         from app import eq
 
         result = eq.EqPayloadConstructor.caps_to_snake('')

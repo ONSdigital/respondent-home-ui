@@ -1,6 +1,5 @@
 import logging
 import time
-import re
 from collections import namedtuple
 from uuid import uuid4
 

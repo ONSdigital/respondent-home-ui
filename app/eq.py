@@ -180,7 +180,7 @@ class EqPayloadConstructor(object):
 
         # Add all of the sample attributes to the payload as camel case fields
         self._payload.update(
-            [(self.camel_to_snake(key), value) for key, value in self._sample_attributes.items()]
+            [(self.caps_to_snake(key), value) for key, value in self._sample_attributes.items()]
         )
 
         # Add any non null event dates that exist for this collection exercise
@@ -194,8 +194,8 @@ class EqPayloadConstructor(object):
         return self._payload
 
     @staticmethod
-    def camel_to_snake(s):
-        return re.sub("([A-Z0-9])", "_\\1", s).lower().lstrip('_')
+    def caps_to_snake(s):
+        return s.lower().lstrip('_')
 
     @staticmethod
     def build_display_address(sample_attributes):

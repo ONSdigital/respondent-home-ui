@@ -238,6 +238,7 @@ class RHTestCase(AioHTTPTestCase):
             "town_name": self.sample_attributes_json['attributes']['TOWN_NAME'],
             "postcode": self.sample_attributes_json['attributes']['POSTCODE'],
             "tla": self.sample_attributes_json['attributes']['TLA'],
+            "country": self.sample_attributes_json['attributes']['COUNTRY'],
             "country_code": self.sample_attributes_json['attributes']['COUNTRY'],
             "reference": self.sample_attributes_json['attributes']['REFERENCE']
         }

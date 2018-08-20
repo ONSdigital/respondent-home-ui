@@ -291,19 +291,19 @@ class TestEq(RHTestCase):
     def test_camel_to_snake(self):
         from app import eq
 
-        result = eq.EqPayloadConstructor.camel_to_snake('TestCase')
+        result = eq.EqPayloadConstructor.caps_to_snake('TEST_CASE')
         self.assertEqual(result, 'test_case')
 
     def test_camel_to_snake_numbers(self):
         from app import eq
 
-        result = eq.EqPayloadConstructor.camel_to_snake('ADDRESS_LINE1')
-        self.assertEqual(result, 'a_d_d_r_e_s_s__l_i_n_e_1')
+        result = eq.EqPayloadConstructor.caps_to_snake('ADDRESS_LINE1')
+        self.assertEqual(result, 'address_line1')
 
     def test_camel_to_snake_empty(self):
         from app import eq
 
-        result = eq.EqPayloadConstructor.camel_to_snake('')
+        result = eq.EqPayloadConstructor.caps_to_snake('')
         self.assertEqual(result, '')
 
     def test_build_display_address(self):

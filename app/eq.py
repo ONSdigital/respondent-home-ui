@@ -174,7 +174,7 @@ class EqPayloadConstructor(object):
             "account_service_url": self._account_service_url,  # required for save/continue
             "country_code": self._country_code,
             "language_code": self._language_code,  # currently only 'en' or 'cy'
-            "display_address": self.build_display_address(self._sample_attributes),  # built from the Prem attributes
+            "display_address": self.build_display_address(self._sample_attributes),
         }
 
         # Add all of the sample attributes to the payload as camel case fields

@@ -1,12 +1,12 @@
 import logging
-import time
 import re
+import time
 from collections import namedtuple
 from uuid import uuid4
 
 import iso8601
-from aiohttp.web import Application
 from aiohttp import ClientError
+from aiohttp.web import Application
 from structlog import wrap_logger
 
 from .exceptions import InvalidEqPayLoad

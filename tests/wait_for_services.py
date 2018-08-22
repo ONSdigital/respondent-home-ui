@@ -1,6 +1,6 @@
 import requests
-from retrying import retry
 from requests import RequestException
+from retrying import retry
 
 from tests.config import Config
 

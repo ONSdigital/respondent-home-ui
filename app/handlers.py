@@ -1,8 +1,8 @@
 import logging
 
 import aiohttp_jinja2
-from aiohttp.web import HTTPFound, json_response
 from aiohttp.client_exceptions import ClientConnectionError, ClientConnectorError, ClientResponseError
+from aiohttp.web import HTTPFound, json_response
 from sdc.crypto.encrypter import encrypt
 from structlog import wrap_logger
 

@@ -1,6 +1,5 @@
 import logging
 import time
-from unittest.mock import Mock
 
 import requests
 from aiohttp.test_utils import AioHTTPTestCase, unittest_run_loop

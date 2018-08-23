@@ -1,9 +1,8 @@
-import os
 from importlib import reload
 from unittest import TestCase
 
-from aiohttp.web_app import Application
 from aiohttp.test_utils import AioHTTPTestCase, unittest_run_loop
+from aiohttp.web_app import Application
 from aioresponses import aioresponses
 from envparse import ConfigurationError, env
 

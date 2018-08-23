@@ -1,5 +1,4 @@
 import logging
-import re
 import time
 from collections import namedtuple
 from uuid import uuid4
@@ -146,12 +145,12 @@ class EqPayloadConstructor(object):
             raise InvalidEqPayLoad(f"Could not retrieve attributes for case {self._case_id}")
 
         try:
-            self._ru_name = self._sample_attributes["Prem1"]
+            self._ru_name = self._sample_attributes["ADDRESS_LINE1"]
         except KeyError:
             raise InvalidEqPayLoad(f"Could not retrieve ru_name (address) for case {self._case_id}")
 
         try:
-            self._country_code = self._sample_attributes["CountryCode"]
+            self._country_code = self._sample_attributes["COUNTRY"]
         except KeyError:
             raise InvalidEqPayLoad(f"Could not retrieve country_code for case {self._case_id}")
 
@@ -175,12 +174,12 @@ class EqPayloadConstructor(object):
             "account_service_url": self._account_service_url,  # required for save/continue
             "country_code": self._country_code,
             "language_code": self._language_code,  # currently only 'en' or 'cy'
-            "display_address": self.build_display_address(self._sample_attributes),  # built from the Prem attributes
+            "display_address": self.build_display_address(self._sample_attributes),
         }
 
         # Add all of the sample attributes to the payload as camel case fields
         self._payload.update(
-            [(self.camel_to_snake(key), value) for key, value in self._sample_attributes.items()]
+            [(self.caps_to_snake(key), value) for key, value in self._sample_attributes.items()]
         )
 
         # Add any non null event dates that exist for this collection exercise
@@ -194,8 +193,8 @@ class EqPayloadConstructor(object):
         return self._payload
 
     @staticmethod
-    def camel_to_snake(s):
-        return re.sub("([A-Z0-9])", "_\\1", s).lower().lstrip('_')
+    def caps_to_snake(s):
+        return s.lower().lstrip('_')
 
     @staticmethod
     def build_display_address(sample_attributes):
@@ -206,8 +205,8 @@ class EqPayloadConstructor(object):
         :return: string of a single address attribute or a combination of two
         """
         display_address = ''
-        for prem_key in ['Prem1', 'Prem2', 'Prem3', 'Prem4', 'District', 'PostTown', 'Postcode']:  # retain order of address attributes
-            val = sample_attributes.get(prem_key)
+        for key in ['ADDRESS_LINE1', 'ADDRESS_LINE2', 'LOCALITY', 'TOWN_NAME', 'POSTCODE']:  # retain order of address attributes
+            val = sample_attributes.get(key)
             if val:
                 prev_display = display_address
                 display_address = f'{prev_display}, {val}' if prev_display else val

@@ -206,7 +206,7 @@ class RHTestCase(AioHTTPTestCase):
         self.iac_code = ''.join([str(n) for n in range(11)])
         self.iac1, self.iac2, self.iac3 = self.iac_code[:4], self.iac_code[4:8], self.iac_code[8:]
         self.iac_json = {'active': '1', 'caseId': self.case_id}
-        self.ru_name = self.sample_attributes_json['attributes']['Prem1']
+        self.ru_name = self.sample_attributes_json['attributes']['ADDRESS_LINE1']
         self.sample_unit_id = self.sample_attributes_json['id']
         self.sample_unit_ref = self.case_json['caseGroup']['sampleUnitRef']
         self.sample_unit_type = self.case_json['sampleUnitType']
@@ -231,16 +231,16 @@ class RHTestCase(AioHTTPTestCase):
             "return_by": self.return_by,
             "ref_p_end_date": self.end_date,
             "ref_p_start_date": self.start_date,
-            "display_address": f"{self.sample_attributes_json['attributes']['Prem1']}, {self.sample_attributes_json['attributes']['PostTown']}",
-            "prem_1": self.sample_attributes_json['attributes']['Prem1'],
-            "prem_2": self.sample_attributes_json['attributes']['Prem2'],
-            "prem_3": self.sample_attributes_json['attributes']['Prem3'],
-            "prem_4": self.sample_attributes_json['attributes']['Prem4'],
-            "district": self.sample_attributes_json['attributes']['District'],
-            "post_town": self.sample_attributes_json['attributes']['PostTown'],
-            "postcode": self.sample_attributes_json['attributes']['Postcode'],
-            "country_code": self.sample_attributes_json['attributes']['CountryCode'],
-            "reference": self.sample_attributes_json['attributes']['Reference'],
+            "display_address": f"{self.sample_attributes_json['attributes']['ADDRESS_LINE1']}, {self.sample_attributes_json['attributes']['TOWN_NAME']}",
+            "address_line1": self.sample_attributes_json['attributes']['ADDRESS_LINE1'],
+            "address_line2": self.sample_attributes_json['attributes']['ADDRESS_LINE2'],
+            "locality": self.sample_attributes_json['attributes']['LOCALITY'],
+            "town_name": self.sample_attributes_json['attributes']['TOWN_NAME'],
+            "postcode": self.sample_attributes_json['attributes']['POSTCODE'],
+            "tla": self.sample_attributes_json['attributes']['TLA'],
+            "country": self.sample_attributes_json['attributes']['COUNTRY'],
+            "country_code": self.sample_attributes_json['attributes']['COUNTRY'],
+            "reference": self.sample_attributes_json['attributes']['REFERENCE']
         }
 
         self.case_url = (

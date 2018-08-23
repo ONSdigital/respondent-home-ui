@@ -27,7 +27,7 @@ class TestEq(RHTestCase):
             eq.EqPayloadConstructor(case_json, self.app)
         self.assertIn('No case id in supplied case JSON', ex.exception.message)
 
-    def test_create_eq_constructor_missing_caseRef(self):
+    def test_create_eq_constructor_missing_case_ref(self):
         from app import eq
 
         case_json = self.case_json.copy()
@@ -205,7 +205,7 @@ class TestEq(RHTestCase):
     @unittest_run_loop
     async def test_build_raises_InvalidEqPayLoad_missing_name(self):
         sample_json = self.sample_attributes_json.copy()
-        del sample_json['attributes']['Prem1']
+        del sample_json['attributes']['ADDRESS_LINE1']
 
         from app import eq  # NB: local import to avoid overwriting the patched version for some tests
 
@@ -222,7 +222,7 @@ class TestEq(RHTestCase):
     @unittest_run_loop
     async def test_build_raises_InvalidEqPayLoad_missing_country_code(self):
         sample_json = self.sample_attributes_json.copy()
-        del sample_json['attributes']['CountryCode']
+        del sample_json['attributes']['COUNTRY']
 
         from app import eq  # NB: local import to avoid overwriting the patched version for some tests
 
@@ -288,22 +288,22 @@ class TestEq(RHTestCase):
                                    True)
         self.assertIn("unexpected", e.exception.message)
 
-    def test_camel_to_snake(self):
+    def test_caps_to_snake(self):
         from app import eq
 
-        result = eq.EqPayloadConstructor.camel_to_snake('TestCase')
+        result = eq.EqPayloadConstructor.caps_to_snake('TEST_CASE')
         self.assertEqual(result, 'test_case')
 
-    def test_camel_to_snake_numbers(self):
+    def test_caps_to_snake_numbers(self):
         from app import eq
 
-        result = eq.EqPayloadConstructor.camel_to_snake('Prem1')
-        self.assertEqual(result, 'prem_1')
+        result = eq.EqPayloadConstructor.caps_to_snake('ADDRESS_LINE1')
+        self.assertEqual(result, 'address_line1')
 
-    def test_camel_to_snake_empty(self):
+    def test_caps_to_snake_empty(self):
         from app import eq
 
-        result = eq.EqPayloadConstructor.camel_to_snake('')
+        result = eq.EqPayloadConstructor.caps_to_snake('')
         self.assertEqual(result, '')
 
     def test_build_display_address(self):
@@ -326,109 +326,37 @@ class TestEq(RHTestCase):
 
         for attributes, expected in [
             ({
-                "Prem1": "A House",
-                "Prem2": "",
-                "Prem3": "",
-                "Prem4": "",
-            }, "A House"),
+                 "ADDRESS_LINE1": "A House",
+                 "ADDRESS_LINE2": "",
+             }, "A House"),
             ({
-                 "Prem1": "",
-                 "Prem2": "A Second House",
-                 "Prem3": "",
-                 "Prem4": "",
-            }, "A Second House"),
+                 "ADDRESS_LINE1": "",
+                 "ADDRESS_LINE2": "A Second House",
+             }, "A Second House"),
             ({
-                 "Prem1": "",
-                 "Prem2": "",
-                 "Prem3": "A Third House",
-                 "Prem4": "",
-            }, "A Third House"),
+                 "ADDRESS_LINE1": "A House",
+                 "ADDRESS_LINE2": "On The Second Hill",
+             }, "A House, On The Second Hill"),
             ({
-                 "Prem1": "",
-                 "Prem2": "",
-                 "Prem3": "",
-                 "Prem4": "A Fourth House",
-            }, "A Fourth House"),
-            ({
-                "Prem1": "A House",
-                "Prem2": "On The Second Hill",
-                "Prem3": "",
-                "Prem4": "",
-            }, "A House, On The Second Hill"),
-            ({
-                "Prem1": "A House",
-                "Prem2": "",
-                "Prem3": "On The Third Hill",
-                "Prem4": "",
-            }, "A House, On The Third Hill"),
-            ({
-                "Prem1": "A House",
-                "Prem2": "",
-                "Prem3": "",
-                "Prem4": "On The Fourth Hill",
-            }, "A House, On The Fourth Hill"),
-            ({
-                 "Prem1": "",
-                 "Prem2": "A Second House",
-                 "Prem3": "On The Third Hill",
-                 "Prem4": "",
-            }, "A Second House, On The Third Hill"),
-            ({
-                 "Prem1": "",
-                 "Prem2": "A Second House",
-                 "Prem3": "",
-                 "Prem4": "On The Fourth Hill",
-            }, "A Second House, On The Fourth Hill"),
-            ({
-                 "Prem1": "",
-                 "Prem2": "",
-                 "Prem3": "A Third House",
-                 "Prem4": "On The Fourth Hill",
-            }, "A Third House, On The Fourth Hill"),
-            ({
-                 "Prem1": "A House",
-                 "Prem2": "On The Second Hill",
-                 "Prem3": "Down The Third Lane",
-                 "Prem4": "",
-            }, "A House, On The Second Hill"),
-            ({
-                 "Prem1": "A House",
-                 "Prem4": "",
-                 "Prem2": "On The Third Hill",
-                 "Prem3": "Down The Fourth Lane",
-            }, "A House, On The Third Hill"),
-            ({
-                 "Prem1": "",
-                 "Prem2": "A Second House",
-                 "Prem3": "On The Third Hill",
-                 "Prem4": "Down The Fourth Lane",
-             }, "A Second House, On The Third Hill"),
-            ({
-                 "Prem1": "",
-                 "Prem2": "",
-                 "Prem3": "",
-                 "Prem4": "Another House",
-                 "District": "",
-                 "PostTown": "",
-                 "Postcode": "AA1 2BB"
+                 "ADDRESS_LINE1": "Another House",
+                 "ADDRESS_LINE2": "",
+                 "LOCALITY": "",
+                 "TOWN_NAME": "",
+                 "POSTCODE": "AA1 2BB"
              }, "Another House, AA1 2BB"),
             ({
-                 "Prem1": "",
-                 "Prem2": "",
-                 "Prem3": "",
-                 "Prem4": "Another House",
-                 "District": "",
-                 "PostTown": "In Brizzle",
-                 "Postcode": ""
+                 "ADDRESS_LINE1": "Another House",
+                 "ADDRESS_LINE2": "",
+                 "LOCALITY": "",
+                 "TOWN_NAME": "In Brizzle",
+                 "POSTCODE": ""
              }, "Another House, In Brizzle"),
             ({
-                 "Prem1": "",
-                 "Prem2": "",
-                 "Prem3": "",
-                 "Prem4": "Another House",
-                 "District": "In The Shire",
-                 "PostTown": "",
-                 "Postcode": ""
+                 "ADDRESS_LINE1": "Another House",
+                 "ADDRESS_LINE2": "",
+                 "LOCALITY": "In The Shire",
+                 "TOWN_NAME": "",
+                 "POSTCODE": ""
              }, "Another House, In The Shire"),
         ]:
             self.assertEqual(eq.EqPayloadConstructor.build_display_address(attributes), expected)

@@ -68,7 +68,7 @@ class TestRespondentHome(AioHTTPTestCase):
         response = requests.get(url, auth=self.app["SAMPLE_AUTH"][:2])
         response.raise_for_status()
         logger.debug('Successfully retrieved sample unit', sample_unit_id=sample_unit_id)
-        return response.json()['sampleAttributes']['attributes']['Prem1']
+        return response.json()['sampleAttributes']['attributes']['ADDRESS_LINE1']
 
     def poll_case_for_iac(self, case, retries=20):
         for _ in range(retries):

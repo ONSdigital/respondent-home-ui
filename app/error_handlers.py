@@ -1,5 +1,5 @@
-from functools import partial
 import logging
+from functools import partial
 
 import aiohttp_jinja2
 from aiohttp import web

@@ -54,7 +54,7 @@ def format_date(string_date):
 
 def build_response_id(case_id, collex_id, iac):
     """
-    Builds a response_id from a case, a collection exercise
+    Builds a response_id from a case ID, a collection exercise ID, and an IAC
     :param case_id: a case UUID
     :param collex_id: a collection exercise UUID
     :param iac: an IAC
@@ -85,8 +85,8 @@ class EqPayloadConstructor(object):
         self._tx_id = str(uuid4())
         self._account_service_url = app["ACCOUNT_SERVICE_URL"]
 
-        if iac is None:
-            raise InvalidEqPayLoad("No iac supplied")
+        if not iac:
+            raise InvalidEqPayLoad("IAC is empty or not supplied")
 
         self._iac = iac
 

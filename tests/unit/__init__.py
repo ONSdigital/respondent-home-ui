@@ -6,6 +6,7 @@ import uuid
 from aiohttp.test_utils import AioHTTPTestCase
 
 from app.app import create_app
+from app.eq import build_response_id
 
 
 def skip_build_eq(func, *args, **kwargs):
@@ -240,7 +241,8 @@ class RHTestCase(AioHTTPTestCase):
             "tla": self.sample_attributes_json['attributes']['TLA'],
             "country": self.sample_attributes_json['attributes']['COUNTRY'],
             "country_code": self.sample_attributes_json['attributes']['COUNTRY'],
-            "reference": self.sample_attributes_json['attributes']['REFERENCE']
+            "reference": self.sample_attributes_json['attributes']['REFERENCE'],
+            "response_id": build_response_id(self.case_id, self.collection_exercise_id, self.iac_code)
         }
 
         self.case_url = (

@@ -4,7 +4,7 @@ from unittest import mock
 from aiohttp.test_utils import unittest_run_loop
 from aioresponses import aioresponses
 
-from app.eq import format_date, find_event_date_by_tag
+from app.eq import format_date, find_event_date_by_tag, build_response_id
 from app.exceptions import InvalidEqPayLoad
 
 from . import RHTestCase
@@ -390,3 +390,8 @@ class TestEq(RHTestCase):
 
         # Then an InvalidEqPayLoad is raised
         self.assertEqual(e.exception.message, 'Unable to format invalid_date')
+
+    def test_build_response_id(self):
+        response_id = build_response_id(self.case_id, self.collection_exercise_id, self.iac_code)
+
+        self.assertEqual(response_id, self.eq_payload['response_id'])

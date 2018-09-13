@@ -70,13 +70,20 @@ class TestRespondentHome(AioHTTPTestCase):
         logger.debug('Successfully retrieved sample unit', sample_unit_id=sample_unit_id)
         return response.json()['sampleAttributes']['attributes']['ADDRESS_LINE1']
 
-    def poll_case_for_iac(self, case, retries=20):
+    def get_iacs_by_case_id(self, case_id):
+        logger.debug('Retrieving IACs', case_id=case_id)
+        url = f"{self.app['CASE_URL']}/cases/{case_id}/iac"
+        response = requests.get(url, auth=self.app["CASE_AUTH"][:2])
+        response.raise_for_status()
+        logger.debug('Successfully retrieved IACs for case', case_id=case_id)
+        return response.json()
+
+    def poll_case_for_iacs(self, case, retries=20):
         for _ in range(retries):
-            iac = case['iac']
-            if iac is not None:
-                return iac
+            iacs = self.get_iacs_by_case_id(case['id'])
+            if iacs is not None:
+                return iacs
             time.sleep(3)
-            case = get_case(case['id'], self.app)
 
     def poll_for_actionable_case(self, sample_unit_id, retries=20):
         for _ in range(retries):
@@ -103,9 +110,11 @@ class TestRespondentHome(AioHTTPTestCase):
         if case is None:
             self.fail('No ACTIONABLE case found')
 
-        iac = self.poll_case_for_iac(case)
-        if iac is None:
-            self.fail('No IAC for case found')
+        iacs = self.poll_case_for_iacs(case)
+        if iacs is None:
+            self.fail('No IACs for case found')
+
+        iac = iacs[0]['iac']   # Grab the first IAC
         iac1, iac2, iac3 = iac[:4], iac[4:8], iac[8:]
         form_data = {
             'iac1': iac1, 'iac2': iac2, 'iac3': iac3, 'action[save_continue]': '',

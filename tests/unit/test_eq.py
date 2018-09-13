@@ -24,7 +24,7 @@ class TestEq(RHTestCase):
 
         with self.assertRaises(InvalidEqPayLoad) as ex:
             eq.EqPayloadConstructor(self.case_json, self.app, iac_code)
-        self.assertIn('IAC is empty or not supplied', ex.exception.message)
+        self.assertIn('IAC is empty', ex.exception.message)
 
     def test_create_eq_constructor_missing_case_id(self):
         from app import eq
@@ -395,3 +395,11 @@ class TestEq(RHTestCase):
         response_id = build_response_id(self.case_id, self.collection_exercise_id, self.iac_code)
 
         self.assertEqual(response_id, self.eq_payload['response_id'])
+
+    def test_build_response_id_is_unique_by_iac(self):
+        iac = 'A' * 12
+
+        existing_response_id = build_response_id(self.case_id, self.collection_exercise_id, self.iac_code)
+        response_id = build_response_id(self.case_id, self.collection_exercise_id, iac)
+
+        self.assertNotEqual(existing_response_id, response_id)

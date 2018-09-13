@@ -86,7 +86,7 @@ class EqPayloadConstructor(object):
         self._account_service_url = app["ACCOUNT_SERVICE_URL"]
 
         if not iac:
-            raise InvalidEqPayLoad("IAC is empty or not supplied")
+            raise InvalidEqPayLoad("IAC is empty")
 
         self._iac = iac
 

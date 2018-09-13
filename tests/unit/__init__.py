@@ -136,6 +136,7 @@ def skip_encrypt(func, *args, **kwargs):
 class RHTestCase(AioHTTPTestCase):
 
     language_code = 'en'
+    response_id = '6tg2s16T1HClxcttXW3IJgpe198BuJkGE5oJg0dieOU='
 
     start_date = '2018-04-10'
     end_date = '2020-05-31'
@@ -242,7 +243,7 @@ class RHTestCase(AioHTTPTestCase):
             "country": self.sample_attributes_json['attributes']['COUNTRY'],
             "country_code": self.sample_attributes_json['attributes']['COUNTRY'],
             "reference": self.sample_attributes_json['attributes']['REFERENCE'],
-            "response_id": build_response_id(self.case_id, self.collection_exercise_id, self.iac_code)
+            "response_id": self.response_id
         }
 
         self.case_url = (

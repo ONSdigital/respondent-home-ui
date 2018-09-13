@@ -114,7 +114,7 @@ class TestRespondentHome(AioHTTPTestCase):
         if iacs is None:
             self.fail('No IACs for case found')
 
-        iac = iacs[0]['iac']   # Grab the first IAC
+        iac = iacs[0]['iac']
         iac1, iac2, iac3 = iac[:4], iac[4:8], iac[8:]
         form_data = {
             'iac1': iac1, 'iac2': iac2, 'iac3': iac3, 'action[save_continue]': '',

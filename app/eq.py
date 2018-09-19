@@ -65,6 +65,7 @@ class EqPayloadConstructor(object):
 
         self._tx_id = str(uuid4())
         self._account_service_url = app["ACCOUNT_SERVICE_URL"]
+        self._account_service_log_out_url = app["ACCOUNT_SERVICE_LOG_OUT_URL"]
 
         try:
             self._case_id = case["id"]
@@ -172,6 +173,7 @@ class EqPayloadConstructor(object):
             "case_id": self._case_id,  # not required by eQ but useful for downstream
             "case_ref": self._case_ref,  # not required by eQ but useful for downstream
             "account_service_url": self._account_service_url,  # required for save/continue
+            "account_service_log_out_url": self._account_service_log_out_url,  # required to logout from ras as well from eq
             "country_code": self._country_code,
             "language_code": self._language_code,  # currently only 'en' or 'cy'
             "display_address": self.build_display_address(self._sample_attributes),

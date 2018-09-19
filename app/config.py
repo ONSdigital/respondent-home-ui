@@ -41,6 +41,7 @@ class BaseConfig:
     STATIC_ROOT = "app/static"
 
     ACCOUNT_SERVICE_URL = env("ACCOUNT_SERVICE_URL")
+    ACCOUNT_SERVICE_LOG_OUT_URL = env('ACCOUNT_SERVICE_LOG_OUT_URL')
     EQ_URL = env("EQ_URL")
     JSON_SECRET_KEYS = env("JSON_SECRET_KEYS")
 
@@ -77,6 +78,7 @@ class DevelopmentConfig:
     STATIC_ROOT = "app/static"
 
     ACCOUNT_SERVICE_URL = env.str("ACCOUNT_SERVICE_URL", default="http://localhost:9092")
+    ACCOUNT_SERVICE_LOG_OUT_URL = env.str("ACCOUNT_SERVICE_LOG_OUT_URL", default="http://localhost:9092/sign-in/logout")
     EQ_URL = env.str("EQ_URL", default="http://localhost:5000")
     JSON_SECRET_KEYS = env.str("JSON_SECRET_KEYS", default=None) or open("./tests/test_data/test_keys.json").read()
 
@@ -114,6 +116,7 @@ class TestingConfig:
     STATIC_ROOT = "app/static"
 
     ACCOUNT_SERVICE_URL = "http://localhost:9092"
+    ACCOUNT_SERVICE_LOG_OUT_URL = "http://localhost:9092/sign-in/logout"
     EQ_URL = "http://localhost:5000"
     JSON_SECRET_KEYS = open("./tests/test_data/test_keys.json").read()
 

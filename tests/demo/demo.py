@@ -67,6 +67,7 @@ class DemoRunner:
             "case_id": self.case_id,
             "case_ref": self.case_ref,
             "account_service_url": self.app['ACCOUNT_SERVICE_URL'],
+            "account_service_log_out_url": self.app['ACCOUNT_SERVICE_LOG_OUT_URL'],
             "country_code": self.sample_attributes_json['attributes']['CountryCode'],
             "language_code": self.language_code,
             "return_by": self.return_by,

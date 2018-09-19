@@ -227,6 +227,7 @@ class RHTestCase(AioHTTPTestCase):
             "case_id": self.case_id,
             "case_ref": self.case_ref,
             "account_service_url": self.app['ACCOUNT_SERVICE_URL'],
+            "account_service_log_out_url": self.app['ACCOUNT_SERVICE_LOG_OUT_URL'],
             "language_code": self.language_code,
             "return_by": self.return_by,
             "ref_p_end_date": self.end_date,

@@ -7,11 +7,19 @@
     <div class="panel panel--error">
       <div class="panel__header">
         <h1 class="panel__title venus">
-          {% trans count=messages|length %}
-          This page has an error
-          {% pluralize %}
-          This page has {{ count }} errors
-          {% endtrans %}
+          {% for message in messages %}
+            {% if message.clickable %}
+              {% trans count=messages|length %}
+              This page has an error
+              {% pluralize %}
+              This page has {{ count }} errors
+              {% endtrans %}
+            {% else %}
+              {% trans count=messages|length %}
+              Error
+              {% endtrans %}
+            {% endif %}
+          {% endfor %}  
         </h1>
       </div>
       <div class="panel__body">
@@ -37,16 +45,12 @@
     </div>
   </div>
 {% endif %}
-
 <div>
 <h2 class="saturn u-mt-l u-mb-m">Welcome to the UK-wide online household study</h2>
   <form action="/" class="form qa-questionnaire-form" role="form" method="post" novalidate="">
-
     <div class="panel panel--simple panel--spacious {% if messages %} panel--error {% else %} panel--info {% endif %} u-mb-l">
       <div class="panel__body">
-
         <div class="group" id="household-and-accommodation">
-
           <div class="block" id="census-access-code">
             <div class="section" id="census-access-code-section">
               <div class="question" id="census-access-code-question">

@@ -25,9 +25,11 @@
         <ul class="list list--bare">
           {% for message in messages %}
           <li class="list__item mars">{{ loop.index }})
-            <a class="js-inpagelink" href="#census-access-code-answer">
-            {{ message }}
-            </a>
+            {% if message.clickable %}
+              <a class="js-inpagelink" href="#census-access-code-answer">{{ message.text }}</a>
+            {% else %}
+              {{ message.text }}
+            {% endif %}
           </li>
           {% endfor %}
         </ul>

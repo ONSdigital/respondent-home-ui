@@ -1,5 +1,5 @@
 from importlib import reload
-from unittest import TestCase
+from unittest import TestCase, mock
 
 from aiohttp.test_utils import AioHTTPTestCase, unittest_run_loop
 from aiohttp.web_app import Application
@@ -7,6 +7,7 @@ from aioresponses import aioresponses
 from envparse import ConfigurationError, env
 
 from app.app import create_app
+from app.security import DEFAULT_RESPONSE_HEADERS
 
 
 class TestCreateApp(AioHTTPTestCase):
@@ -19,6 +20,15 @@ class TestCreateApp(AioHTTPTestCase):
     @unittest_run_loop
     async def test_create_app(self):
         self.assertIsInstance(self.app, Application)
+
+    @unittest_run_loop
+    async def test_security_headers(self):
+        rando_string = '123456'
+        with mock.patch('app.security.get_random_string') as mocked_rando:
+            mocked_rando.return_value = rando_string
+            response = await self.client.request("GET", "/")
+        self.assertTrue(all(header in response.headers for header in DEFAULT_RESPONSE_HEADERS))
+        self.assertIn(f'nonce-{rando_string}', response.headers['Content-Security-Policy'])
 
 
 class TestCreateAppMissingConfig(TestCase):

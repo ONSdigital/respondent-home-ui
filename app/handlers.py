@@ -23,8 +23,7 @@ async def get_index(request, msg=None, redirect=False):
     if redirect:
         raise HTTPFound("/")
 
-    response = aiohttp_jinja2.render_template("index.html", request, {})
-    return response
+    return aiohttp_jinja2.render_template("index.html", request, {})
 
 
 async def get_info(request):

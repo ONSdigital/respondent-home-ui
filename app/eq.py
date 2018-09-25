@@ -1,5 +1,7 @@
 import logging
 import time
+import hashlib
+import base64
 from collections import namedtuple
 from uuid import uuid4
 
@@ -50,9 +52,26 @@ def format_date(string_date):
         raise InvalidEqPayLoad(f"Unable to format {string_date}")
 
 
+def build_response_id(case_id, collex_id, iac):
+    """
+    Builds a response_id from a case ID, a collection exercise ID, and an IAC
+    :param case_id: a case UUID
+    :param collex_id: a collection exercise UUID
+    :param iac: an IAC
+    :return: a base-64 encoded sha-256 hash of case_id|collex_id|iac
+    """
+    hash_string = f'{case_id}|{collex_id}|{iac}'
+    m = hashlib.sha256()
+    m.update(hash_string.encode('utf-8'))
+
+    logger.debug("Hash created", digest=m.hexdigest(), case_id=case_id, collex_id=collex_id)
+
+    return base64.urlsafe_b64encode(m.digest()).decode()
+
+
 class EqPayloadConstructor(object):
 
-    def __init__(self, case: dict, app: Application):
+    def __init__(self, case: dict, app: Application, iac: str):
         """
         Creates the payload needed to communicate with EQ, built from the Case, Collection Exercise, Sample,
         and Collection Instrument services
@@ -65,6 +84,11 @@ class EqPayloadConstructor(object):
 
         self._tx_id = str(uuid4())
         self._account_service_url = app["ACCOUNT_SERVICE_URL"]
+
+        if not iac:
+            raise InvalidEqPayLoad("IAC is empty")
+
+        self._iac = iac
 
         try:
             self._case_id = case["id"]
@@ -154,6 +178,8 @@ class EqPayloadConstructor(object):
         except KeyError:
             raise InvalidEqPayLoad(f"Could not retrieve country_code for case {self._case_id}")
 
+        response_id = build_response_id(self._case_id, self._collex_id, self._iac)
+
         # TODO: Remove hardcoded language variables for payload when they become available in RAS/RM
         self._language_code = 'en'  # sample attributes do not currently have language details
 
@@ -175,6 +201,7 @@ class EqPayloadConstructor(object):
             "country_code": self._country_code,
             "language_code": self._language_code,  # currently only 'en' or 'cy'
             "display_address": self.build_display_address(self._sample_attributes),
+            "response_id": response_id
         }
 
         # Add all of the sample attributes to the payload as camel case fields

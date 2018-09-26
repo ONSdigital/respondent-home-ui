@@ -22,7 +22,7 @@ class TestHandlers(RHTestCase):
         response = await self.client.request("GET", "/")
         self.assertEqual(response.status, 200)
         contents = await response.content.read()
-        self.assertIn(b'Enter your unique access code below', contents)
+        self.assertIn(b'The household access code is printed on the letter we sent you.', contents)
         self.assertEqual(contents.count(b'input-text'), 3)
         self.assertIn(b'type="submit"', contents)
 
@@ -51,7 +51,7 @@ class TestHandlers(RHTestCase):
             self.assertLogLine(cm, "Service connection error")
 
         self.assertEqual(response.status, 200)
-        self.assertIn(CONNECTION_ERROR_MSG.encode(), await response.content.read())
+        self.assertIn(CONNECTION_ERROR_MSG.get('text').encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_no_iac_json(self):
@@ -63,7 +63,7 @@ class TestHandlers(RHTestCase):
             self.assertLogLine(cm, "Service failed to return expected JSON payload")
 
         self.assertEqual(response.status, 200)
-        self.assertIn(SERVER_ERROR_MSG.encode(), await response.content.read())
+        self.assertIn(SERVER_ERROR_MSG.get('text').encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_case_403(self):
@@ -76,7 +76,7 @@ class TestHandlers(RHTestCase):
             self.assertLogLine(cm, "Error retrieving case", case_id=self.case_id, status_code=403)
 
         self.assertEqual(response.status, 200)
-        self.assertIn(f'403 {SERVER_ERROR_MSG}'.encode(), await response.content.read())
+        self.assertIn(f"403 {SERVER_ERROR_MSG.get('text')}".encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_case_500(self):
@@ -89,7 +89,7 @@ class TestHandlers(RHTestCase):
             self.assertLogLine(cm, "Error retrieving case", case_id=self.case_id, status_code=500)
 
         self.assertEqual(response.status, 200)
-        self.assertIn(f'500 {SERVER_ERROR_MSG}'.encode(), await response.content.read())
+        self.assertIn(f"500 {SERVER_ERROR_MSG.get('text')}".encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_case_connector_error(self):
@@ -102,7 +102,7 @@ class TestHandlers(RHTestCase):
             self.assertLogLine(cm, "Service connection error")
 
         self.assertEqual(response.status, 200)
-        self.assertIn(CONNECTION_ERROR_MSG.encode(), await response.content.read())
+        self.assertIn(CONNECTION_ERROR_MSG.get('text').encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_with_build_connection_error(self):
@@ -116,7 +116,7 @@ class TestHandlers(RHTestCase):
             self.assertLogLine(cm, "Service connection error", message='Failed')
 
         self.assertEqual(response.status, 200)
-        self.assertIn(CONNECTION_ERROR_MSG.encode(), await response.content.read())
+        self.assertIn(CONNECTION_ERROR_MSG.get('text').encode(), await response.content.read())
 
     @skip_encrypt
     @unittest_run_loop
@@ -165,7 +165,7 @@ class TestHandlers(RHTestCase):
 
         # then error handler catches exception and flashes message to index
         self.assertEqual(response.status, 200)
-        self.assertIn(REDIRECT_FAILED_MSG.encode(), await response.content.read())
+        self.assertIn(REDIRECT_FAILED_MSG.get('text').encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_with_build_ci_500(self):
@@ -182,7 +182,7 @@ class TestHandlers(RHTestCase):
             self.assertLogLine(cm, "Error in response", status_code=500)
 
         self.assertEqual(response.status, 200)
-        self.assertIn(f'500 {SERVER_ERROR_MSG}'.encode(), await response.content.read())
+        self.assertIn(f"500 {SERVER_ERROR_MSG.get('text')}".encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_with_build_ci_400(self):
@@ -199,7 +199,7 @@ class TestHandlers(RHTestCase):
             self.assertLogLine(cm, "Error in response", status_code=400)
 
         self.assertEqual(response.status, 200)
-        self.assertIn(f'400 {SERVER_ERROR_MSG}'.encode(), await response.content.read())
+        self.assertIn(f"400 {SERVER_ERROR_MSG.get('text')}".encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_with_build_ce_503(self):
@@ -217,7 +217,7 @@ class TestHandlers(RHTestCase):
             self.assertLogLine(cm, "Error in response", status_code=503)
 
         self.assertEqual(response.status, 200)
-        self.assertIn(f'503 {SERVER_ERROR_MSG}'.encode(), await response.content.read())
+        self.assertIn(f"503 {SERVER_ERROR_MSG.get('text')}".encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_with_build_events_404(self):
@@ -236,7 +236,7 @@ class TestHandlers(RHTestCase):
             self.assertLogLine(cm, "Error in response", status_code=404)
 
         self.assertEqual(response.status, 200)
-        self.assertIn(f'404 {SERVER_ERROR_MSG}'.encode(), await response.content.read())
+        self.assertIn(f"404 {SERVER_ERROR_MSG.get('text')}".encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_with_build_sample_403(self):
@@ -256,7 +256,7 @@ class TestHandlers(RHTestCase):
             self.assertLogLine(cm, "Error in response", status_code=403)
 
         self.assertEqual(response.status, 200)
-        self.assertIn(f'403 {SERVER_ERROR_MSG}'.encode(), await response.content.read())
+        self.assertIn(f"403 {SERVER_ERROR_MSG.get('text')}".encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_with_build_case_event_500(self):
@@ -277,7 +277,7 @@ class TestHandlers(RHTestCase):
             self.assertLogLine(cm, "Error posting case event", status_code=500, case_id=self.case_id)
 
         self.assertEqual(response.status, 200)
-        self.assertIn(f'500 {SERVER_ERROR_MSG}'.encode(), await response.content.read())
+        self.assertIn(f"500 {SERVER_ERROR_MSG.get('text')}".encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_caseid_missing(self):
@@ -292,7 +292,7 @@ class TestHandlers(RHTestCase):
             self.assertLogLine(cm, 'caseId missing from IAC response')
 
         self.assertEqual(response.status, 200)
-        self.assertIn(BAD_RESPONSE_MSG.encode(), await response.content.read())
+        self.assertIn(BAD_RESPONSE_MSG.get('text').encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_sampleUnitType_missing(self):
@@ -308,7 +308,7 @@ class TestHandlers(RHTestCase):
             self.assertLogLine(cm, 'sampleUnitType missing from case response')
 
         self.assertEqual(response.status, 200)
-        self.assertIn(BAD_RESPONSE_MSG.encode(), await response.content.read())
+        self.assertIn(BAD_RESPONSE_MSG.get('text').encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_sampleUnitType_B_error(self):
@@ -324,7 +324,7 @@ class TestHandlers(RHTestCase):
             self.assertLogLine(cm, 'Attempt to use unexpected sample unit type', sample_unit_type='B')
 
         self.assertEqual(response.status, 200)
-        self.assertIn(INVALID_CODE_MSG.encode(), await response.content.read())
+        self.assertIn(INVALID_CODE_MSG.get('text').encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_malformed(self):
@@ -339,7 +339,7 @@ class TestHandlers(RHTestCase):
             self.assertLogLine(cm, "Attempt to use a malformed access code")
 
         self.assertEqual(response.status, 200)
-        self.assertIn(BAD_CODE_MSG.encode(), await response.content.read())
+        self.assertIn(BAD_CODE_MSG.get('text').encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_iac_active_missing(self):
@@ -354,7 +354,7 @@ class TestHandlers(RHTestCase):
             self.assertLogLine(cm, "Attempt to use an inactive access code")
 
         self.assertEqual(response.status, 200)
-        self.assertIn(CODE_USED_MSG.encode(), await response.content.read())
+        self.assertIn(CODE_USED_MSG.get('text').encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_iac_inactive(self):
@@ -369,7 +369,7 @@ class TestHandlers(RHTestCase):
             self.assertLogLine(cm, "Attempt to use an inactive access code")
 
         self.assertEqual(response.status, 200)
-        self.assertIn(CODE_USED_MSG.encode(), await response.content.read())
+        self.assertIn(CODE_USED_MSG.get('text').encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_iac_service_connection_error(self):
@@ -381,7 +381,7 @@ class TestHandlers(RHTestCase):
             self.assertLogLine(cm, "Client failed to connect to iac service")
 
         self.assertEqual(response.status, 200)
-        self.assertIn(CONNECTION_ERROR_MSG.encode(), await response.content.read())
+        self.assertIn(CONNECTION_ERROR_MSG.get('text').encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_iac_service_500(self):
@@ -393,7 +393,7 @@ class TestHandlers(RHTestCase):
             self.assertLogLine(cm, "Error in response", status_code=500)
 
         self.assertEqual(response.status, 200)
-        self.assertIn(f'500 {SERVER_ERROR_MSG}'.encode(), await response.content.read())
+        self.assertIn(f"500 {SERVER_ERROR_MSG.get('text')}".encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_iac_service_503(self):
@@ -405,7 +405,7 @@ class TestHandlers(RHTestCase):
             self.assertLogLine(cm, "Error in response", status_code=503)
 
         self.assertEqual(response.status, 200)
-        self.assertIn(f'503 {SERVER_ERROR_MSG}'.encode(), await response.content.read())
+        self.assertIn(f"503 {SERVER_ERROR_MSG.get('text')}".encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_iac_service_404(self):
@@ -417,7 +417,7 @@ class TestHandlers(RHTestCase):
             self.assertLogLine(cm, "Attempt to use an invalid access code", client_ip=None)
 
         self.assertEqual(response.status, 200)
-        self.assertIn(BAD_CODE_MSG.encode(), await response.content.read())
+        self.assertIn(BAD_CODE_MSG.get('text').encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_iac_service_403(self):
@@ -429,7 +429,7 @@ class TestHandlers(RHTestCase):
             self.assertLogLine(cm, "Unauthorized access to IAC service attempted", client_ip=None)
 
         self.assertEqual(response.status, 200)
-        self.assertIn(NOT_AUTHORIZED_MSG.encode(), await response.content.read())
+        self.assertIn(NOT_AUTHORIZED_MSG.get('text').encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_iac_service_401(self):
@@ -441,7 +441,7 @@ class TestHandlers(RHTestCase):
             self.assertLogLine(cm, "Unauthorized access to IAC service attempted", client_ip=None)
 
         self.assertEqual(response.status, 200)
-        self.assertIn(NOT_AUTHORIZED_MSG.encode(), await response.content.read())
+        self.assertIn(NOT_AUTHORIZED_MSG.get('text').encode(), await response.content.read())
 
     @unittest_run_loop
     async def test_post_index_iac_service_400(self):
@@ -453,7 +453,7 @@ class TestHandlers(RHTestCase):
             self.assertLogLine(cm, "Client error when accessing IAC service", client_ip=None, status=400)
 
         self.assertEqual(response.status, 200)
-        self.assertIn(BAD_RESPONSE_MSG.encode(), await response.content.read())
+        self.assertIn(BAD_RESPONSE_MSG.get('text').encode(), await response.content.read())
 
     def test_join_iac(self):
         # Given some post data

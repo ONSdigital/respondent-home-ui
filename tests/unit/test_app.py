@@ -7,7 +7,6 @@ from aioresponses import aioresponses
 from envparse import ConfigurationError, env
 
 from app.app import create_app
-from app.security import DEFAULT_RESPONSE_HEADERS
 
 
 class TestCreateApp(AioHTTPTestCase):
@@ -23,12 +22,22 @@ class TestCreateApp(AioHTTPTestCase):
 
     @unittest_run_loop
     async def test_security_headers(self):
-        rando_string = '123456'
+        nonce = '123456'
         with mock.patch('app.security.get_random_string') as mocked_rando:
-            mocked_rando.return_value = rando_string
+            mocked_rando.return_value = nonce
             response = await self.client.request("GET", "/")
-        self.assertTrue(all(header in response.headers for header in DEFAULT_RESPONSE_HEADERS))
-        self.assertIn(f'nonce-{rando_string}', response.headers['Content-Security-Policy'])
+        self.assertEqual(response.headers['Strict-Transport-Security'], 'max-age=31536000 includeSubDomains')
+        self.assertIn("default-src 'self' https://cdn.ons.gov.uk", response.headers['Content-Security-Policy'])
+        self.assertIn("font-src 'self' data: https://cdn.ons.gov.uk", response.headers['Content-Security-Policy'])
+        self.assertIn(f"script-src 'self' https://www.google-analytics.com https://cdn.ons.gov.uk 'nonce-{nonce}'",
+                      response.headers['Content-Security-Policy'])
+        self.assertIn("connect-src 'self' https://www.google-analytics.com https://cdn.ons.gov.uk",
+                      response.headers['Content-Security-Policy'])
+        self.assertIn("img-src 'self' data: https://www.google-analytics.com https://cdn.ons.gov.uk",
+                      response.headers['Content-Security-Policy'])
+        self.assertEqual(response.headers['X-XSS-Protection'], '1')
+        self.assertEqual(response.headers['X-Content-Type-Options'], 'nosniff')
+        self.assertEqual(response.headers['Referrer-Policy'], 'same-origin')
 
 
 class TestCreateAppMissingConfig(TestCase):

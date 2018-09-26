@@ -7,19 +7,11 @@
     <div class="panel panel--error">
       <div class="panel__header">
         <h1 class="panel__title venus">
-          {% for message in messages %}
-            {% if message.clickable %}
-              {% trans count=messages|length %}
-              This page has an error
-              {% pluralize %}
-              This page has {{ count }} errors
-              {% endtrans %}
-            {% else %}
-              {% trans count=messages|length %}
-              Error
-              {% endtrans %}
-            {% endif %}
-          {% endfor %}  
+          {% trans count=messages|length %}
+            This page has an error
+            {% pluralize %}
+            This page has {{ count }} errors
+          {% endtrans %}
         </h1>
       </div>
       <div class="panel__body">
@@ -46,7 +38,7 @@
   </div>
 {% endif %}
 <div>
-<h2 class="saturn u-mt-l u-mb-m">Welcome to the UK-wide online household study</h2>
+<h2 class="saturn u-mt-l u-mb-m">Welcome to the UK-wide Online Household Study</h2>
   <form action="/" class="form qa-questionnaire-form" role="form" method="post" novalidate="">
     <div class="panel panel--simple panel--spacious {% if messages %} panel--error {% else %} panel--info {% endif %} u-mb-l">
       <div class="panel__body">
@@ -59,7 +51,7 @@
                     <div class="answer answer--integer " id="census-access-code-answer">
                       <div class="answer__fields js-fields">
                         <fieldset class="fieldgroup fieldgroup--date">
-                          <legend class="fieldgroup__title venus">To start or continue the study, enter your 12 digit household access code and select "Start now".</legend>
+                          <legend class="fieldgroup__title venus">To start or continue the study, enter your 12 character household access code and select "Start now".</legend>
                           <p class="mars">The household access code is printed on the letter we sent you.</p>
                           <div class="fieldgroup__fields">
                             <div class="field field--input field--code">

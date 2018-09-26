@@ -56,7 +56,9 @@ async def payload_error(request, url: str):
 
 
 async def response_error(request, status: int):
-    flash(request, f"{status} " + SERVER_ERROR_MSG)
+    status_error = SERVER_ERROR_MSG.copy()
+    status_error['text'] = f"{status} " + status_error.get('text', '')
+    flash(request, status_error)
     return aiohttp_jinja2.render_template("index.html", request, {})
 
 

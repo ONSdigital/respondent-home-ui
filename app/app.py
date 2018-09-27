@@ -14,6 +14,7 @@ from . import error_handlers
 from . import flash
 from . import jwt
 from . import routes
+from . import security
 from . import session
 from . import settings
 from .app_logging import logger_initial_config
@@ -21,7 +22,6 @@ from .app_logging import logger_initial_config
 
 logger = wrap_logger(logging.getLogger("respondent-home"))
 server_logger = logging.getLogger("aiohttp.server")
-
 server_logger.setLevel("INFO")
 
 
@@ -62,7 +62,12 @@ def create_app(config_name=None) -> Application:
     [app_config.__setitem__(key, BasicAuth(*app_config[key])) for key in app_config if key.endswith('_AUTH')]
 
     app = Application(
-        debug=settings.DEBUG, middlewares=[session.setup(app_config["SECRET_KEY"]), flash.flash_middleware]
+        debug=settings.DEBUG,
+        middlewares=[
+            security.nonce_middleware,
+            session.setup(app_config["SECRET_KEY"]),
+            flash.flash_middleware,
+        ]
     )
 
     # Handle 500 errors
@@ -109,6 +114,7 @@ def create_app(config_name=None) -> Application:
 
     app.on_startup.append(on_startup)
     app.on_cleanup.append(on_cleanup)
+    app.on_response_prepare.append(security.on_prepare)
 
     logger.info("App setup complete", config=config_name)
 

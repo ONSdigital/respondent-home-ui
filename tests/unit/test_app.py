@@ -1,5 +1,5 @@
 from importlib import reload
-from unittest import TestCase
+from unittest import TestCase, mock
 
 from aiohttp.test_utils import AioHTTPTestCase, unittest_run_loop
 from aiohttp.web_app import Application
@@ -19,6 +19,25 @@ class TestCreateApp(AioHTTPTestCase):
     @unittest_run_loop
     async def test_create_app(self):
         self.assertIsInstance(self.app, Application)
+
+    @unittest_run_loop
+    async def test_security_headers(self):
+        nonce = '123456'
+        with mock.patch('app.security.get_random_string') as mocked_rando:
+            mocked_rando.return_value = nonce
+            response = await self.client.request("GET", "/")
+        self.assertEqual(response.headers['Strict-Transport-Security'], 'max-age=31536000 includeSubDomains')
+        self.assertIn("default-src 'self' https://cdn.ons.gov.uk", response.headers['Content-Security-Policy'])
+        self.assertIn("font-src 'self' data: https://cdn.ons.gov.uk", response.headers['Content-Security-Policy'])
+        self.assertIn(f"script-src 'self' https://www.google-analytics.com https://cdn.ons.gov.uk 'nonce-{nonce}'",
+                      response.headers['Content-Security-Policy'])
+        self.assertIn("connect-src 'self' https://www.google-analytics.com https://cdn.ons.gov.uk",
+                      response.headers['Content-Security-Policy'])
+        self.assertIn("img-src 'self' data: https://www.google-analytics.com https://cdn.ons.gov.uk",
+                      response.headers['Content-Security-Policy'])
+        self.assertEqual(response.headers['X-XSS-Protection'], '1')
+        self.assertEqual(response.headers['X-Content-Type-Options'], 'nosniff')
+        self.assertEqual(response.headers['Referrer-Policy'], 'same-origin')
 
 
 class TestCreateAppMissingConfig(TestCase):

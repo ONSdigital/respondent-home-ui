@@ -17,7 +17,7 @@
     <script src="/js/polyfills.js?q=95ed16e2c89bb26d9c02129271468664828e4cee"></script>
   <![endif]-->
   <!--[if gt IE 8]><!-->
-  <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'has-js')</script>
+  <script nonce="{{ request.csp_nonce }}">document.documentElement.className = document.documentElement.className.replace('no-js', 'has-js')</script>
   <!--<![endif]-->
   <!--[if (gt IE 9) | (IEMobile)]><!-->
   <link href="{{ static('css/responsive.css') }}" rel="stylesheet">
@@ -86,7 +86,7 @@
 <!-- jQuery 2 -->
 <!--[if gte IE 9]><!-->
 <script src="/js/vendor/jquery-2.2.0.min.js"></script>
-<script>window.jQuery || document.write('<script "/js/vendor/jquery-2.2.0.min.js?q=95ed16e2c89bb26d9c02129271468664828e4cee"><\/script>')</script>
+<script nonce="{{ request.csp_nonce }}">window.jQuery || document.write('<script "/js/vendor/jquery-2.2.0.min.js?q=95ed16e2c89bb26d9c02129271468664828e4cee"><\/script>')</script>
 <!--<![endif]-->
 <!--[if gte IE 9]><!-->
 <script src="/js/bundle.js"></script>

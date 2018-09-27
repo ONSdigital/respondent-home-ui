@@ -5,5 +5,6 @@ cd respondent-home-ui-source
 
 # Install libssl-dev for python cryptography lib
 apt-get install libssl-dev -y
+apt-get install python3-dev -y
 pipenv install --dev
 pipenv run inv smoke

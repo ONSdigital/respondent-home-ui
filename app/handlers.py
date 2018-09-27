@@ -88,7 +88,7 @@ async def post_index(request):
         flash(request, BAD_RESPONSE_MSG)
         return aiohttp_jinja2.render_template("index.html", request, {})
 
-    eq_payload = await EqPayloadConstructor(case, request.app).build()
+    eq_payload = await EqPayloadConstructor(case, request.app, iac).build()
 
     token = encrypt(eq_payload, key_store=request.app['key_store'], key_purpose="authentication")
 

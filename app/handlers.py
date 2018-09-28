@@ -117,7 +117,7 @@ async def get_iac_details(request, iac: str, client_ip: str):
             except ClientResponseError as ex:
                 if resp.status == 404:
                     logger.info("Attempt to use an invalid access code", client_ip=client_ip)
-                    flash(request, BAD_CODE_MSG)
+                    flash(request, INVALID_CODE_MSG)
                     raise HTTPFound("/")
                 elif resp.status in (401, 403):
                     logger.info("Unauthorized access to IAC service attempted", client_ip=client_ip)

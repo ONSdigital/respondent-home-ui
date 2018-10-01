@@ -1,12 +1,12 @@
 VERSION = '0.0.1'
 
 
-CONNECTION_ERROR_MSG = "Service connection error"
-REDIRECT_FAILED_MSG = "Failed to redirect to survey"
-SERVER_ERROR_MSG = "Server error"
+CONNECTION_ERROR_MSG = {'text': 'There was a problem connecting to this study. Please try again later.', "clickable": False}    # NOQA
+REDIRECT_FAILED_MSG = {'text': 'There was a problem connecting to this study. Please try again later.', "clickable": False}    # NOQA
+SERVER_ERROR_MSG = {'text': 'There was an error, please enter your access code and try again.', "clickable": True}
 
-BAD_CODE_MSG = "Please enter the 12 character unique access code provided to you by ONS."
-BAD_RESPONSE_MSG = "Bad response from server. Please try again"
-CODE_USED_MSG = "The unique access code entered has already been used"
-INVALID_CODE_MSG = "Invalid access code"
-NOT_AUTHORIZED_MSG = "You are not authorized to access this service."
+BAD_CODE_MSG = {'text': 'Please enter the 12 character access code provided to you by ONS.', "clickable": True}
+BAD_RESPONSE_MSG = {'text': 'There was an error, please enter your access code and try again.', "clickable": True}
+CODE_USED_MSG = {'text': 'Thank you. We have received a response for your address. No further action is required.\n\nIf you need further assistance, please phone us for free on 0800 085 7376.', "clickable": True}    # NOQA
+INVALID_CODE_MSG = {'text': 'Invalid access code. Please check your access code and web address to continue.', "clickable": True}  # NOQA
+NOT_AUTHORIZED_MSG = {'text': 'There was a problem connecting to this study. Please try again later.', "clickable": False}  # NOQA

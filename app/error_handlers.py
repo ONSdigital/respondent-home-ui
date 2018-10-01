@@ -1,5 +1,4 @@
 import logging
-from functools import partial
 
 import aiohttp_jinja2
 from aiohttp import web
@@ -31,8 +30,8 @@ def create_error_middleware(overrides):
             return await connection_error(request, ex.os_error.strerror)
         except ContentTypeError as ex:
             return await payload_error(request, str(ex.request_info.url))
-        except ClientResponseError as ex:
-            return await response_error(request, ex.status)
+        except ClientResponseError:
+            return await response_error(request)
 
     return middleware_handler
 
@@ -55,14 +54,15 @@ async def payload_error(request, url: str):
     return aiohttp_jinja2.render_template("index.html", request, {})
 
 
-async def response_error(request, status: int):
-    flash(request, f"{status} " + SERVER_ERROR_MSG)
+async def response_error(request):
+    flash(request, SERVER_ERROR_MSG)
     return aiohttp_jinja2.render_template("index.html", request, {})
 
 
 def setup(app):
     overrides = {
-        500: partial(response_error, status=500),
-        503: partial(response_error, status=503)}
+        500: response_error,
+        503: response_error
+    }
     error_middleware = create_error_middleware(overrides)
     app.middlewares.append(error_middleware)

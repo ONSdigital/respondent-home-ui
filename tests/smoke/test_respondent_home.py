@@ -17,7 +17,6 @@ class TestRespondentHome(unittest.TestCase):
 
         # Then
         self.assertEqual(resp.status_code, 200, resp.status_code)
-        self.assertIn('Welcome to the Online Household Study', resp.text)
 
     def test_can_access_required_services(self):
         # Given

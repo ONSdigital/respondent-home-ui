@@ -9,7 +9,7 @@ from structlog import wrap_logger
 from . import BAD_CODE_MSG, BAD_RESPONSE_MSG, CODE_USED_MSG, INVALID_CODE_MSG, NOT_AUTHORIZED_MSG, VERSION
 from .case import get_case, post_case_event
 from .eq import EqPayloadConstructor
-from .exceptions import InactiveCaseError
+from .exceptions import InactiveCaseError, InvalidIACError
 from .flash import flash
 
 
@@ -59,7 +59,12 @@ async def post_index(request):
             redirect=True,
         )
 
-    iac_json = await get_iac_details(request, iac, client_ip)
+    try:
+        iac_json = await get_iac_details(request, iac, client_ip)
+    except InvalidIACError:
+        logger.info("Attempt to use an invalid access code", client_ip=client_ip)
+        flash(request, INVALID_CODE_MSG)
+        return aiohttp_jinja2.render_template("index.html", request, {}, status=202)
 
     try:
         validate_case(iac_json)
@@ -115,9 +120,7 @@ async def get_iac_details(request, iac: str, client_ip: str):
                 resp.raise_for_status()
             except ClientResponseError as ex:
                 if resp.status == 404:
-                    logger.info("Attempt to use an invalid access code", client_ip=client_ip)
-                    flash(request, INVALID_CODE_MSG)
-                    raise HTTPFound("/")
+                    raise InvalidIACError
                 elif resp.status in (401, 403):
                     logger.info("Unauthorized access to IAC service attempted", client_ip=client_ip)
                     flash(request, NOT_AUTHORIZED_MSG)

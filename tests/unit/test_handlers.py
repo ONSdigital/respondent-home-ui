@@ -416,8 +416,7 @@ class TestHandlers(RHTestCase):
                 response = await self.client.request("POST", "/", data=self.form_data)
             self.assertLogLine(cm, "Attempt to use an invalid access code", client_ip=None)
 
-        self.assertEqual(response.status, 200)
-        self.assertIn(INVALID_CODE_MSG.get('text').encode(), await response.content.read())
+        self.assertEqual(response.status, 202)
 
     @unittest_run_loop
     async def test_post_index_iac_service_403(self):

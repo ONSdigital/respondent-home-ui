@@ -2,7 +2,7 @@ import logging
 
 import aiohttp_jinja2
 from aiohttp.client_exceptions import ClientConnectionError, ClientConnectorError, ClientResponseError
-from aiohttp.web import HTTPFound, json_response
+from aiohttp.web import HTTPFound, HTTPAccepted, json_response
 from sdc.crypto.encrypter import encrypt
 from structlog import wrap_logger
 
@@ -117,7 +117,7 @@ async def get_iac_details(request, iac: str, client_ip: str):
                 if resp.status == 404:
                     logger.info("Attempt to use an invalid access code", client_ip=client_ip)
                     flash(request, INVALID_CODE_MSG)
-                    raise HTTPFound("/")
+                    raise HTTPAccepted()
                 elif resp.status in (401, 403):
                     logger.info("Unauthorized access to IAC service attempted", client_ip=client_ip)
                     flash(request, NOT_AUTHORIZED_MSG)

@@ -416,7 +416,7 @@ class TestHandlers(RHTestCase):
                 response = await self.client.request("POST", "/", data=self.form_data)
             self.assertLogLine(cm, "Attempt to use an invalid access code", client_ip=None)
 
-        self.assertEqual(response.status, 200)
+        self.assertEqual(response.status, 202)
         self.assertMessagePanel(INVALID_CODE_MSG, str(await response.content.read()))
 
     @unittest_run_loop

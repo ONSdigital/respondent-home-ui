@@ -13,9 +13,9 @@ ROUTES = [
 ]
 
 
-def setup(app, url_prefix=""):
+def setup(app, url_path_prefix):
     """Set up routes."""
     for route in ROUTES:
         method, url, handler, name = route
-        full_url = f"/{url.lstrip('/')}"
+        full_url = f"{url_path_prefix}/{url.lstrip('/')}"
         app.router.add_route(method, full_url, handler, name=name)

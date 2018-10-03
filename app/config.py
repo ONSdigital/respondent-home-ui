@@ -64,6 +64,8 @@ class BaseConfig:
 
     SECRET_KEY = env("SECRET_KEY")
 
+    URL_PATH_PREFIX = env("URL_PATH_PREFIX", default="")
+
 
 class ProductionConfig(BaseConfig):
     pass
@@ -106,6 +108,8 @@ class DevelopmentConfig:
 
     SECRET_KEY = env.str("SECRET_KEY", default=None) or generate_new_key()
 
+    URL_PATH_PREFIX = env("URL_PATH_PREFIX", default="")
+
 
 class TestingConfig:
     HOST = "0.0.0.0"
@@ -136,3 +140,5 @@ class TestingConfig:
     SURVEY_AUTH = ("admin", "secret")
 
     SECRET_KEY = generate_new_key()
+
+    URL_PATH_PREFIX = "/url-path-prefix"

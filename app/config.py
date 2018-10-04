@@ -141,4 +141,4 @@ class TestingConfig:
 
     SECRET_KEY = generate_new_key()
 
-    URL_PATH_PREFIX = "/url-path-prefix"
+    URL_PATH_PREFIX = ""

@@ -39,6 +39,18 @@ class TestCreateApp(AioHTTPTestCase):
         self.assertEqual(response.headers['X-Content-Type-Options'], 'nosniff')
         self.assertEqual(response.headers['Referrer-Policy'], 'same-origin')
 
+    def test_create_app_with_url_path_prefix(self):
+        from app import config
+
+        url_prefix = '/url-path-prefix'
+        config.TestingConfig.URL_PATH_PREFIX = url_prefix
+
+        app = create_app(self.config)
+        routes = app.router._named_resources
+
+        for route in routes.values():
+            self.assertTrue(route.canonical.startswith(url_prefix))
+
 
 class TestCreateAppMissingConfig(TestCase):
 

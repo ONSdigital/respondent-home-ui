@@ -6,7 +6,6 @@ import uuid
 from aiohttp.test_utils import AioHTTPTestCase
 
 from app.app import create_app
-from app.eq import build_response_id
 
 
 def skip_build_eq(func, *args, **kwargs):

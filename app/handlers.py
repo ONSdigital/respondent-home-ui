@@ -21,7 +21,7 @@ async def get_index(request, msg=None, redirect=False):
         flash(request, msg)
 
     if redirect:
-        raise HTTPFound("/")
+        raise HTTPFound(request.path)
 
     return aiohttp_jinja2.render_template("index.html", request, {})
 

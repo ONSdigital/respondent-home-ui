@@ -15,8 +15,9 @@ ROUTES = [
 
 def setup(app, url_path_prefix):
     """Set up routes. Preserve /info for app health check"""
+    prefix = url_path_prefix.lstrip("/")
     for route in ROUTES:
         method, url, handler, name = route
         url = url.lstrip('/')
-        full_url = f"{url_path_prefix}/{url}" if name != "get_info" else f"/{url}"
+        full_url = f"/{prefix}{url}" if name != "get_info" else f"/{url}"
         app.router.add_route(method, full_url, handler, name=name)

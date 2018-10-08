@@ -10,10 +10,10 @@
   <meta content="width=device-width, initial-scale=1" name="viewport">
   <link rel="shortcut icon" href="favicon.ico">
   <!--[if lt IE 9]>
-    <script src="/js/vendor/html5shiv.min.js?q=95ed16e2c89bb26d9c02129271468664828e4cee"></script>
+    <script src="{{ static('/js/vendor/html5shiv.min.js?q=95ed16e2c89bb26d9c02129271468664828e4cee') }}"></script>
   <![endif]-->
   <!--[if lte IE 9]>
-    <script src="/js/polyfills.js?q=95ed16e2c89bb26d9c02129271468664828e4cee"></script>
+    <script src="{{ static('/js/polyfills.js?q=95ed16e2c89bb26d9c02129271468664828e4cee') }}"></script>
   <![endif]-->
   <!--[if gt IE 8]><!-->
   <script nonce="{{ request.csp_nonce }}">document.documentElement.className = document.documentElement.className.replace('no-js', 'has-js')</script>
@@ -22,7 +22,7 @@
   <link href="{{ static('css/responsive.css') }}" rel="stylesheet">
   <!--<![endif]-->
   <!--[if (lte IE 9) & (!IEMobile)]>
-    <link href="/css/fixed.min.css?q=95ed16e2c89bb26d9c02129271468664828e4cee" rel="stylesheet">
+    <link href="{{ static('/css/fixed.min.css?q=95ed16e2c89bb26d9c02129271468664828e4cee') }}" rel="stylesheet">
   <![endif]-->
 
 
@@ -80,15 +80,15 @@
 <!-- jQuery 1 -->
 <!--[if lt IE 9]>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script "/js/vendor/jquery-1.12.0.min.js?q=95ed16e2c89bb26d9c02129271468664828e4cee"><\/script>')</script>
+<script>window.jQuery || document.write('<script "{{ static('/js/vendor/jquery-1.12.0.min.js?q=95ed16e2c89bb26d9c02129271468664828e4cee') }}"><\/script>')</script>
 <![endif]-->
 <!-- jQuery 2 -->
 <!--[if gte IE 9]><!-->
 <script src="/js/vendor/jquery-2.2.0.min.js"></script>
-<script nonce="{{ request.csp_nonce }}">window.jQuery || document.write('<script "/js/vendor/jquery-2.2.0.min.js?q=95ed16e2c89bb26d9c02129271468664828e4cee"><\/script>')</script>
+<script nonce="{{ request.csp_nonce }}">window.jQuery || document.write('<script "{{ static('/js/vendor/jquery-2.2.0.min.js?q=95ed16e2c89bb26d9c02129271468664828e4cee') }}"><\/script>')</script>
 <!--<![endif]-->
 <!--[if gte IE 9]><!-->
-<script src="/js/bundle.js"></script>
+<script src="{{ static('/js/bundle.js') }}"></script>
   <!--<![endif]-->
   <!-- <%= yield_content :javascript %>
     <% unless analytics_account.nil? %>

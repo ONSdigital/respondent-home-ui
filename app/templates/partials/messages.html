@@ -1,0 +1,49 @@
+{% for group, messages in messages_dict.items() %}
+  <div class="u-mt-s">
+
+    {% if group=='ERROR' %}
+    <div class="panel panel--error">
+      <div class="panel__header">
+        <h1 class="panel__title venus">
+          {% trans count=messages|length %}
+          This page has an error
+          {% pluralize %}
+          This page has {{ count }} errors
+          {% endtrans %}
+        </h1>
+      </div>
+
+      {% for message in messages %}
+      <div class="panel__body">
+        {% if message.clickable %}
+        <p class="mars">
+          This <strong>must be corrected</strong> to continue.
+        </p>
+        {% endif %}
+        <ul class="list list--bare">
+          <li class="list__item mars">{% if group.list|length > 1 %}{{ loop.index }}){% endif %}
+            {% if message.clickable %}
+              <a class="js-inpagelink" href="access-code-answer">{{ message.text }}</a>
+            {% else %}
+              {{ message.text }}
+            {% endif %}
+          </li>
+        </ul>
+      </div>
+      {% endfor %}
+    </div>
+
+    {% elif group=='INFO' %}
+      {% for message in messages %}
+      <div class="panel panel--simple panel--info">
+        <div class="panel__body">
+          {% for para in message.text.split('\n') %}
+            <h2 class="mars">{{ para }}</h2>
+          {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+    {% endif %}
+
+  </div>
+{% endfor %}

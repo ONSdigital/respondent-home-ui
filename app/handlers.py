@@ -22,7 +22,6 @@ async def get_index(request, msg=None, redirect=False):
 
     if redirect:
         raise HTTPFound("/")
-
     return aiohttp_jinja2.render_template("index.html", request, {})
 
 
@@ -63,7 +62,7 @@ async def post_index(request):
         iac_json = await get_iac_details(request, iac, client_ip)
     except InvalidIACError:
         logger.info("Attempt to use an invalid access code", client_ip=client_ip)
-        flash(request, INVALID_CODE_MSG)
+        flash(request, BAD_CODE_MSG)
         return aiohttp_jinja2.render_template("index.html", request, {}, status=202)
 
     try:

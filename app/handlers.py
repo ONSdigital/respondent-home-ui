@@ -21,7 +21,8 @@ async def get_index(request, msg=None, redirect=False):
         flash(request, msg)
 
     if redirect:
-        raise HTTPFound(request.path)
+        index = request.app.router['get_index'].url_for()
+        raise HTTPFound(index)
 
     return aiohttp_jinja2.render_template("index.html", request, {})
 
@@ -115,6 +116,7 @@ async def get_iac_details(request, iac: str, client_ip: str):
     try:
         async with request.app.http_session_pool.get(iac_url, auth=request.app["IAC_AUTH"]) as resp:
             logger.info("Received response from IAC", iac=iac, status_code=resp.status)
+            index = request.app.router['get_index'].url_for()
 
             try:
                 resp.raise_for_status()
@@ -124,7 +126,7 @@ async def get_iac_details(request, iac: str, client_ip: str):
                 elif resp.status in (401, 403):
                     logger.info("Unauthorized access to IAC service attempted", client_ip=client_ip)
                     flash(request, NOT_AUTHORIZED_MSG)
-                    raise HTTPFound("/")
+                    raise HTTPFound(index)
                 elif 400 <= resp.status < 500:
                     logger.info(
                         "Client error when accessing IAC service",
@@ -132,7 +134,7 @@ async def get_iac_details(request, iac: str, client_ip: str):
                         status=resp.status,
                     )
                     flash(request, BAD_RESPONSE_MSG)
-                    raise HTTPFound("/")
+                    raise HTTPFound(index)
                 else:
                     logger.error("Error in response", url=resp.url, status_code=resp.status)
                     raise ex

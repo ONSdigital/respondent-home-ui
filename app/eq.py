@@ -83,7 +83,7 @@ class EqPayloadConstructor(object):
         self._sample_url = f"{app['SAMPLE_URL']}/samples/"
 
         self._tx_id = str(uuid4())
-        self._account_service_url = app["ACCOUNT_SERVICE_URL"]
+        self._account_service_url = f'{app["ACCOUNT_SERVICE_URL"]}{app["URL_PATH_PREFIX"]}'
 
         if not iac:
             raise InvalidEqPayLoad("IAC is empty")

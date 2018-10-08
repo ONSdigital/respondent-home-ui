@@ -48,6 +48,11 @@
 
   <body>
     <div class="page">
+
+      <div class="skip">
+          <a class="skip__link" id="skip-link" href="#main">Skip to content</a>
+      </div>
+      
       <div class="container">
         <header class="header">
           <div class="logo header__logo">
@@ -63,7 +68,9 @@
       <div class="page__container container">
         <div class="grid">
           <div class="grid__col col-8@m u-mb-s">
-              {% block content %}{% endblock %}
+              <div role="main" class="page__main" id="main">
+                {% block content %}{% endblock %}
+              </div>
           </div>
         </div>
       </div>

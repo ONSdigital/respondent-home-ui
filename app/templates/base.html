@@ -9,30 +9,40 @@
 <!--[if gt IE 9]><!--> <html lang="en-gb" dir="ltr" class="no-js"> <!--<![endif]-->
   <head>
     {%- block head %}
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta content="" name="description">
-    <meta content="width=device-width, initial-scale=1" name="viewport">
     <title>{% block title %}My Study{% endblock %}</title>
-    <link rel="shortcut icon" href="favicon.ico">
+    <meta content="" name="description">
+    <meta content="width=device-width, initial-scale=1" name="viewport">    
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ cdn_url_prefix }}/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" href="{{ cdn_url_prefix }}/favicons/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="{{ cdn_url_prefix }}/favicons/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="{{ cdn_url_prefix }}/favicons/manifest.json">
+    <link rel="mask-icon" href="{{ cdn_url_prefix }}/favicons/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="{{ cdn_url_prefix }}/favicons/favicon.ico" >
+    <meta name="theme-color" content="#ffffff">
     <!--[if lt IE 9]>
-      <script src="/js/vendor/html5shiv.min.js?q=95ed16e2c89bb26d9c02129271468664828e4cee"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
     <![endif]-->
     <!--[if lte IE 9]>
       <script src="/js/polyfills.js?q=95ed16e2c89bb26d9c02129271468664828e4cee"></script>
     <![endif]-->
     <!--[if gt IE 8]><!-->
-    <script nonce="{{ request.csp_nonce }}">document.documentElement.className = document.documentElement.className.replace('no-js', 'has-js')</script>
+      <script>document.documentElement.className = document.documentElement.className.replace('no-js','has-js')</script>
     <!--<![endif]-->
+    {%- block styles %}
+    {% set css_fixed_cdn = cdn_url_prefix~"/css/fixed.css" %}
+    {% set css_responsive_cdn = cdn_url_prefix~"/css/responsive.css" %}
+
     <!--[if (gt IE 9) | (IEMobile)]><!-->
-    <link href="{{ static('css/responsive.css') }}" rel="stylesheet">
+    <link href="{{ css_responsive_cdn }}" rel="stylesheet" />
     <!--<![endif]-->
     <!--[if (lte IE 9) & (!IEMobile)]>
       <link href="/css/fixed.min.css?q=95ed16e2c89bb26d9c02129271468664828e4cee" rel="stylesheet">
     <![endif]-->
 
-
     <!--<link href="{{ static('css/responsive.css') }}" rel="stylesheet">-->
+    {% endblock styles -%}
     {% endblock head -%}
   </head>
 

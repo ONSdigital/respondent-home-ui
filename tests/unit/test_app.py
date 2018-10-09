@@ -7,6 +7,7 @@ from aioresponses import aioresponses
 from envparse import ConfigurationError, env
 
 from app.app import create_app
+from app.handlers import routes
 
 
 class TestCreateApp(AioHTTPTestCase):
@@ -51,15 +52,11 @@ class TestCreateAppURLPathPrefix(TestCase):
         config.TestingConfig.URL_PATH_PREFIX = url_prefix
 
         app = create_app(self.config)
-        routes = app.router._named_resources
-
         self.assertEqual(app['URL_PATH_PREFIX'], url_prefix)
 
-        for route in routes.values():
-            url = route.canonical
-            if url == '/info':
-                continue
-            self.assertTrue(url.startswith(url_prefix), msg=f"{url} not prefixed with {url_prefix}")
+        routes = app.router._named_resources
+        self.assertEqual(routes['index'].canonical, url_prefix)
+        self.assertEqual(routes['info'].canonical, '/info')
 
 
 class TestCreateAppMissingConfig(TestCase):

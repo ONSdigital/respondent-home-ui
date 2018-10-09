@@ -89,7 +89,7 @@ def create_app(config_name=None) -> Application:
     logger.info("Logging configured", log_level=app['LOG_LEVEL'])
 
     # Set up routes
-    routes.setup(app, app['URL_PATH_PREFIX'])
+    routes.setup(app, url_path_prefix=app['URL_PATH_PREFIX'])
 
     # Use content negotiation middleware to render JSON responses
     negotiation.setup(app)

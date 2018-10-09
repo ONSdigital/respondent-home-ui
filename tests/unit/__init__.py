@@ -178,6 +178,23 @@ class RHTestCase(AioHTTPTestCase):
         else:
             self.fail(f'No matching log records present: {event}')
 
+    def assertMessagePanel(self, message, content):
+        """
+        Helper method for asserting the rendered content includes the required message panels.
+
+        :param message: message dict
+        :param content: rendered HTML str
+        """
+        if message.get('clickable', False):
+            if message['level'] == 'ERROR':
+                self.assertIn('must be corrected', content)
+            self.assertIn('js-inpagelink', content)
+
+        for message_line in message['text'].split('\n'):
+            self.assertIn(message_line, content)
+
+        self.assertIn(f'panel--{message["level"].lower()}', content)
+
     def setUp(self):
         super().setUp()  # NB: setUp the server first so we can use self.app
         with open('tests/test_data/case/case.json') as fp:

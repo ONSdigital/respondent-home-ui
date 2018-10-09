@@ -10,7 +10,7 @@ from app import (
     BAD_CODE_MSG, BAD_RESPONSE_MSG, CODE_USED_MSG, INVALID_CODE_MSG, NOT_AUTHORIZED_MSG,
     CONNECTION_ERROR_MSG, REDIRECT_FAILED_MSG, SERVER_ERROR_MSG)
 from app.exceptions import InactiveCaseError
-from app.handlers import join_iac, validate_case
+from app.handlers import Index
 
 from . import RHTestCase, build_eq_raises, skip_build_eq, skip_encrypt
 
@@ -460,7 +460,7 @@ class TestHandlers(RHTestCase):
         post_data = {'iac1': '1234', 'iac2': '5678', 'iac3': '9012', 'action[save_continue]': ''}
 
         # When join_iac is called
-        result = join_iac(post_data)
+        result = Index.join_iac(post_data)
 
         # Then a single string built from the iac values is returned
         self.assertEqual(result, post_data['iac1'] + post_data['iac2'] + post_data['iac3'])
@@ -471,7 +471,7 @@ class TestHandlers(RHTestCase):
 
         # When join_iac is called
         with self.assertRaises(TypeError):
-            join_iac(post_data)
+            Index.join_iac(post_data)
         # Then a TypeError is raised
 
     def test_join_iac_some_missing(self):
@@ -480,7 +480,7 @@ class TestHandlers(RHTestCase):
 
         # When join_iac is called
         with self.assertRaises(TypeError):
-            join_iac(post_data)
+            Index.join_iac(post_data)
         # Then a TypeError is raised
 
     def test_validate_case(self):
@@ -488,7 +488,7 @@ class TestHandlers(RHTestCase):
         case_json = {'active': True}
 
         # When validate_case is called
-        validate_case(case_json)
+        Index.validate_case(case_json)
 
         # Nothing happens
 
@@ -498,7 +498,7 @@ class TestHandlers(RHTestCase):
 
         # When validate_case is called
         with self.assertRaises(InactiveCaseError):
-            validate_case(case_json)
+            Index.validate_case(case_json)
 
         # Then an InactiveCaseError is raised
 
@@ -508,6 +508,6 @@ class TestHandlers(RHTestCase):
 
         # When validate_case is called
         with self.assertRaises(InactiveCaseError):
-            validate_case(case_json)
+            Index.validate_case(case_json)
 
         # Then an InactiveCaseError is raised

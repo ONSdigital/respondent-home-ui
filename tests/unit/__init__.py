@@ -210,9 +210,9 @@ class RHTestCase(AioHTTPTestCase):
         with open('tests/test_data/survey/survey.json') as fp:
             self.survey_json = json.load(fp)
 
-        self.get_index = self.app.router._named_resources['get_index'].canonical
-        self.get_info = self.app.router._named_resources['get_info'].canonical
-        self.post_index = self.app.router._named_resources['post_index'].canonical
+        self.get_index = self.app.router._named_resources['index'].canonical
+        self.get_info = self.app.router._named_resources['info'].canonical
+        self.post_index = self.app.router._named_resources['index'].canonical
 
         self.action_plan_id = self.case_json['actionPlanId']
         self.case_id = self.case_json['id']

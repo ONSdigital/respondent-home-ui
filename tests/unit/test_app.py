@@ -53,6 +53,8 @@ class TestCreateAppURLPathPrefix(TestCase):
         app = create_app(self.config)
         routes = app.router._named_resources
 
+        self.assertEqual(app['URL_PATH_PREFIX'], url_prefix)
+
         for route in routes.values():
             url = route.canonical
             if url == '/info':

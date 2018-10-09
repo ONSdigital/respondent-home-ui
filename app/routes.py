@@ -1,23 +1,10 @@
-from collections import namedtuple
-
-from . import handlers
-
-
-Route = namedtuple("Route", ["method", "path", "handler", "name"])
-
-
-ROUTES = [
-    Route("GET",  "/", handler=handlers.get_index,  name="get_index"),
-    Route("POST", "/", handler=handlers.post_index, name="post_index"),
-    Route("GET", "/info", handler=handlers.get_info, name="get_info"),
-]
+from .handlers import routes
 
 
 def setup(app, url_path_prefix):
     """Set up routes."""
     prefix = url_path_prefix.lstrip("/")
-    for route in ROUTES:
-        method, url, handler, name = route
-        url = url.lstrip('/')
-        full_url = f"/{prefix}{url}" if name != "get_info" else f"/{url}"   # Preserve /info for app health check
-        app.router.add_route(method, full_url, handler, name=name)
+    for route in routes:
+        url = route.path.lstrip('/')
+        route_path = f"/{prefix}{url}" if route.kwargs.get('use_prefix', True) else f"/{url}"
+        app.router.add_route(route.method, route_path, route.handler, name=route.kwargs.get('name'))

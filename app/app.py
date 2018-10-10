@@ -106,7 +106,7 @@ def create_app(config_name=None) -> Application:
 
     # Set static folder location
     # TODO: Only turn on in dev environment
-    app["static_root_url"] = f'{app["URL_PATH_PREFIX"] or "/"}'
+    app["static_root_url"] = app["URL_PATH_PREFIX"] or "/"
     app.router.add_static(app["static_root_url"], app["STATIC_ROOT"], show_index=True)
 
     # JWT KeyStore

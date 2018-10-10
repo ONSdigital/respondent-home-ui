@@ -7,7 +7,6 @@ from aioresponses import aioresponses
 from envparse import ConfigurationError, env
 
 from app.app import create_app
-from app.handlers import routes
 
 
 class TestCreateApp(AioHTTPTestCase):

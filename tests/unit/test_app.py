@@ -58,6 +58,18 @@ class TestCreateAppURLPathPrefix(TestCase):
         self.assertEqual(routes['index'].canonical, url_prefix)
         self.assertEqual(routes['info'].canonical, '/info')
 
+    def test_create_app_without_url_path_prefix(self):
+        from app import config
+
+        config.TestingConfig.URL_PATH_PREFIX = ''
+
+        app = create_app(self.config)
+        self.assertEqual(app['URL_PATH_PREFIX'], '')
+
+        routes = app.router._named_resources
+        self.assertEqual(routes['index'].canonical, '')
+        self.assertEqual(routes['info'].canonical, '/info')
+
 
 class TestCreateAppMissingConfig(TestCase):
 

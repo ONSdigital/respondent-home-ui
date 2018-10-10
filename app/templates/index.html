@@ -6,7 +6,7 @@
     {% include "partials/messages.html" with context %}
   {% endif %}
   <div>
-  <h2 class="saturn u-mt-l u-mb-m">Please enter your 12 character access code</h2>
+    <h2 class="saturn u-mt-l u-mb-m">Please enter your 12 character access code</h2>
     <form action="/" class="form qa-questionnaire-form" role="form" method="post" novalidate="">
       <div class="panel panel--simple panel--spacious {% if 'ERROR' in messages_dict %} panel--error {% else %} panel--info {% endif %} u-mb-l">
         <div class="panel__body">
@@ -48,9 +48,8 @@
           </div>
         </div>
       </div>
-    </div>
-    <p class="venus icon--lock u-mb-m">Your personal information is protected by law and will be kept confidential.</p>  
-    <button class="btn btn--lg qa-btn-get-started" type="submit" name="action[save_continue]">Start now</button>
-  </form>
-</div>
+      <p class="venus icon--lock u-mb-m">Your personal information is protected by law and will be kept confidential.</p>  
+      <button class="btn btn--lg qa-btn-get-started" type="submit" name="action[save_continue]">Start now</button>
+    </form>
+  </div>
 {% endblock %}

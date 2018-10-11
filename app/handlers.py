@@ -2,7 +2,7 @@ import logging
 
 import aiohttp_jinja2
 from aiohttp.client_exceptions import ClientConnectionError, ClientConnectorError, ClientResponseError
-from aiohttp.web import HTTPFound, RouteTableDef, View, json_response
+from aiohttp.web import HTTPFound, RouteTableDef, json_response
 from sdc.crypto.encrypter import encrypt
 from structlog import wrap_logger
 
@@ -17,26 +17,31 @@ logger = wrap_logger(logging.getLogger("respondent-home"))
 routes = RouteTableDef()
 
 
-@routes.view('/info', name='info', use_prefix=False)
-class Info(View):
+@routes.view('/info', use_prefix=False)
+class Info:
 
-    async def get(self):
+    async def get(self, request):
         info = {
             "name": 'respondent-home-ui',
             "version": VERSION,
         }
-        if 'check' in self.request.query:
-            info["ready"] = await self.request.app.check_services()
+        if 'check' in request.query:
+            info["ready"] = await request.app.check_services()
         return json_response(info)
 
 
-@routes.view('/', name='index')
-class Index(View):
+@routes.view('/')
+class Index:
 
-    def __init__(self, request):
-        super(Index, self).__init__(request)
-        self.client_ip = self.request.headers.get("X-Forwarded-For")
+    def __init__(self):
         self.iac = None
+        self.request = None
+
+    @property
+    def client_ip(self):
+        if not hasattr(self, '_client_ip'):
+            self._client_ip = self.request.headers.get("X-Forwarded-For")
+        return self._client_ip
 
     @property
     def iac_url(self):
@@ -55,7 +60,7 @@ class Index(View):
             raise InactiveCaseError
 
     def redirect(self):
-        raise HTTPFound(self.request.app.router['index'].url_for())
+        raise HTTPFound(self.request.app.router['Index:get'].url_for())
 
     async def get_iac_details(self):
         logger.info(f"Making GET request to {self.iac_url}", iac=self.iac, client_ip=self.client_ip)
@@ -90,15 +95,17 @@ class Index(View):
             raise ex
 
     @aiohttp_jinja2.template('index.html')
-    async def get(self):
+    async def get(self, _):
         return {}
 
     @aiohttp_jinja2.template('index.html')
-    async def post(self):
+    async def post(self, request):
         """
         Main entry point to building an eQ payload as URL parameter.
         """
+        self.request = request
         data = await self.request.post()
+
         try:
             self.iac = self.join_iac(data)
         except TypeError:

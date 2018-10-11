@@ -6,7 +6,7 @@ import jinja2
 from aiohttp import BasicAuth, ClientSession, ClientTimeout
 from aiohttp.client_exceptions import ClientConnectionError, ClientConnectorError, ClientResponseError
 from aiohttp.web import Application
-from aiohttp_utils import negotiation
+from aiohttp_utils import negotiation, routing
 from structlog import wrap_logger
 
 from . import config
@@ -67,7 +67,8 @@ def create_app(config_name=None) -> Application:
             security.nonce_middleware,
             session.setup(app_config["SECRET_KEY"]),
             flash.flash_middleware,
-        ]
+        ],
+        router=routing.ResourceRouter(),
     )
 
     # Handle 500 errors

@@ -53,9 +53,9 @@ class TestCreateAppURLPathPrefix(TestCase):
         app = create_app(self.config)
         self.assertEqual(app['URL_PATH_PREFIX'], url_prefix)
 
-        routes = app.router._named_resources
-        self.assertEqual(routes['index'].canonical, url_prefix)
-        self.assertEqual(routes['info'].canonical, '/info')
+        self.assertEqual(app.router['Index:get'].canonical, '/url-path-prefix/')
+        self.assertEqual(app.router['Index:post'].canonical, '/url-path-prefix/')
+        self.assertEqual(app.router['Info:get'].canonical, '/info')
 
     def test_create_app_without_url_path_prefix(self):
         from app import config
@@ -65,9 +65,9 @@ class TestCreateAppURLPathPrefix(TestCase):
         app = create_app(self.config)
         self.assertEqual(app['URL_PATH_PREFIX'], '')
 
-        routes = app.router._named_resources
-        self.assertEqual(routes['index'].canonical, '')
-        self.assertEqual(routes['info'].canonical, '/info')
+        self.assertEqual(app.router['Index:get'].canonical, '/')
+        self.assertEqual(app.router['Index:post'].canonical, '/')
+        self.assertEqual(app.router['Info:get'].canonical, '/info')
 
 
 class TestCreateAppMissingConfig(TestCase):

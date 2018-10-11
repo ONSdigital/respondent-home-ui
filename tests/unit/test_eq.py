@@ -212,23 +212,6 @@ class TestEq(RHTestCase):
             self.assertIn(f"Could not retrieve ce id for case {self.case_id}", ex.exception.message)
 
     @unittest_run_loop
-    async def test_build_raises_InvalidEqPayLoad_missing_name(self):
-        sample_json = self.sample_attributes_json.copy()
-        del sample_json['attributes']['ADDRESS_LINE1']
-
-        from app import eq  # NB: local import to avoid overwriting the patched version for some tests
-
-        with aioresponses() as mocked:
-            mocked.get(self.collection_instrument_url, payload=self.collection_instrument_json)
-            mocked.get(self.collection_exercise_url, payload=self.collection_exercise_json)
-            mocked.get(self.collection_exercise_events_url, payload=self.collection_exercise_events_json)
-            mocked.get(self.sample_attributes_url, payload=sample_json)
-
-            with self.assertRaises(InvalidEqPayLoad) as ex:
-                await eq.EqPayloadConstructor(self.case_json, self.app, self.iac_code).build()
-            self.assertIn(f"Could not retrieve ru_name (address) for case {self.case_id}", ex.exception.message)
-
-    @unittest_run_loop
     async def test_build_raises_InvalidEqPayLoad_missing_country_code(self):
         sample_json = self.sample_attributes_json.copy()
         del sample_json['attributes']['COUNTRY']

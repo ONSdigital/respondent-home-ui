@@ -169,11 +169,6 @@ class EqPayloadConstructor(object):
             raise InvalidEqPayLoad(f"Could not retrieve attributes for case {self._case_id}")
 
         try:
-            self._ru_name = self._sample_attributes["ADDRESS_LINE1"]
-        except KeyError:
-            raise InvalidEqPayLoad(f"Could not retrieve ru_name (address) for case {self._case_id}")
-
-        try:
             self._country_code = self._sample_attributes["COUNTRY"]
         except KeyError:
             raise InvalidEqPayLoad(f"Could not retrieve country_code for case {self._case_id}")
@@ -194,7 +189,6 @@ class EqPayloadConstructor(object):
             "form_type": self._form_type,  # required but only one ('1') formtype for lms
             "collection_exercise_sid": self._collex_id,  # required by eQ
             "ru_ref": self._sample_unit_ref,  # required by eQ
-            "ru_name": self._ru_name,  # required by eQ - household identifier (address)
             "case_id": self._case_id,  # not required by eQ but useful for downstream
             "case_ref": self._case_ref,  # not required by eQ but useful for downstream
             "account_service_url": self._account_service_url,  # required for save/continue

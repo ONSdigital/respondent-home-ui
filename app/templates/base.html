@@ -64,37 +64,12 @@
         {% include 'partials/footer.html' %}
       </div>
     </div>
-  <!-- jQuery 1 -->
-  <!--[if lt IE 9]>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-  <script>window.jQuery || document.write('<script "/js/vendor/jquery-1.12.0.min.js?q=95ed16e2c89bb26d9c02129271468664828e4cee"><\/script>')</script>
-  <![endif]-->
-  <!-- jQuery 2 -->
-  <!--[if gte IE 9]><!-->
-  <script src="/js/vendor/jquery-2.2.0.min.js"></script>
-  <script nonce="{{ request.csp_nonce }}">window.jQuery || document.write('<script "/js/vendor/jquery-2.2.0.min.js?q=95ed16e2c89bb26d9c02129271468664828e4cee"><\/script>')</script>
-  <!--<![endif]-->
-  <!--[if gte IE 9]><!-->
-  <script src="/js/bundle.js"></script>
-    <!--<![endif]-->
-    <!-- <%= yield_content :javascript %>
-      <% unless analytics_account.nil? %>
-        <script>
-          (function (i, s, o, g, r, a, m) {
-            i['GoogleAnalyticsObject'] = r;
-            i[r] = i[r] || function () {
-              (i[r].q = i[r].q || []).push(arguments)
-            }, i[r].l = 1 * new Date();
-            a = s.createElement(o),
-              m = s.getElementsByTagName(o)[0];
-            a.async = 1;
-            a.src = g;
-            m.parentNode.insertBefore(a, m)
-          })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
-          ga('create', '<%=h analytics_account %>', 'auto');
-          ga('send', 'pageview');
-        </script>
-        <% end %> -->
+    <!--[if gte IE 9]><!-->
+    {% block scripts %}
+    {% set scripts_cdn = cdn_url_prefix~"/scripts/bundle.min.js" %}
+      <script src="{{ scripts_cdn }}"></script>
+    {% endblock scripts %}
+  	  <!--<![endif]-->
   </body>
 
 </html>

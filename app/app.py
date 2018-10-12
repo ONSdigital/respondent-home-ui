@@ -6,7 +6,7 @@ import jinja2
 from aiohttp import BasicAuth, ClientSession, ClientTimeout
 from aiohttp.client_exceptions import ClientConnectionError, ClientConnectorError, ClientResponseError
 from aiohttp.web import Application
-from aiohttp_utils import negotiation
+from aiohttp_utils import negotiation, routing
 from structlog import wrap_logger
 
 from . import config
@@ -67,7 +67,8 @@ def create_app(config_name=None) -> Application:
             security.nonce_middleware,
             session.setup(app_config["SECRET_KEY"]),
             flash.flash_middleware,
-        ]
+        ],
+        router=routing.ResourceRouter(),
     )
 
     # Handle 500 errors
@@ -89,7 +90,7 @@ def create_app(config_name=None) -> Application:
     logger.info("Logging configured", log_level=app['LOG_LEVEL'])
 
     # Set up routes
-    routes.setup(app)
+    routes.setup(app, url_path_prefix=app['URL_PATH_PREFIX'])
 
     # Use content negotiation middleware to render JSON responses
     negotiation.setup(app)
@@ -106,8 +107,8 @@ def create_app(config_name=None) -> Application:
 
     # Set static folder location
     # TODO: Only turn on in dev environment
-    app["static_root_url"] = "/"
-    app.router.add_static("/", app["STATIC_ROOT"], show_index=True)
+    app["static_root_url"] = app["URL_PATH_PREFIX"] or "/"
+    app.router.add_static(app["static_root_url"], app["STATIC_ROOT"])
 
     # JWT KeyStore
     app["key_store"] = jwt.key_store(app["JSON_SECRET_KEYS"])

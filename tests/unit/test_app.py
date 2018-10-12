@@ -40,6 +40,36 @@ class TestCreateApp(AioHTTPTestCase):
         self.assertEqual(response.headers['Referrer-Policy'], 'same-origin')
 
 
+class TestCreateAppURLPathPrefix(TestCase):
+
+    config = 'TestingConfig'
+
+    def test_create_app_with_url_path_prefix(self):
+        from app import config
+
+        url_prefix = '/url-path-prefix'
+        config.TestingConfig.URL_PATH_PREFIX = url_prefix
+
+        app = create_app(self.config)
+        self.assertEqual(app['URL_PATH_PREFIX'], url_prefix)
+
+        self.assertEqual(app.router['Index:get'].canonical, '/url-path-prefix/')
+        self.assertEqual(app.router['Index:post'].canonical, '/url-path-prefix/')
+        self.assertEqual(app.router['Info:get'].canonical, '/info')
+
+    def test_create_app_without_url_path_prefix(self):
+        from app import config
+
+        config.TestingConfig.URL_PATH_PREFIX = ''
+
+        app = create_app(self.config)
+        self.assertEqual(app['URL_PATH_PREFIX'], '')
+
+        self.assertEqual(app.router['Index:get'].canonical, '/')
+        self.assertEqual(app.router['Index:post'].canonical, '/')
+        self.assertEqual(app.router['Info:get'].canonical, '/info')
+
+
 class TestCreateAppMissingConfig(TestCase):
 
     config = 'ProductionConfig'

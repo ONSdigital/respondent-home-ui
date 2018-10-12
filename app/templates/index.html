@@ -6,8 +6,8 @@
     {% include "partials/messages.html" with context %}
   {% endif %}
   <div>
-    <h2 class="saturn u-mt-l u-mb-m">Please enter your 12 character access code</h2>
-    <form action="/" class="form qa-questionnaire-form" role="form" method="post" novalidate="">
+    <h2 class="saturn u-mt-l u-mb-m">Enter your access code</h2>
+    <form action="/" class="form qa-questionnaire-form" role="form" method="post">
       <div class="panel panel--simple panel--spacious {% if 'ERROR' in messages_dict %} panel--error {% else %} panel--info {% endif %} u-mb-l">
         <div class="panel__body">
           <div class="group" id="household-and-accommodation">
@@ -19,7 +19,7 @@
                       <div class="answer answer--integer " id="access-code-answer">
                         <div class="answer__fields js-fields">
                           <fieldset class="fieldgroup fieldgroup--date">
-                            <legend class="fieldgroup__title venus">Your access code is printed on the letter we sent you</legend>
+                            <legend class="fieldgroup__title venus">Your 12 character access code is on the letter we sent you</legend>
                             <div class="fieldgroup__fields">
                               <div class="field field--input field--code">
                                 <label class="label mercury u-vh" for="iac1">Enter the first four characters of the access code</label>
@@ -48,7 +48,7 @@
           </div>
         </div>
       </div>
-      <p class="venus icon--lock u-mb-m">Your personal information is protected by law and will be kept confidential.</p>  
+      <p class="venus icon--lock u-mb-m">Your information is protected by law and will be kept confidential.</p>  
       <button class="btn btn--lg qa-btn-get-started" type="submit" name="action[save_continue]">Start now</button>
     </form>
   </div>

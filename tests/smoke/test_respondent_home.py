@@ -12,9 +12,7 @@ class TestRespondentHome(unittest.TestCase):
         if not respondent_home_url:
             self.fail('RESPONDENT_HOME_URL not set')
 
-        url_prefix = os.getenv('URL_PATH_PREFIX')
-        if not url_prefix:
-            self.fail('URL_PATH_PREFIX not set')
+        url_prefix = os.getenv('URL_PATH_PREFIX', '')
 
         url = f'{respondent_home_url}{url_prefix}'
 

@@ -16,7 +16,8 @@ class TestRespondentHome(unittest.TestCase):
         resp = requests.get(url, verify=False)
 
         # Then
-        self.assertEqual(resp.status_code, 200, resp.status_code)
+        message = f'URL: {url}, status_code: {resp.status_code}'
+        self.assertEqual(resp.status_code, 200, message)
 
     def test_can_access_required_services(self):
         # Given
@@ -29,3 +30,4 @@ class TestRespondentHome(unittest.TestCase):
 
         # Then
         self.assertEqual(resp['ready'], True, resp)
+        self.assertEqual(resp['name'], "respondent-home-ui", resp)

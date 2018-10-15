@@ -46,7 +46,6 @@ class DemoRunner:
         self.iac_code = ''.join([str(n) for n in range(11)])
         self.iac1, self.iac2, self.iac3 = self.iac_code[:4], self.iac_code[4:8], self.iac_code[8:]
         self.iac_json = {'active': '1', 'caseId': self.case_id}
-        self.ru_name = self.sample_attributes_json['attributes']['ADDRESS_LINE1']
         self.sample_unit_id = self.sample_attributes_json['id']
         self.sample_unit_ref = self.case_json['caseGroup']['sampleUnitRef']
         self.sample_unit_type = self.case_json['sampleUnitType']
@@ -63,7 +62,6 @@ class DemoRunner:
             "form_type": self.form_type,
             "collection_exercise_sid": self.collection_exercise_id,
             "ru_ref": self.sample_unit_ref,
-            "ru_name": self.ru_name,
             "case_id": self.case_id,
             "case_ref": self.case_ref,
             "account_service_url": self.app['ACCOUNT_SERVICE_URL'],

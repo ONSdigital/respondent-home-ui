@@ -20,8 +20,7 @@ class TestRespondentHome(unittest.TestCase):
         resp = requests.get(url, verify=False)
 
         # Then
-        message = f'URL: {url}, status_code: {resp.status_code}'
-        self.assertEqual(resp.status_code, 200, message)
+        self.assertEqual(resp.status_code, 200, url)
 
     def test_can_access_required_services(self):
         # Given

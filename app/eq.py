@@ -186,7 +186,7 @@ class EqPayloadConstructor(object):
             "exp": int(time.time() + (5 * 60)),  # required by eQ for creating a new claim
             "eq_id": self._eq_id,  # required but currently only one social survey ('lms')
             "period_id": self._collex_period_id,  # required by eQ
-            "form_type": self._form_type,  # required but only one ('1') formtype for lms
+            "form_type": self._form_type,  # required formtype for lms ('2' for lms_2 schema)
             "collection_exercise_sid": self._collex_id,  # required by eQ
             "ru_ref": self._sample_unit_ref,  # required by eQ
             "case_id": self._case_id,  # not required by eQ but useful for downstream

@@ -139,8 +139,8 @@ class TestRespondentHome(AioHTTPTestCase):
         location = response.headers['location']
         self.assertIn(self.app['EQ_URL'], location)  # Check that the redirect location is to eQ
         response = requests.get(location)  # Follow the redirect location to check contents
-        address = self.get_address_by_sample_unit_id(sample_unit_id).encode()
-        self.assertIn(address, response.content)  # Use the household address as a simple point of verification
+        self.assertIn(b'What is your name', response.content)
+        self.assertIn(b'Online Household Study', response.content)
         case_response = await get_case(case['id'], self.app)
         case_state = case_response['caseGroup']['caseGroupStatus']
         self.assertEqual(case_state, 'NOTSTARTED')  # Ensure the case status has not transitioned

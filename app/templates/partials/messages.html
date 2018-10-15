@@ -21,7 +21,7 @@
         </p>
         {% endif %}
         <ul class="list list--bare">
-          <li class="list__item mars">{% if group.list|length > 1 %}{{ loop.index }}){% endif %}
+          <li class="list__item mars">
             {% if message.clickable %}
               {{loop.index}}) <a class="js-inpagelink" href="#access-code-answer">{{ message.text }}</a>
             {% else %}

@@ -22,7 +22,7 @@ class TestHandlers(RHTestCase):
         response = await self.client.request("GET", self.get_index)
         self.assertEqual(response.status, 200)
         contents = await response.content.read()
-        self.assertIn(b'Your access code is printed on the letter we sent you', contents)
+        self.assertIn(b'Your 12 character access code is on the letter we sent you', contents)
         self.assertEqual(contents.count(b'input-text'), 3)
         self.assertIn(b'type="submit"', contents)
 

@@ -73,6 +73,7 @@ def smoke(ctx, local=False):
 
     if local:
         os.environ['RESPONDENT_HOME_URL'] = "http://localhost:9092"
+        os.environ['RESPONDENT_HOME_INTERNAL_URL'] = "http://localhost:9092"
     retcode = pytest.main(["tests/smoke"])
     sys.exit(retcode)
 

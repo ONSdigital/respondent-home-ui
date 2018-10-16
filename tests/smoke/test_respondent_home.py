@@ -24,9 +24,9 @@ class TestRespondentHome(unittest.TestCase):
 
     def test_can_access_required_services(self):
         # Given
-        url = os.getenv('RESPONDENT_HOME_URL')
+        url = os.getenv('RESPONDENT_HOME_INTERNAL_URL')
         if not url:
-            self.fail('RESPONDENT_HOME_URL not set')
+            self.fail('RESPONDENT_HOME_INTERNAL_URL not set')
 
         # When
         resp = requests.get(f'{url}/info?check=true', verify=False).json()

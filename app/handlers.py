@@ -156,3 +156,10 @@ class Index:
 
         logger.info('Redirecting to eQ', client_ip=self.client_ip)
         raise HTTPFound(f"{self.request.app['EQ_URL']}/session?token={token}")
+
+
+@routes.view('/cookies-privacy')
+class CookiesPrivacy:
+    @aiohttp_jinja2.template('cookies-privacy.html')
+    async def get(self, _):
+        return {}

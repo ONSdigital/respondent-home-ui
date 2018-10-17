@@ -186,8 +186,6 @@ class RHTestCase(AioHTTPTestCase):
         :param content: rendered HTML str
         """
         if message.get('clickable', False):
-            if message['level'] == 'ERROR':
-                self.assertIn('must be corrected', content)
             self.assertIn('js-inpagelink', content)
 
         for message_line in message['text'].split('\n'):

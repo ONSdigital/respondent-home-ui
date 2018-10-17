@@ -108,30 +108,30 @@
 
 
     <table class="table">
-        <thead class="table__head table__header-cell--align">
+        <thead class="table--head">
             <tr>
-                <th class="table__header-cell table__header-cell--align">Name</th>
-                <th class="table__header-cell">Purpose</th>
-                <th class="table__header-cell">Expires</th>
+                <th scope="col" class="table--header--cell">Name</th>
+                <th scope="col" class="table--header--cell">Purpose</th>
+                <th scope="col" class="table--header--cell">Expires</th>
             </tr>
         </thead>
         <tbody>
             <tr class="table__row">
-                <td class="table__cell">_ga</td>
-                <td class="table__cell">This helps us count how many people visit our website by tracking if you’ve
+                <td class="table--cell">_ga</td>
+                <td class="table--cell">This helps us count how many people visit our website by tracking if you’ve
                     visited before</td>
-                <td class="table__cell nowrap">2 years</td>
+                <td class="table--cell nowrap">2 years</td>
             </tr>
             <tr class="table__row">
-                <td class="table__cell">_gid</td>
-                <td class="table__cell">This helps us count how many people visit our website by tracking if you’ve
+                <td class="table--cell">_gid</td>
+                <td class="table--cell">This helps us count how many people visit our website by tracking if you’ve
                     visited before</td>
-                <td class="table__cell nowrap">24 hours</td>
+                <td class="table--cell nowrap">24 hours</td>
             </tr>
             <tr class="table__row">
-                <td class="table__cell">_gat</td>
-                <td class="table__cell">Used to manage the rate at which page view requests are made</td>
-                <td class="table__cell nowrap">10 minutes</td>
+                <td class="table--cell">_gat</td>
+                <td class="table--cell">Used to manage the rate at which page view requests are made</td>
+                <td class="table--cell nowrap">10 minutes</td>
             </tr>
         </tbody>
     </table>
@@ -147,16 +147,16 @@
     <table class="table">
         <thead class="table__head">
             <tr>
-                <th class="table__header-cell">Name</th>
-                <th class="table__header-cell">Purpose</th>
-                <th class="table__header-cell">Expires</th>
+                <th scope="col" class="table--header--cell">Name</th>
+                <th scope="col" class="table--header--cell">Purpose</th>
+                <th scope="col" class="table--header--cell">Expires</th>
             </tr>
         </thead>
         <tbody>
             <tr class="table__row">
-                <td class="table__cell">Session</td>
-                <td class="table__cell">To keep you signed in when completing a survey</td>
-                <td class="table__cell">When a user logs out or closes the browser. Or when
+                <td class="table--cell">Session</td>
+                <td class="table--cell">To keep you signed in when completing a survey</td>
+                <td class="table--cell">When a user logs out or closes the browser. Or when
                     their cookie cache is cleared
                 </td>
             </tr>
@@ -210,14 +210,14 @@
         <table class="table">
             <thead class="table__head">
                 <tr>
-                    <th class="table__header-cell">Data item</th>
-                    <th class="table__header-cell">Description</th>
+                    <th scope="col" class="table--header--cell">Data item</th>
+                    <th scope="col" class="table--header--cell">Description</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td class="table__cell">IP address</td>
-                    <td class="table__cell">
+                    <td class="table--cell">IP address</td>
+                    <td class="table--cell">
                         <p>Internet Protocol address</p>
                         <p>All devices connected to the internet will have an IP address and this is used for one
                             device (e.g. the computer you use to provide a survey response at your place of work) to be
@@ -233,14 +233,16 @@
             data.</p>
 
         <ul>
-            <li>Online Household Study</li>
-            <ul>
-                <li>The Online Household Study is a UK-wide online study which covers a range of topics including work, retirement, higher education, unemployment and looking after the family or home.</li>
-                <li>The study collects the following items of personal data:</li>
+            <li>Online Household Study
                 <ul>
-                    <li>Date of Birth</li>
+                    <li>The Online Household Study is a UK-wide online study which covers a range of topics including work, retirement, higher education, unemployment and looking after the family or home.</li>
+                    <li>The study collects the following items of personal data:
+                        <ul>
+                            <li>Date of Birth</li>
+                        </ul>
+                    </li>
                 </ul>
-            </ul>
+            </li>
         </ul>
         <p>Participating in the study, as well as specific questions within the study, is voluntary.</p>
 
@@ -277,19 +279,19 @@
             <table class="table">
                 <thead class="table__head">
                     <tr>
-                        <th class="table__header-cell">Purpose</th>
-                        <th class="table__header-cell">Description</th>
+                        <th scope="col" class="table--header--cell">Purpose</th>
+                        <th scope="col" class="table--header--cell">Description</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="table__cell">Cloud infrastructure</td>
-                        <td class="table__cell">Used to support the platform on which the Survey Data Collection
+                        <td class="table--cell">Cloud infrastructure</td>
+                        <td class="table--cell">Used to support the platform on which the Survey Data Collection
                             service runs.</td>
                     </tr>
                     <tr>
-                        <td class="table__cell">Secure file transfer</td>
-                        <td class="table__cell">This is used for the behind the scenes transfer of data that identify
+                        <td class="table--cell">Secure file transfer</td>
+                        <td class="table--cell">This is used for the behind the scenes transfer of data that identify
                             the businesses that have been selected for participation in a given survey.</td>
                     </tr>
                 </tbody>
@@ -318,13 +320,13 @@
             <li>The right to erasure *</li>
             <li>The right to restrict processing *</li>
             <li>The right to data portability * <br>
-                <emphasis>This right only exists if the lawful basis used is either consent or contract. Neither the
+                <em>This right only exists if the lawful basis used is either consent or contract. Neither the
                     Survey Data Collection service nor any surveys hosted on this platform rely on either of the lawful
-                    basis and therefore this right is not applicable.</emphasis>
+                    basis and therefore this right is not applicable.</em>
             </li>
             <li>The right to object *</li>
             <li>Rights in relation to automated decision making and profiling.<br>
-                <emphasis>No automated decision making or profiling occurs at the personal level.</emphasis>
+                <em>No automated decision making or profiling occurs at the personal level.</em>
             </li>
         </ol>
         <p> * These rights are subject to exemptions.</p>

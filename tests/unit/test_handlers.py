@@ -50,8 +50,8 @@ class TestHandlers(RHTestCase):
                 response = await self.client.request("POST", self.post_index, allow_redirects=False, data=self.form_data)
             self.assertLogLine(cm, "Service connection error")
 
-        self.assertEqual(response.status, 200)
-        self.assertMessagePanel(CONNECTION_ERROR_MSG, str(await response.content.read()))
+        self.assertEqual(response.status, 500)
+        self.assertIn('Sorry, something went wrong', str(await response.content.read()))
 
     @unittest_run_loop
     async def test_post_index_no_iac_json(self):
@@ -62,8 +62,8 @@ class TestHandlers(RHTestCase):
                 response = await self.client.request("POST", self.post_index, allow_redirects=False, data=self.form_data)
             self.assertLogLine(cm, "Service failed to return expected JSON payload")
 
-        self.assertEqual(response.status, 200)
-        self.assertMessagePanel(SERVER_ERROR_MSG, str(await response.content.read()))
+        self.assertEqual(response.status, 500)
+        self.assertIn('Sorry, something went wrong', str(await response.content.read()))
 
     @unittest_run_loop
     async def test_post_index_case_403(self):
@@ -75,8 +75,8 @@ class TestHandlers(RHTestCase):
                 response = await self.client.request("POST", self.post_index, allow_redirects=False, data=self.form_data)
             self.assertLogLine(cm, "Error retrieving case", case_id=self.case_id, status_code=403)
 
-        self.assertEqual(response.status, 200)
-        self.assertMessagePanel(SERVER_ERROR_MSG, str(await response.content.read()))
+        self.assertEqual(response.status, 500)
+        self.assertIn('Sorry, something went wrong', str(await response.content.read()))
 
     @unittest_run_loop
     async def test_post_index_case_500(self):
@@ -88,8 +88,8 @@ class TestHandlers(RHTestCase):
                 response = await self.client.request("POST", self.post_index, data=self.form_data)
             self.assertLogLine(cm, "Error retrieving case", case_id=self.case_id, status_code=500)
 
-        self.assertEqual(response.status, 200)
-        self.assertMessagePanel(SERVER_ERROR_MSG, str(await response.content.read()))
+        self.assertEqual(response.status, 500)
+        self.assertIn('Sorry, something went wrong', str(await response.content.read()))
 
     @unittest_run_loop
     async def test_post_index_case_connector_error(self):
@@ -101,8 +101,8 @@ class TestHandlers(RHTestCase):
                 response = await self.client.request("POST", self.post_index, data=self.form_data)
             self.assertLogLine(cm, "Service connection error")
 
-        self.assertEqual(response.status, 200)
-        self.assertMessagePanel(CONNECTION_ERROR_MSG, str(await response.content.read()))
+        self.assertEqual(response.status, 500)
+        self.assertIn('Sorry, something went wrong', str(await response.content.read()))
 
     @unittest_run_loop
     async def test_post_index_with_build_connection_error(self):
@@ -115,8 +115,8 @@ class TestHandlers(RHTestCase):
                 response = await self.client.request("POST", self.post_index, allow_redirects=False, data=self.form_data)
             self.assertLogLine(cm, "Service connection error", message='Failed')
 
-        self.assertEqual(response.status, 200)
-        self.assertMessagePanel(CONNECTION_ERROR_MSG, str(await response.content.read()))
+        self.assertEqual(response.status, 500)
+        self.assertIn('Sorry, something went wrong', str(await response.content.read()))
 
     @skip_encrypt
     @unittest_run_loop
@@ -163,9 +163,9 @@ class TestHandlers(RHTestCase):
                 response = await self.client.request("POST", self.post_index, allow_redirects=False, data=self.form_data)
             self.assertLogLine(cm, "Service failed to build eQ payload")
 
-        # then error handler catches exception and flashes message to index
-        self.assertEqual(response.status, 200)
-        self.assertMessagePanel(REDIRECT_FAILED_MSG, str(await response.content.read()))
+        # then error handler catches exception and renders error.html
+        self.assertEqual(response.status, 500)
+        self.assertIn('Sorry, something went wrong', str(await response.content.read()))
 
     @unittest_run_loop
     async def test_post_index_with_build_ci_500(self):
@@ -181,8 +181,8 @@ class TestHandlers(RHTestCase):
                 response = await self.client.request("POST", self.post_index, allow_redirects=False, data=self.form_data)
             self.assertLogLine(cm, "Error in response", status_code=500)
 
-        self.assertEqual(response.status, 200)
-        self.assertMessagePanel(SERVER_ERROR_MSG, str(await response.content.read()))
+        self.assertEqual(response.status, 500)
+        self.assertIn('Sorry, something went wrong', str(await response.content.read()))
 
     @unittest_run_loop
     async def test_post_index_with_build_ci_400(self):
@@ -198,8 +198,8 @@ class TestHandlers(RHTestCase):
                 response = await self.client.request("POST", self.post_index, allow_redirects=False, data=self.form_data)
             self.assertLogLine(cm, "Error in response", status_code=400)
 
-        self.assertEqual(response.status, 200)
-        self.assertMessagePanel(SERVER_ERROR_MSG, str(await response.content.read()))
+        self.assertEqual(response.status, 500)
+        self.assertIn('Sorry, something went wrong', str(await response.content.read()))
 
     @unittest_run_loop
     async def test_post_index_with_build_ce_503(self):
@@ -216,8 +216,8 @@ class TestHandlers(RHTestCase):
                 response = await self.client.request("POST", self.post_index, allow_redirects=False, data=self.form_data)
             self.assertLogLine(cm, "Error in response", status_code=503)
 
-        self.assertEqual(response.status, 200)
-        self.assertMessagePanel(SERVER_ERROR_MSG, str(await response.content.read()))
+        self.assertEqual(response.status, 500)
+        self.assertIn('Sorry, something went wrong', str(await response.content.read()))
 
     @unittest_run_loop
     async def test_post_index_with_build_events_404(self):
@@ -235,8 +235,8 @@ class TestHandlers(RHTestCase):
                 response = await self.client.request("POST", self.post_index, allow_redirects=False, data=self.form_data)
             self.assertLogLine(cm, "Error in response", status_code=404)
 
-        self.assertEqual(response.status, 200)
-        self.assertMessagePanel(SERVER_ERROR_MSG, str(await response.content.read()))
+        self.assertEqual(response.status, 500)
+        self.assertIn('Sorry, something went wrong', str(await response.content.read()))
 
     @unittest_run_loop
     async def test_post_index_with_build_sample_403(self):
@@ -255,8 +255,8 @@ class TestHandlers(RHTestCase):
                 response = await self.client.request("POST", self.post_index, allow_redirects=False, data=self.form_data)
             self.assertLogLine(cm, "Error in response", status_code=403)
 
-        self.assertEqual(response.status, 200)
-        self.assertMessagePanel(SERVER_ERROR_MSG, str(await response.content.read()))
+        self.assertEqual(response.status, 500)
+        self.assertIn('Sorry, something went wrong', str(await response.content.read()))
 
     @unittest_run_loop
     async def test_post_index_with_build_case_event_500(self):
@@ -276,8 +276,8 @@ class TestHandlers(RHTestCase):
                 response = await self.client.request("POST", self.post_index, allow_redirects=False, data=self.form_data)
             self.assertLogLine(cm, "Error posting case event", status_code=500, case_id=self.case_id)
 
-        self.assertEqual(response.status, 200)
-        self.assertMessagePanel(SERVER_ERROR_MSG, str(await response.content.read()))
+        self.assertEqual(response.status, 500)
+        self.assertIn('Sorry, something went wrong', str(await response.content.read()))
 
     @unittest_run_loop
     async def test_post_index_caseid_missing(self):
@@ -380,8 +380,8 @@ class TestHandlers(RHTestCase):
                 response = await self.client.request("POST", self.post_index, data=self.form_data)
             self.assertLogLine(cm, "Client failed to connect to iac service")
 
-        self.assertEqual(response.status, 200)
-        self.assertMessagePanel(CONNECTION_ERROR_MSG, str(await response.content.read()))
+        self.assertEqual(response.status, 500)
+        self.assertIn('Sorry, something went wrong', str(await response.content.read()))
 
     @unittest_run_loop
     async def test_post_index_iac_service_500(self):
@@ -392,8 +392,8 @@ class TestHandlers(RHTestCase):
                 response = await self.client.request("POST", self.post_index, data=self.form_data)
             self.assertLogLine(cm, "Error in response", status_code=500)
 
-        self.assertEqual(response.status, 200)
-        self.assertMessagePanel(SERVER_ERROR_MSG, str(await response.content.read()))
+        self.assertEqual(response.status, 500)
+        self.assertIn('Sorry, something went wrong', str(await response.content.read()))
 
     @unittest_run_loop
     async def test_post_index_iac_service_503(self):
@@ -404,8 +404,8 @@ class TestHandlers(RHTestCase):
                 response = await self.client.request("POST", self.post_index, data=self.form_data)
             self.assertLogLine(cm, "Error in response", status_code=503)
 
-        self.assertEqual(response.status, 200)
-        self.assertMessagePanel(SERVER_ERROR_MSG, str(await response.content.read()))
+        self.assertEqual(response.status, 500)
+        self.assertIn('Sorry, something went wrong', str(await response.content.read()))
 
     @unittest_run_loop
     async def test_post_index_iac_service_404(self):

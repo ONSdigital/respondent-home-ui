@@ -65,6 +65,8 @@ class BaseConfig:
 
     URL_PATH_PREFIX = env("URL_PATH_PREFIX", default="")
 
+    ANALYTICS_UA_ID = env("ANALYTICS_UA_ID", default="")
+
 
 class ProductionConfig(BaseConfig):
     pass
@@ -108,6 +110,8 @@ class DevelopmentConfig:
 
     URL_PATH_PREFIX = env("URL_PATH_PREFIX", default="")
 
+    ANALYTICS_UA_ID = env("ANALYTICS_UA_ID", default="")
+
 
 class TestingConfig:
     HOST = "0.0.0.0"
@@ -139,3 +143,5 @@ class TestingConfig:
     SECRET_KEY = generate_new_key()
 
     URL_PATH_PREFIX = ""
+
+    ANALYTICS_UA_ID = ""

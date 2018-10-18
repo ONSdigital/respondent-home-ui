@@ -117,7 +117,7 @@ class Index:
             iac_json = await self.get_iac_details()
         except InvalidIACError:
             logger.info("Attempt to use an invalid access code", client_ip=self.client_ip)
-            flash(self.request, BAD_CODE_MSG)
+            flash(self.request, INVALID_CODE_MSG)
             return aiohttp_jinja2.render_template("index.html", self.request, {}, status=202)
 
         try:

@@ -1,9 +1,6 @@
 VERSION = '0.0.1'
 
 
-CONNECTION_ERROR_MSG = {'text': 'There was a problem connecting to this study. Please try again later.', "level": "ERROR"}    # NOQA
-REDIRECT_FAILED_MSG = {'text': 'There was a problem connecting to this study. Please try again later.', "level": "ERROR"}    # NOQA
-SERVER_ERROR_MSG = {'text': 'There was an error, please enter your access code and try again.', "clickable": True, "level": "ERROR"}
 BAD_CODE_MSG = {'text': 'Please enter your access code.', "clickable": True, "level": "ERROR"}  # NOQA
 BAD_RESPONSE_MSG = {'text': 'There was an error, please enter your access code and try again.', "clickable": True, "level": "ERROR"}  # NOQA
 INVALID_CODE_MSG = {'text': 'Please re-enter your access code and try again.', "clickable": True, "level": "ERROR"}  # NOQA

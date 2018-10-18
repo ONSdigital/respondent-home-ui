@@ -38,7 +38,6 @@ class BaseConfig:
     HOST = env("HOST")
     PORT = env("PORT")
     LOG_LEVEL = env("LOG_LEVEL")
-    STATIC_ROOT = "app/static"
 
     ACCOUNT_SERVICE_URL = env("ACCOUNT_SERVICE_URL")
     EQ_URL = env("EQ_URL")
@@ -76,7 +75,6 @@ class DevelopmentConfig:
     HOST = env.str("HOST", default="0.0.0.0")
     PORT = env.int("PORT", default="9092")
     LOG_LEVEL = env("LOG_LEVEL", default="INFO")
-    STATIC_ROOT = "app/static"
 
     ACCOUNT_SERVICE_URL = env.str("ACCOUNT_SERVICE_URL", default="http://localhost:9092")
     EQ_URL = env.str("EQ_URL", default="http://localhost:5000")
@@ -115,7 +113,6 @@ class TestingConfig:
     HOST = "0.0.0.0"
     PORT = "9092"
     LOG_LEVEL = "INFO"
-    STATIC_ROOT = "app/static"
 
     ACCOUNT_SERVICE_URL = "http://localhost:9092"
     EQ_URL = "http://localhost:5000"

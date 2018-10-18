@@ -7,8 +7,7 @@ from aiohttp.test_utils import unittest_run_loop
 from aioresponses import aioresponses
 
 from app import (
-    BAD_CODE_MSG, BAD_RESPONSE_MSG, CODE_USED_MSG, INVALID_CODE_MSG, NOT_AUTHORIZED_MSG,
-    CONNECTION_ERROR_MSG, REDIRECT_FAILED_MSG, SERVER_ERROR_MSG)
+    BAD_CODE_MSG, BAD_RESPONSE_MSG, CODE_USED_MSG, INVALID_CODE_MSG, NOT_AUTHORIZED_MSG)
 from app.exceptions import InactiveCaseError
 from app.handlers import Index
 
@@ -417,7 +416,7 @@ class TestHandlers(RHTestCase):
             self.assertLogLine(cm, "Attempt to use an invalid access code", client_ip=None)
 
         self.assertEqual(response.status, 202)
-        self.assertMessagePanel(BAD_CODE_MSG, str(await response.content.read()))
+        self.assertMessagePanel(INVALID_CODE_MSG, str(await response.content.read()))
 
     @unittest_run_loop
     async def test_post_index_iac_service_403(self):

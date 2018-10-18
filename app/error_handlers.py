@@ -22,8 +22,6 @@ def create_error_middleware(overrides):
             resp = await handler(request)
             override = overrides.get(resp.status)
             return await override(request) if override else resp
-        except web.HTTPForbidden:
-            return await redirect(request, str(request.path))
         except InvalidEqPayLoad as ex:
             return await eq_error(request, ex.message)
         except ClientConnectionError as ex:
@@ -61,16 +59,10 @@ async def response_error(request):
     return aiohttp_jinja2.render_template("index.html", request, {})
 
 
-async def redirect(request, path):
-    logger.debug("Redirecting to root", path=path)
-    raise web.HTTPFound(request.app.router['Index:get'].url_for())
-
-
 def setup(app):
     overrides = {
         500: response_error,
         503: response_error,
-        403: redirect,
     }
     error_middleware = create_error_middleware(overrides)
     app.middlewares.append(error_middleware)

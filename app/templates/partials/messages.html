@@ -25,6 +25,9 @@
           </li>
         </ul>
       </div>
+      {% if message.type %}
+      <!-- TODO: GA script post error {{ message.type }} -->
+      {% endif %}
       {% endfor %}
     </div>
 
@@ -37,6 +40,9 @@
           {% endfor %}
         </div>
       </div>
+      {% if message.type %}
+      <!-- TODO: GA script post info {{ message.type }} -->
+      {% endif %}
       {% endfor %}
     {% endif %}
 

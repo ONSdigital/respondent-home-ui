@@ -7,7 +7,7 @@
   {% endif %}
   <div>
     <h2 class="saturn u-mt-l u-mb-m">Enter your access code</h2>
-    <form action="{{ url('Index:post') }}" class="form qa-questionnaire-form" role="form" method="post">
+    <form action="{{ url('Index:post') }}" class="form qa-questionnaire-form" role="form" method="post" novalidate>
       <div class="panel panel--simple panel--spacious {% if 'ERROR' in messages_dict %} panel--error {% else %} panel--info {% endif %} u-mb-l">
         <div class="panel__body">
           <div class="group" id="household-and-accommodation">

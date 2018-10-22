@@ -1,11 +1,13 @@
 import logging
 import types
 
+import aiohttp_debugtoolbar
 import aiohttp_jinja2
 import jinja2
 from aiohttp import BasicAuth, ClientSession, ClientTimeout
 from aiohttp.client_exceptions import ClientConnectionError, ClientConnectorError, ClientResponseError
 from aiohttp.web import Application
+from aiohttp_debugtoolbar import toolbar_middleware_factory
 from aiohttp_utils import negotiation, routing
 from structlog import wrap_logger
 
@@ -110,7 +112,9 @@ def create_app(config_name=None) -> Application:
 
     app.on_startup.append(on_startup)
     app.on_cleanup.append(on_cleanup)
-    if not app.debug:
+    if app.debug:
+        aiohttp_debugtoolbar.setup(app)
+    else:
         app.on_response_prepare.append(security.on_prepare)
 
     logger.info("App setup complete", config=config_name)

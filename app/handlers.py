@@ -163,3 +163,10 @@ class CookiesPrivacy:
     @aiohttp_jinja2.template('cookies-privacy.html')
     async def get(self, _):
         return {}
+
+
+@routes.view('/contact-us')
+class ContactUs:
+    @aiohttp_jinja2.template('contact-us.html')
+    async def get(self, _):
+        return {}

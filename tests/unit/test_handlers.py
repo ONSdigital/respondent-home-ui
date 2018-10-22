@@ -20,10 +20,24 @@ class TestHandlers(RHTestCase):
     async def test_get_index(self):
         response = await self.client.request("GET", self.get_index)
         self.assertEqual(response.status, 200)
-        contents = await response.content.read()
-        self.assertIn(b'Your 12 character access code is on the letter we sent you', contents)
-        self.assertEqual(contents.count(b'input-text'), 3)
-        self.assertIn(b'type="submit"', contents)
+        contents = str(await response.content.read())
+        self.assertIn('Your 12 character access code is on the letter we sent you', contents)
+        self.assertEqual(contents.count('input-text'), 3)
+        self.assertIn('type="submit"', contents)
+
+    @unittest_run_loop
+    async def test_get_cookies_privacy(self):
+        response = await self.client.request("GET", self.get_cookies_privacy)
+        self.assertEqual(response.status, 200)
+        contents = str(await response.content.read())
+        self.assertIn('Cookies and Privacy', contents)
+
+    @unittest_run_loop
+    async def test_get_contact_us(self):
+        response = await self.client.request("GET", self.get_contact_us)
+        self.assertEqual(response.status, 200)
+        contents = str(await response.content.read())
+        self.assertIn('Contact us', contents)
 
     @skip_build_eq
     @unittest_run_loop

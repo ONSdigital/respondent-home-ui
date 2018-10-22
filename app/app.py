@@ -12,6 +12,7 @@ from structlog import wrap_logger
 from . import config
 from . import error_handlers
 from . import flash
+from . import google_analytics
 from . import jwt
 from . import routes
 from . import security
@@ -99,7 +100,10 @@ def create_app(config_name=None) -> Application:
     env = aiohttp_jinja2.setup(
         app,
         loader=jinja2.PackageLoader("app", "templates"),
-        context_processors=[flash.context_processor, aiohttp_jinja2.request_processor],
+        context_processors=[
+            flash.context_processor,
+            aiohttp_jinja2.request_processor,
+            google_analytics.ga_ua_id_processor],
         extensions=['jinja2.ext.i18n'],
     )
     # Required to add the default gettext and ngettext functions for rendering

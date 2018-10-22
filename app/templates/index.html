@@ -7,7 +7,7 @@
   {% endif %}
   <div>
     <h2 class="saturn u-mt-l u-mb-m">Enter your access code</h2>
-    <form action="{{ url('Index:post') }}" class="form qa-questionnaire-form" role="form" method="post">
+    <form action="{{ url('Index:post') }}" class="form qa-questionnaire-form" role="form" method="post" novalidate>
       <div class="panel panel--simple panel--spacious {% if 'ERROR' in messages_dict %} panel--error {% else %} panel--info {% endif %} u-mb-l">
         <div class="panel__body">
           <div class="group" id="household-and-accommodation">
@@ -49,7 +49,7 @@
         </div>
       </div>
       <p class="venus icon--lock u-mb-m">Your information is protected by law and will be kept confidential.</p>  
-      <button class="btn btn--lg qa-btn-get-started" type="submit" name="action[save_continue]">Start now</button>
+      <button class="btn btn--lg qa-btn-get-started" type="submit" name="action[save_continue]" data-ga="click" data-ga-category="survey" data-ga-action="launcheq" data-ga-label="survey_ref = LMS">Start now</button>
     </form>
   </div>
 {% endblock %}

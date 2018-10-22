@@ -7,7 +7,7 @@ from aiohttp.test_utils import unittest_run_loop
 from aioresponses import aioresponses
 
 from app import (
-    BAD_CODE_MSG, BAD_RESPONSE_MSG, CODE_USED_MSG, INVALID_CODE_MSG, NOT_AUTHORIZED_MSG)
+    BAD_CODE_MSG, BAD_CODE_TYPE_MSG, BAD_RESPONSE_MSG, CODE_USED_MSG, INVALID_CODE_MSG, NOT_AUTHORIZED_MSG)
 from app.exceptions import InactiveCaseError
 from app.handlers import Index
 
@@ -337,7 +337,7 @@ class TestHandlers(RHTestCase):
             self.assertLogLine(cm, 'Attempt to use unexpected sample unit type', sample_unit_type='B')
 
         self.assertEqual(response.status, 200)
-        self.assertMessagePanel(INVALID_CODE_MSG, str(await response.content.read()))
+        self.assertMessagePanel(BAD_CODE_TYPE_MSG, str(await response.content.read()))
 
     @unittest_run_loop
     async def test_post_index_malformed(self):

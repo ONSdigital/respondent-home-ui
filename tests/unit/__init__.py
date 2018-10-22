@@ -210,6 +210,8 @@ class RHTestCase(AioHTTPTestCase):
 
         self.get_index = self.app.router['Index:get'].url_for()
         self.get_info = self.app.router['Info:get'].url_for()
+        self.get_cookies_privacy = self.app.router['CookiesPrivacy:get'].url_for()
+        self.get_contact_us = self.app.router['ContactUs:get'].url_for()
         self.post_index = self.app.router['Index:post'].url_for()
 
         self.action_plan_id = self.case_json['actionPlanId']

@@ -1,3 +1,4 @@
+import datetime
 import logging
 import time
 import hashlib
@@ -10,7 +11,7 @@ from aiohttp import ClientError
 from aiohttp.web import Application
 from structlog import wrap_logger
 
-from .exceptions import InvalidEqPayLoad
+from .exceptions import ExerciseClosedError, InvalidEqPayLoad
 
 
 logger = wrap_logger(logging.getLogger(__name__))
@@ -28,10 +29,21 @@ def handle_response(response):
         logger.debug("Successfully connected to service", url=str(response.url))
 
 
-def find_event_date_by_tag(search_param: str, collex_events: dict, collex_id: str, mandatory: bool):
+def check_ce_has_ended(datetime_object):
+    try:
+        if datetime.datetime.now(tz=datetime_object.tzinfo) > datetime_object:
+            raise ExerciseClosedError
+    except ValueError:
+        raise InvalidEqPayLoad("Unable to compare date objects")
+
+
+def find_event_date_by_tag(search_param: str, collex_events: dict, collex_id: str, mandatory: bool, cmp_func=None):
     for event in collex_events:
         if event["tag"] == search_param and event.get("timestamp"):
-            return format_date(event["timestamp"])
+            parsed_datetime = parse_date(event["timestamp"])
+            if callable(cmp_func):
+                cmp_func(parsed_datetime)
+            return format_date(parsed_datetime)
 
     if mandatory:
         raise InvalidEqPayLoad(
@@ -39,17 +51,28 @@ def find_event_date_by_tag(search_param: str, collex_events: dict, collex_id: st
         )
 
 
-def format_date(string_date):
+def parse_date(string_date):
     """
-    Formats the date from a string to %Y-%m-%d eg 2018-01-20
-    :param string_date: The date string
+    Parses a date string from ISO 8601 format to be converted elsewhere.
+    :param string_date: a date string in ISO 8601 format
+    :return: datetime object
+    """
+    try:
+        return iso8601.parse_date(string_date)
+    except (ValueError, iso8601.iso8601.ParseError):
+        raise InvalidEqPayLoad(f"Unable to parse {string_date}")
+
+
+def format_date(datetime_object):
+    """
+    Formats the date from a datetime object to %Y-%m-%d eg 2018-01-20
+    :param datetime_object: datetime object
     :return formatted date
     """
-
     try:
-        return iso8601.parse_date(string_date).strftime("%Y-%m-%d")
-    except (ValueError, iso8601.iso8601.ParseError):
-        raise InvalidEqPayLoad(f"Unable to format {string_date}")
+        return datetime_object.strftime("%Y-%m-%d")
+    except (ValueError, AttributeError):
+        raise InvalidEqPayLoad(f"Unable to format {datetime_object}")
 
 
 def build_response_id(case_id, collex_id, iac):
@@ -266,7 +289,7 @@ class EqPayloadConstructor(object):
                 "ref_period_start", self._collex_events, self._collex_id, False
             ),
             "ref_p_end_date": find_event_date_by_tag(
-                "ref_period_end", self._collex_events, self._collex_id, False
+                "ref_period_end", self._collex_events, self._collex_id, False, cmp_func=check_ce_has_ended
             ),
             "return_by": find_event_date_by_tag(
                 "return_by", self._collex_events, self._collex_id, False

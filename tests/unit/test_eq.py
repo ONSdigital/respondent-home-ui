@@ -4,8 +4,8 @@ from unittest import mock
 from aiohttp.test_utils import unittest_run_loop
 from aioresponses import aioresponses
 
-from app.eq import format_date, find_event_date_by_tag, build_response_id
-from app.exceptions import InvalidEqPayLoad
+from app.eq import check_ce_has_ended, format_date, parse_date, find_event_date_by_tag, build_response_id
+from app.exceptions import ExerciseClosedError, InvalidEqPayLoad
 
 from . import RHTestCase
 
@@ -358,7 +358,7 @@ class TestEq(RHTestCase):
         date = '2007-01-25T12:00:00Z'
 
         # When format_date is called
-        result = format_date(date)
+        result = format_date(parse_date(date))
 
         # Then the date is formatted correctly
         self.assertEqual(result, '2007-01-25')
@@ -373,6 +373,25 @@ class TestEq(RHTestCase):
 
         # Then an InvalidEqPayLoad is raised
         self.assertEqual(e.exception.message, 'Unable to format invalid_date')
+
+    def test_check_ce_has_ended(self):
+        # Given a valid date
+        datetime_obj = parse_date('2007-01-25T12:00:00Z')
+
+        # When check_ce_has_ended is called
+        with self.assertRaises(ExerciseClosedError):
+            check_ce_has_ended(datetime_obj)
+
+        # Then an ExerciseEndError is raised
+
+    def test_check_ce_has_not_ended(self):
+        # Given a valid date
+        datetime_obj = parse_date('2027-01-25T12:00:00Z')
+
+        # When check_ce_has_ended is called
+        self.assertIsNone(check_ce_has_ended(datetime_obj))
+
+        # Then an ExerciseEndError is not raised
 
     def test_build_response_id(self):
         response_id = build_response_id(self.case_id, self.collection_exercise_id, self.iac_code)

@@ -6,7 +6,7 @@ from aiohttp.client_exceptions import (
     ClientResponseError, ClientConnectorError, ClientConnectionError, ContentTypeError)
 from structlog import wrap_logger
 
-from .exceptions import InvalidEqPayLoad
+from .exceptions import ExerciseClosedError, InvalidEqPayLoad
 
 
 logger = wrap_logger(logging.getLogger("respondent-home"))
@@ -26,6 +26,8 @@ def create_error_middleware(overrides):
                 logger.debug('Redirecting to index', path=request.path)
                 raise web.HTTPMovedPermanently(index_resource.url_for())
             raise ex
+        except ExerciseClosedError:
+            return await ce_closed(request)
         except InvalidEqPayLoad as ex:
             return await eq_error(request, ex.message)
         except ClientConnectionError as ex:
@@ -38,6 +40,11 @@ def create_error_middleware(overrides):
             return await response_error(request)
 
     return middleware_handler
+
+
+async def ce_closed(request):
+    logger.info("Attempt to access collection exercise that has already ended")
+    return aiohttp_jinja2.render_template("closed.html", request, {})
 
 
 async def eq_error(request, message: str):

@@ -11,3 +11,7 @@ class InvalidEqPayLoad(Exception):
 
 class InvalidIACError(Exception):
     """Raised when the IAC Service returns a 404"""
+
+
+class ExerciseClosedError(Exception):
+    """Raised when a user attempts to access an already ended CE"""

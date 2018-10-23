@@ -363,6 +363,17 @@ class TestEq(RHTestCase):
         # Then the date is formatted correctly
         self.assertEqual(result, '2007-01-25')
 
+    def test_invalid_iso8601_date_format(self):
+        # Given a valid date
+        date = 'invalid_date'
+
+        # When parse_date is called
+        with self.assertRaises(InvalidEqPayLoad) as e:
+            parse_date(date)
+
+        # Then the date is formatted correctly
+        self.assertEqual(e.exception.message, 'Unable to parse invalid_date')
+
     def test_incorrect_date_format(self):
         # Given an invalid date
         date = 'invalid_date'
@@ -392,6 +403,17 @@ class TestEq(RHTestCase):
         self.assertIsNone(check_ce_has_ended(datetime_obj))
 
         # Then an ExerciseEndError is not raised
+
+    def test_check_ce_has_ended_error(self):
+        # Given an invalid date
+        datetime_obj = 'invalid_date'
+
+        # When check_ce_has_ended is called
+        with self.assertRaises(InvalidEqPayLoad) as e:
+            check_ce_has_ended(datetime_obj)
+
+        # Then an InvalidEqPayload is raised
+        self.assertEqual(e.exception.message, 'Unable to compare date objects')
 
     def test_build_response_id(self):
         response_id = build_response_id(self.case_id, self.collection_exercise_id, self.iac_code)

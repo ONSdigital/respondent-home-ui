@@ -33,7 +33,7 @@ def check_ce_has_ended(datetime_object):
     try:
         if datetime.datetime.now(tz=datetime_object.tzinfo) > datetime_object:
             raise ExerciseClosedError
-    except ValueError:
+    except (AttributeError, ValueError):
         raise InvalidEqPayLoad("Unable to compare date objects")
 
 

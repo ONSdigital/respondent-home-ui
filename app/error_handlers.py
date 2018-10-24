@@ -26,8 +26,8 @@ def create_error_middleware(overrides):
                 logger.debug('Redirecting to index', path=request.path)
                 raise web.HTTPMovedPermanently(index_resource.url_for())
             raise ex
-        except ExerciseClosedError:
-            return await ce_closed(request)
+        except ExerciseClosedError as ex:
+            return await ce_closed(request, ex.collection_exercise_id)
         except InvalidEqPayLoad as ex:
             return await eq_error(request, ex.message)
         except ClientConnectionError as ex:
@@ -42,8 +42,8 @@ def create_error_middleware(overrides):
     return middleware_handler
 
 
-async def ce_closed(request):
-    logger.info("Attempt to access collection exercise that has already ended")
+async def ce_closed(request, collex_id):
+    logger.info("Attempt to access collection exercise that has already ended", collex_id=collex_id)
     return aiohttp_jinja2.render_template("closed.html", request, {})
 
 

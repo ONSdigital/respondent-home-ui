@@ -29,28 +29,6 @@ def handle_response(response):
         logger.debug("Successfully connected to service", url=str(response.url))
 
 
-def check_ce_has_ended(datetime_object):
-    try:
-        if datetime.datetime.now(tz=datetime_object.tzinfo) > datetime_object:
-            raise ExerciseClosedError
-    except (AttributeError, ValueError):
-        raise InvalidEqPayLoad("Unable to compare date objects")
-
-
-def find_event_date_by_tag(search_param: str, collex_events: dict, collex_id: str, mandatory: bool, cmp_func=None):
-    for event in collex_events:
-        if event["tag"] == search_param and event.get("timestamp"):
-            parsed_datetime = parse_date(event["timestamp"])
-            if callable(cmp_func):
-                cmp_func(parsed_datetime)
-            return format_date(parsed_datetime)
-
-    if mandatory:
-        raise InvalidEqPayLoad(
-            f"Mandatory event not found for collection {collex_id} for search param {search_param}"
-        )
-
-
 def parse_date(string_date):
     """
     Parses a date string from ISO 8601 format to be converted elsewhere.
@@ -285,13 +263,27 @@ class EqPayloadConstructor(object):
 
     def _get_collex_event_dates(self):
         return {
-            "ref_p_start_date": find_event_date_by_tag(
-                "ref_period_start", self._collex_events, self._collex_id, False
-            ),
-            "ref_p_end_date": find_event_date_by_tag(
-                "ref_period_end", self._collex_events, self._collex_id, False, cmp_func=check_ce_has_ended
-            ),
-            "return_by": find_event_date_by_tag(
-                "return_by", self._collex_events, self._collex_id, False
-            ),
+            "ref_p_start_date": self._find_event_date_by_tag("ref_period_start", False),
+            "ref_p_end_date": self._find_event_date_by_tag("ref_period_end", False, cmp_func=self._check_ce_has_ended),
+            "return_by": self._find_event_date_by_tag("return_by", False),
         }
+
+    def _check_ce_has_ended(self, datetime_object):
+        try:
+            if datetime.datetime.now(tz=datetime_object.tzinfo) > datetime_object:
+                raise ExerciseClosedError(collection_exercise_id=self._collex_id)
+        except (AttributeError, ValueError):
+            raise InvalidEqPayLoad("Unable to compare date objects")
+
+    def _find_event_date_by_tag(self, search_param: str, mandatory: bool, cmp_func=None):
+        for event in self._collex_events:
+            if event["tag"] == search_param and event.get("timestamp"):
+                parsed_datetime = parse_date(event["timestamp"])
+                if callable(cmp_func):
+                    cmp_func(parsed_datetime)
+                return format_date(parsed_datetime)
+
+        if mandatory:
+            raise InvalidEqPayLoad(
+                f"Mandatory event not found for collection {self._collex_id} for search param {search_param}"
+            )

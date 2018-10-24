@@ -297,3 +297,8 @@ class RHTestCase(AioHTTPTestCase):
         self.form_data = {
             'iac1': self.iac1, 'iac2': self.iac2, 'iac3': self.iac3, 'action[save_continue]': '',
         }
+
+        class DummyConstructor:
+            _collex_id = self.collection_exercise_id
+            _collex_events = self.collection_exercise_events_json
+        self.dummy_eq = DummyConstructor()

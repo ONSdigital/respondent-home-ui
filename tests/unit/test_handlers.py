@@ -179,7 +179,9 @@ class TestHandlers(RHTestCase):
             with self.assertLogs('respondent-home', 'INFO') as logs_home:
                 response = await self.client.request("POST", self.post_index, allow_redirects=False,
                                                      data=self.form_data)
-            self.assertLogLine(logs_home, 'Attempt to access collection exercise that has already ended')
+            self.assertLogLine(logs_home,
+                               'Attempt to access collection exercise that has already ended',
+                               collex_id=self.collection_exercise_id)
 
         self.assertEqual(response.status, 200)
         self.assertIn('This study is now closed', str(await response.content.read()))

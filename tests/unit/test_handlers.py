@@ -162,6 +162,30 @@ class TestHandlers(RHTestCase):
                 continue  # skip uuid / time generated values
             self.assertEqual(self.eq_payload[key], token[key], key)  # outputs failed key as msg
 
+    @unittest_run_loop
+    async def test_post_index_build_closed_ce(self):
+        with aioresponses(passthrough=[str(self.server._root)]) as mocked:
+            # mocks for initial data setup in post
+            mocked.get(self.iac_url, payload=self.iac_json)
+            mocked.get(self.case_url, payload=self.case_json)
+            mocked.post(self.case_events_url)
+            # mocks for the payload builder
+            mocked.get(self.collection_instrument_url, payload=self.collection_instrument_json)
+            mocked.get(self.collection_exercise_url, payload=self.collection_exercise_json)
+            mocked.get(self.collection_exercise_events_url, payload=self.closed_ce_events_json)
+            mocked.get(self.sample_attributes_url, payload=self.sample_attributes_json)
+            mocked.get(self.survey_url, payload=self.survey_json)
+
+            with self.assertLogs('respondent-home', 'INFO') as logs_home:
+                response = await self.client.request("POST", self.post_index, allow_redirects=False,
+                                                     data=self.form_data)
+            self.assertLogLine(logs_home,
+                               'Attempt to access collection exercise that has already ended',
+                               collex_id=self.collection_exercise_id)
+
+        self.assertEqual(response.status, 200)
+        self.assertIn('This study is now closed', str(await response.content.read()))
+
     @build_eq_raises
     @unittest_run_loop
     async def test_post_index_build_raises_InvalidEqPayLoad(self):

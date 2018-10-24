@@ -201,6 +201,8 @@ class RHTestCase(AioHTTPTestCase):
             self.collection_exercise_json = json.load(fp)
         with open('tests/test_data/collection_exercise/collection_exercise_events.json') as fp:
             self.collection_exercise_events_json = json.load(fp)
+        with open('tests/test_data/collection_exercise/collection_exercise_events_closed.json') as fp:
+            self.closed_ce_events_json = json.load(fp)
         with open('tests/test_data/collection_instrument/collection_instrument_eq.json') as fp:
             self.collection_instrument_json = json.load(fp)
         with open('tests/test_data/sample/sample_attributes.json') as fp:
@@ -295,3 +297,8 @@ class RHTestCase(AioHTTPTestCase):
         self.form_data = {
             'iac1': self.iac1, 'iac2': self.iac2, 'iac3': self.iac3, 'action[save_continue]': '',
         }
+
+        class DummyConstructor:
+            _collex_id = self.collection_exercise_id
+            _collex_events = self.collection_exercise_events_json
+        self.dummy_eq = DummyConstructor()

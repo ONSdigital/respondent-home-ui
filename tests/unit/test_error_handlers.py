@@ -31,4 +31,4 @@ class TestErrorHandlers(RHTestCase):
         response = await self.client.request("GET", '/unknown-path')
         self.assertEqual(response.status, 404)
         contents = str(await response.content.read())
-        self.assertIn('Error 404 - Page not found', contents)
+        self.assertIn('Page not found', contents)

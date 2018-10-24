@@ -2,8 +2,8 @@
   "id": "519bb700-1bd9-432d-9db7-d34ea1727415",
   "attributes": {
     "ADDRESS_LINE1": "Tredegar House",
-    "ADDRESS_LINE2": null,
-    "LOCALITY": null,
+    "ADDRESS_LINE2": "Newport",
+    "LOCALITY": "Newport",
     "TOWN_NAME": "Newport",
     "POSTCODE": "NV184QG",
     "COUNTRY": "E",

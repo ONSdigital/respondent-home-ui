@@ -1,6 +1,4 @@
 import json
-import time
-import uuid
 
 from aiohttp import web
 from aioresponses import aioresponses
@@ -9,6 +7,8 @@ from app.app import create_app
 
 
 class DemoRunner:
+
+    # IAC_TO_USE: 0123 4567 8910
 
     language_code = 'en'
 
@@ -32,45 +32,14 @@ class DemoRunner:
 
         self.app = create_app('TestingConfig')
 
-        self.action_plan_id = self.case_json['actionPlanId']
         self.case_id = self.case_json['id']
-        self.case_group_id = self.case_json['caseGroup']['id']
-        self.case_ref = self.case_json['caseRef']
         self.collection_exercise_id = self.collection_exercise_json['id']
-        self.collection_exercise_ref = self.collection_exercise_json['exerciseRef']
-        self.collection_exercise_user_desc = self.collection_exercise_json['userDescription']
         self.collection_instrument_id = self.collection_instrument_json['id']
-        self.eq_id = self.collection_instrument_json['classifiers']['eq_id']
-        self.form_type = self.collection_instrument_json['classifiers']['form_type']
-        self.jti = str(uuid.uuid4())
         self.iac_code = ''.join([str(n) for n in range(11)])
         self.iac1, self.iac2, self.iac3 = self.iac_code[:4], self.iac_code[4:8], self.iac_code[8:]
         self.iac_json = {'active': '1', 'caseId': self.case_id}
         self.sample_unit_id = self.sample_attributes_json['id']
-        self.sample_unit_ref = self.case_json['caseGroup']['sampleUnitRef']
-        self.sample_unit_type = self.case_json['sampleUnitType']
         self.survey_id = self.survey_json['id']
-        self.survey_ref = self.survey_json['surveyRef']
-        self.eq_payload = {
-            "jti": self.jti,
-            "tx_id": self.jti,
-            "user_id": self.sample_unit_id,
-            "iat": int(time.time()),
-            "exp": int(time.time() + (5 * 60)),
-            "eq_id": self.eq_id,
-            "period_id": self.collection_exercise_ref,
-            "form_type": self.form_type,
-            "collection_exercise_sid": self.collection_exercise_id,
-            "ru_ref": self.sample_unit_ref,
-            "case_id": self.case_id,
-            "case_ref": self.case_ref,
-            "account_service_url": self.app['ACCOUNT_SERVICE_URL'],
-            "country_code": self.sample_attributes_json['attributes']['CountryCode'],
-            "language_code": self.language_code,
-            "return_by": self.return_by,
-            "ref_p_end_date": self.end_date,
-            "ref_p_start_date": self.start_date
-        }
 
         self.case_url = (
             f"{self.app['CASE_URL']}/cases/{self.case_id}"

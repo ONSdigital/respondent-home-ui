@@ -184,7 +184,7 @@ class TestHandlers(RHTestCase):
                                collex_id=self.collection_exercise_id)
 
         self.assertEqual(response.status, 200)
-        self.assertIn('This study is now closed', str(await response.content.read()))
+        self.assertIn('This study has closed', str(await response.content.read()))
 
     @build_eq_raises
     @unittest_run_loop

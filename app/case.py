@@ -10,7 +10,7 @@ logger = wrap_logger(logging.getLogger(__name__))
 
 async def get_case(case_id: str, app: Application):
     url = f"{app['CASE_URL']}/cases/{case_id}"
-    logger.info(f"Making GET request to {url}")
+    logger.debug(f"Making GET request to {url}")
     async with app.http_session_pool.get(url, auth=app["CASE_AUTH"]) as response:
         try:
             response.raise_for_status()
@@ -24,7 +24,7 @@ async def get_case(case_id: str, app: Application):
 
 async def post_case_event(case_id: str, category: str, description: str, app: Application):
     url = f"{app['CASE_URL']}/cases/{case_id}/events"
-    logger.info(f"Making POST request to {url}")
+    logger.debug(f"Making POST request to {url}")
     async with app.http_session_pool.post(
         url,
         auth=app["CASE_AUTH"],

@@ -7,7 +7,7 @@ from sdc.crypto.encrypter import encrypt
 from structlog import wrap_logger
 
 from . import (
-    BAD_CODE_MSG, BAD_CODE_TYPE_MSG, BAD_RESPONSE_MSG, CODE_USED_MSG, INVALID_CODE_MSG, NOT_AUTHORIZED_MSG, VERSION)
+    BAD_CODE_MSG, BAD_CODE_TYPE_MSG, BAD_RESPONSE_MSG, INVALID_CODE_MSG, NOT_AUTHORIZED_MSG, VERSION)
 from .case import get_case, post_case_event
 from .eq import EqPayloadConstructor
 from .exceptions import InactiveCaseError, InvalidIACError

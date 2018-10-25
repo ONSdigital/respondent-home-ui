@@ -25,7 +25,7 @@ def create_error_middleware(overrides):
             if request.path + '/' == index_resource.canonical:
                 logger.debug('Redirecting to index', path=request.path)
                 raise web.HTTPMovedPermanently(index_resource.url_for())
-            raise ex
+            return await not_found_error(request)
         except ExerciseClosedError as ex:
             return await ce_closed(request, ex.collection_exercise_id)
         except InvalidEqPayLoad as ex:
@@ -66,10 +66,15 @@ async def response_error(request):
     return aiohttp_jinja2.render_template("error.html", request, {}, status=500)
 
 
+async def not_found_error(request):
+    return aiohttp_jinja2.render_template("404.html", request, {}, status=404)
+
+
 def setup(app):
     overrides = {
         500: response_error,
         503: response_error,
+        404: not_found_error,
     }
     error_middleware = create_error_middleware(overrides)
     app.middlewares.append(error_middleware)

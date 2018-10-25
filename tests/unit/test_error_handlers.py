@@ -25,3 +25,10 @@ class TestErrorHandlers(RHTestCase):
         self.assertIn(b'Your 12 character access code is on the letter we sent you', contents)
         self.assertEqual(contents.count(b'input-text'), 3)
         self.assertIn(b'type="submit"', contents)
+
+    @unittest_run_loop
+    async def test_404_renders_tempalate(self):
+        response = await self.client.request("GET", '/unknown-path')
+        self.assertEqual(response.status, 404)
+        contents = str(await response.content.read())
+        self.assertIn('Page not found', contents)

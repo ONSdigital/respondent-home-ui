@@ -263,8 +263,9 @@ class EqPayloadConstructor(object):
 
     def _get_collex_event_dates(self):
         return {
+            "exercise_end": self._find_event_date_by_tag("exercise_end", True, cmp_func=self._check_ce_has_ended),
             "ref_p_start_date": self._find_event_date_by_tag("ref_period_start", False),
-            "ref_p_end_date": self._find_event_date_by_tag("ref_period_end", False, cmp_func=self._check_ce_has_ended),
+            "ref_p_end_date": self._find_event_date_by_tag("ref_period_end", False),
             "return_by": self._find_event_date_by_tag("return_by", False),
         }
 

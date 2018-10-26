@@ -16,5 +16,11 @@
     "collectionExerciseId": "6553d121-df61-4b3a-8f43-e0726666b8cc",
     "tag": "ref_period_end",
     "timestamp": "2000-05-31T00:00:00.000Z"
+    },
+    {
+    "id": "f64f2382-2c79-41af-abec-9cb729f12625",
+    "collectionExerciseId": "6553d121-df61-4b3a-8f43-e0726666b8cc",
+    "tag": "exercise_end",
+    "timestamp": "2007-05-31T00:00:00.000Z"
     }
 ]

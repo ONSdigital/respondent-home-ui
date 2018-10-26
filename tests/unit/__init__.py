@@ -253,6 +253,7 @@ class RHTestCase(AioHTTPTestCase):
             "return_by": self.return_by,
             "ref_p_end_date": self.end_date,
             "ref_p_start_date": self.start_date,
+            "exercise_end": self.end_date,
             "display_address": f"{self.sample_attributes_json['attributes']['ADDRESS_LINE1']}, {self.sample_attributes_json['attributes']['TOWN_NAME']}",
             "address_line1": self.sample_attributes_json['attributes']['ADDRESS_LINE1'],
             "address_line2": self.sample_attributes_json['attributes']['ADDRESS_LINE2'],

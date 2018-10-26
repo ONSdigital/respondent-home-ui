@@ -7,7 +7,7 @@ from aiohttp.test_utils import unittest_run_loop
 from aioresponses import aioresponses
 
 from app import (
-    BAD_CODE_MSG, BAD_CODE_TYPE_MSG, BAD_RESPONSE_MSG, CODE_USED_MSG, INVALID_CODE_MSG, NOT_AUTHORIZED_MSG)
+    BAD_CODE_MSG, BAD_CODE_TYPE_MSG, BAD_RESPONSE_MSG, INVALID_CODE_MSG, NOT_AUTHORIZED_MSG)
 from app.exceptions import InactiveCaseError
 from app.handlers import Index
 
@@ -356,7 +356,7 @@ class TestHandlers(RHTestCase):
             mocked.get(self.iac_url, payload=self.iac_json)
             mocked.get(self.case_url, payload=case_json)
 
-            with self.assertLogs('respondent-home', 'ERROR') as cm:
+            with self.assertLogs('respondent-home', 'WARN') as cm:
                 response = await self.client.request("POST", self.post_index, allow_redirects=False, data=self.form_data)
             self.assertLogLine(cm, 'Attempt to use unexpected sample unit type', sample_unit_type='B')
 
@@ -391,7 +391,7 @@ class TestHandlers(RHTestCase):
             self.assertLogLine(cm, "Attempt to use an inactive access code")
 
         self.assertEqual(response.status, 200)
-        self.assertMessagePanel(CODE_USED_MSG, str(await response.content.read()))
+        self.assertIn('Study complete', str(await response.content.read()))
 
     @unittest_run_loop
     async def test_post_index_iac_inactive(self):
@@ -406,7 +406,7 @@ class TestHandlers(RHTestCase):
             self.assertLogLine(cm, "Attempt to use an inactive access code")
 
         self.assertEqual(response.status, 200)
-        self.assertMessagePanel(CODE_USED_MSG, str(await response.content.read()))
+        self.assertIn('Study complete', str(await response.content.read()))
 
     @unittest_run_loop
     async def test_post_index_iac_service_connection_error(self):

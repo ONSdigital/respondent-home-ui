@@ -1,6 +1,7 @@
 EQ_RUNNER_REPO_URL = https://github.com/ONSdigital/eq-survey-runner.git
 RAS_RM_REPO_URL = https://github.com/ONSdigital/ras-rm-docker-dev.git
 RM_TOOLS_REPO_URL = https://github.com/ONSdigital/rm-tools.git
+TEST_TARGET = tests/acceptance/features
 
 .PHONY: test unit_tests integration_tests
 
@@ -14,6 +15,9 @@ serve:
 
 run:
 	pipenv run inv run
+
+acceptance_tests:
+	pipenv run behave --stop ${TEST_TARGET}
 
 test: flake8 unittests
 

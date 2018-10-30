@@ -27,6 +27,10 @@ aiohttp-devtools = "*"
 aioresponses = "*"
 requests = "*"
 retrying = "*"
+behave = "*"
+selenium = "*"
+splinter = "*"
+chromedriver-installer = "*"
 
 [requires]
 python_version = "3.6"

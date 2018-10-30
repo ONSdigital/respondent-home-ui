@@ -1,5 +1,4 @@
 import logging
-import time
 
 import requests
 from aiohttp.test_utils import AioHTTPTestCase, unittest_run_loop
@@ -9,6 +8,8 @@ from structlog import wrap_logger
 
 from app.app import create_app
 from app.case import get_case
+from tests.controllers import (get_case, get_sample_summary_id_from_kwargs, get_first_sample_summary_id,
+                               get_first_sample_unit_id_by_summary, poll_for_actionable_case, poll_case_for_iacs)
 
 
 env = Env()
@@ -26,91 +27,25 @@ class TestRespondentHome(AioHTTPTestCase):
         self.sample_size = env.int('SAMPLE_SIZE', default=500)
         return create_app('BaseConfig' if self.live_test else 'TestingConfig')
 
-    def get_sample_summary_id_from_kwargs(self, **kwargs):
-        logger.debug('Retrieving sample summaries')
-        url = f'{self.app["SAMPLE_URL"]}/samples/samplesummaries'
-        response = requests.get(url, auth=self.app["SAMPLE_AUTH"][:2])
-        response.raise_for_status()
-        logger.debug('Successfully retrieved sample summaries')
-        for sample_summary in response.json():
-            if all(sample_summary[key] == val for key, val in kwargs.items()):
-                return sample_summary['id']
-
-    def get_first_sample_summary_id(self):
-        logger.debug('Retrieving sample summaries')
-        url = f'{self.app["SAMPLE_URL"]}/samples/samplesummaries'
-        response = requests.get(url, auth=self.app["SAMPLE_AUTH"][:2])
-        response.raise_for_status()
-        logger.debug('Successfully retrieved sample summaries')
-        return response.json()[0]['id']
-
-    def get_first_sample_unit_id_by_summary(self, sample_summary_id):
-        logger.debug('Retrieving sample unit id', sample_summary_id=sample_summary_id)
-        url = f'{self.app["SAMPLE_URL"]}/samples/{sample_summary_id}/sampleunits'
-        response = requests.get(url, auth=self.app["SAMPLE_AUTH"][:2])
-        response.raise_for_status()
-        logger.debug('Successfully retrieved sample units', sample_summary_id=sample_summary_id)
-        return response.json()[0]['id']
-
-    def get_actionable_case_by_sample_unit_id(self, sample_unit_id):
-        logger.debug('Retrieving case by id', sample_unit_id=sample_unit_id)
-        url = f'{self.app["CASE_URL"]}/cases?sampleUnitId={sample_unit_id}&iac=true'
-        response = requests.get(url, auth=self.app["CASE_AUTH"][:2])
-        response.raise_for_status()
-        logger.debug('Successfully retrieved case', sample_unit_id=sample_unit_id)
-        for case in response.json():
-            if case['state'] == 'ACTIONABLE':
-                return case
-
-    def get_address_by_sample_unit_id(self, sample_unit_id):
-        logger.debug('Retrieving sample unit', sample_unit_id=sample_unit_id)
-        url = f'{self.app["SAMPLE_URL"]}/samples/{sample_unit_id}'
-        response = requests.get(url, auth=self.app["SAMPLE_AUTH"][:2])
-        response.raise_for_status()
-        logger.debug('Successfully retrieved sample unit', sample_unit_id=sample_unit_id)
-        return response.json()['sampleAttributes']['attributes']['ADDRESS_LINE1']
-
-    def get_iacs_by_case_id(self, case_id):
-        logger.debug('Retrieving IACs', case_id=case_id)
-        url = f"{self.app['CASE_URL']}/cases/{case_id}/iac"
-        response = requests.get(url, auth=self.app["CASE_AUTH"][:2])
-        response.raise_for_status()
-        logger.debug('Successfully retrieved IACs for case', case_id=case_id)
-        return response.json()
-
-    def poll_case_for_iacs(self, case, retries=20):
-        for _ in range(retries):
-            iacs = self.get_iacs_by_case_id(case['id'])
-            if iacs is not None:
-                return iacs
-            time.sleep(3)
-
-    def poll_for_actionable_case(self, sample_unit_id, retries=20):
-        for _ in range(retries):
-            case = self.get_actionable_case_by_sample_unit_id(sample_unit_id)
-            if case is not None:
-                return case
-            time.sleep(3)
-
     @unittest_run_loop
     async def test_can_access_respondent_home_homepage(self):
         if self.live_test:
-            sample_summary_id = self.get_sample_summary_id_from_kwargs(totalSampleUnits=self.sample_size)
+            sample_summary_id = get_sample_summary_id_from_kwargs(totalSampleUnits=self.sample_size)
         else:
             # Any old summary should do against test data
-            sample_summary_id = self.get_first_sample_summary_id()
+            sample_summary_id = get_first_sample_summary_id()
         if sample_summary_id is None:
             self.fail('No sample summary found')
 
-        sample_unit_id = self.get_first_sample_unit_id_by_summary(sample_summary_id)
+        sample_unit_id = get_first_sample_unit_id_by_summary(sample_summary_id)
         if sample_unit_id is None:
             self.fail('No sample unit id found')
 
-        case = self.poll_for_actionable_case(sample_unit_id)
+        case = poll_for_actionable_case(sample_unit_id)
         if case is None:
             self.fail('No ACTIONABLE case found')
 
-        iacs = self.poll_case_for_iacs(case)
+        iacs = poll_case_for_iacs(case)
         if iacs is None:
             self.fail('No IACs for case found')
 
@@ -141,6 +76,6 @@ class TestRespondentHome(AioHTTPTestCase):
         response = requests.get(location)  # Follow the redirect location to check contents
         self.assertIn(b'What is your name', response.content)
         self.assertIn(b'Online Household Study', response.content)
-        case_response = await get_case(case['id'], self.app)
+        case_response = get_case(case['id'])
         case_state = case_response['caseGroup']['caseGroupStatus']
         self.assertEqual(case_state, 'NOTSTARTED')  # Ensure the case status has not transitioned

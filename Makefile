@@ -53,3 +53,6 @@ demo:
 
 load_test:
 	pipenv run inv load
+
+load_test_web:
+	pipenv run inv load --web

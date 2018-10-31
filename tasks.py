@@ -118,7 +118,10 @@ def coverage(ctx):
 
 
 @task
-def load(ctx):
-    run_command(f"locust -f tests/load/locustfile.py "
-                f"--no-web -c 10000 -r 100 --run-time 30s "
-                f"--host={os.environ['RESPONDENT_HOME_URL']}")
+def load(ctx, web=False):
+    if web:
+        run_command(f"locust -f tests/load/locustfile.py --host={os.environ['RESPONDENT_HOME_URL']}")
+    else:
+        run_command(f"locust -f tests/load/locustfile.py "
+                    f"--no-web -c 10000 -r 100 --run-time 30s "
+                    f"--host={os.environ['RESPONDENT_HOME_URL']}")

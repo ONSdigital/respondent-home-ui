@@ -27,6 +27,7 @@ aiohttp-devtools = "*"
 aioresponses = "*"
 requests = "*"
 retrying = "*"
+locustio = "*"
 
 [requires]
 python_version = "3.6"

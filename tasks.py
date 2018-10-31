@@ -115,3 +115,10 @@ def wait(ctx):
 def coverage(ctx):
     """Calculate coverage and render to HTML"""
     run_command("pytest tests/unit --cov app --cov-report html --ignore=node_modules")
+
+
+@task
+def load(ctx):
+    run_command(f"locust -f tests/load/locustfile.py "
+                f"--no-web -c 10000 -r 100 --run-time 30s "
+                f"--host={os.environ['RESPONDENT_HOME_URL']}")

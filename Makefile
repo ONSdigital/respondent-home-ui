@@ -50,3 +50,6 @@ flake8:
 demo:
 	./scripts/start_eq.sh ${EQ_RUNNER_REPO_URL}
 	pipenv run inv demo
+
+load_test:
+	pipenv run inv load

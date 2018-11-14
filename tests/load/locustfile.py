@@ -1,16 +1,26 @@
+import os
+import random
+import sys
+import time
+
 from locust import HttpLocust, TaskSet, task
+
+sys.path.append(os.getcwd())
+
+from tests import get_all_hacs_for_collection_exercise, get_collex_id
 
 
 class UserBehavior(TaskSet):
 
     def on_start(self):
         """ on_start is called when a Locust start before any task is scheduled """
-        # TODO: get an access code
-        pass
-
-    def on_stop(self):
-        """ on_stop is called when the TaskSet is stopping """
-        pass
+        """
+        1) generate sample file with N rows
+        2) run setup scripts with new sample file
+        3) get all hacs from db (that would otherwise go to letter)
+        4) use random.choice on iac collection when launch_survey
+        """
+        self.access_code = random.choice(self.parent.access_codes)
 
     @task(8)
     def index(self):
@@ -32,10 +42,11 @@ class UserBehavior(TaskSet):
 
     @task(4)
     def launch_survey(self):
-        # TOOD: use a "real" access code
-        iac = 'dpbdwym6y9pc'
         self.client.post("/", {
-            'iac1': iac[:4], 'iac2': iac[4:8], 'iac3': iac[8:], 'action[save_continue]': '',
+            'iac1': self.access_code[:4],
+            'iac2': self.access_code[4:8],
+            'iac3': self.access_code[8:],
+            'action[save_continue]': '',
         })
 
 
@@ -43,3 +54,12 @@ class Respondent(HttpLocust):
     task_set = UserBehavior
     min_wait = 5000
     max_wait = 9000
+    access_codes = []
+
+    @classmethod
+    def setup(cls):
+        while True:
+            cls.access_codes = get_all_hacs_for_collection_exercise(get_collex_id())
+            if cls.access_codes:
+                break
+            time.sleep(2)

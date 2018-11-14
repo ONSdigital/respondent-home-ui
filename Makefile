@@ -1,6 +1,7 @@
 EQ_RUNNER_REPO_URL = https://github.com/ONSdigital/eq-survey-runner.git
 RAS_RM_REPO_URL = https://github.com/ONSdigital/ras-rm-docker-dev.git
 RM_TOOLS_REPO_URL = https://github.com/ONSdigital/rm-tools.git
+SAMPLE_ROWS = 500
 
 .PHONY: test unit_tests integration_tests
 
@@ -21,6 +22,8 @@ local_test:  start_services wait_for_services setup integration_tests stop_servi
 
 live_test: start_services wait_for_services setup live_integration_tests stop_services
 
+load_test: start_services wait_for_services setup load
+
 start_services:
 	./scripts/start_ras_rm.sh ${RAS_RM_REPO_URL}
 	./scripts/start_eq.sh ${EQ_RUNNER_REPO_URL}
@@ -33,7 +36,7 @@ wait_for_services:
 	pipenv run inv wait
 
 setup:
-	./scripts/setup_data.sh ${RM_TOOLS_REPO_URL}
+	./scripts/setup_data.sh ${RM_TOOLS_REPO_URL} ${SAMPLE_ROWS}
 
 integration_tests:
 	pipenv run inv integration
@@ -51,8 +54,8 @@ demo:
 	./scripts/start_eq.sh ${EQ_RUNNER_REPO_URL}
 	pipenv run inv demo
 
-load_test:
+load:
 	pipenv run inv load
 
-load_test_web:
+load_web:
 	pipenv run inv load --web

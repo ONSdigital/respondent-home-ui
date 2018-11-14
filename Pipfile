@@ -28,6 +28,9 @@ aioresponses = "*"
 requests = "*"
 retrying = "*"
 locustio = "*"
+sqlalchemy = "*"
+"psycopg2-binary" = "*"
+"psycopg2" = "*"
 
 [requires]
 python_version = "3.6"

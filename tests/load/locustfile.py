@@ -15,10 +15,11 @@ class UserBehavior(TaskSet):
     def on_start(self):
         """ on_start is called when a Locust start before any task is scheduled """
         """
+        Load work flow:
         1) generate sample file with N rows
         2) run setup scripts with new sample file
         3) get all hacs from db (that would otherwise go to letter)
-        4) use random.choice on iac collection when launch_survey
+        4) use random.choice on hacs when creating a new locust
         """
         self.access_code = random.choice(self.parent.access_codes)
 

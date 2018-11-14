@@ -131,3 +131,4 @@ def load(_, web=False):
 def create_sample(_, rows=1):
     from tests import generate_social_sample
     generate_social_sample(int(rows))
+    print(f'created sample file with {rows} rows')

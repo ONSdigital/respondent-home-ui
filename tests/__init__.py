@@ -14,10 +14,10 @@ logger = wrap_logger(logging.getLogger(__name__))
 
 
 def execute_sql(sql_string=None, database_uri=Config.DATABASE_URI):
+    logger.debug('Executing SQL script')
+    engine = create_engine(database_uri)
+    connection = engine.connect()
     try:
-        logger.debug('Executing SQL script')
-        engine = create_engine(database_uri)
-        connection = engine.connect()
         trans = connection.begin()
 
         response = connection.execute(sql_string)

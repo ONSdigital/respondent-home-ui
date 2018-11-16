@@ -21,7 +21,7 @@ class TestRespondentHome(AioHTTPTestCase):
     Assumes services are running on the default ports with social data pre-loaded with `make setup`.
     """
     async def get_application(self):
-        return create_app('DevelopmentConfig' if env.bool('LIVE_TEST', default=False) else 'TestingConfig')
+        return create_app(env.str('APP_SETTINGS', default='DevelopmentConfig'))
 
     @unittest_run_loop
     async def test_can_access_respondent_home_homepage(self):

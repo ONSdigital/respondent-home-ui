@@ -29,7 +29,7 @@ def execute_sql(sql_string=None, database_uri=Config.DATABASE_URI):
         connection.close()
 
 
-def get_all_hacs_for_collection_exercise(collection_exercise_id):
+def get_all_hacs_by_collex_id(collection_exercise_id):
     sample_unit_type = "H"
 
     sql_statement = "SELECT a.iac FROM casesvc.caseiacaudit a " \
@@ -41,6 +41,20 @@ def get_all_hacs_for_collection_exercise(collection_exercise_id):
                     "AND i.active = TRUE " \
                     "ORDER BY c.createddatetime DESC;"
     return [row['iac'] for row in execute_sql(sql_string=sql_statement)]
+
+
+def get_single_hac_and_case_id_by_collex_id(collection_exercise_id):
+    sample_unit_type = "H"
+
+    sql_statement = "SELECT a.iac, c.id FROM casesvc.caseiacaudit a " \
+                    "INNER JOIN casesvc.case c ON a.casefk = c.casepk " \
+                    "INNER JOIN iac.iac i ON a.iac = i.code " \
+                    "INNER JOIN casesvc.casegroup g ON c.casegroupfk = g.casegrouppk " \
+                    f"WHERE c.statefk = 'ACTIONABLE' AND c.SampleUnitType = '{sample_unit_type}'" \
+                    f"AND g.collectionexerciseid = '{collection_exercise_id}' " \
+                    "AND i.active = TRUE " \
+                    "ORDER BY c.createddatetime DESC;"
+    return choice(list(execute_sql(sql_string=sql_statement)))
 
 
 def generate_social_sample(number_of_rows=1):

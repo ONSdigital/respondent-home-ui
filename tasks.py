@@ -123,7 +123,7 @@ def load(_, web=False):
         run_command(f"locust -f tests/load/locustfile.py --host={os.environ['RESPONDENT_HOME_URL']}")
     else:
         run_command(f"locust -f tests/load/locustfile.py "
-                    f"--no-web -c 10000 -r 100 --run-time 30s "
+                    f"--no-web -c 1000 -r 50 --run-time 30s "
                     f"--host={os.environ['RESPONDENT_HOME_URL']}")
 
 

@@ -7,7 +7,7 @@ from locust import HttpLocust, TaskSet, task
 
 sys.path.append(os.getcwd())
 
-from tests import get_all_hacs_for_collection_exercise, get_collex_id
+from tests import get_all_hacs_by_collex_id, get_collex_id
 
 
 class UserBehavior(TaskSet):
@@ -82,7 +82,7 @@ class _BaseRespondent(HttpLocust):
     @classmethod
     def setup(cls):
         while True:
-            cls.access_codes = get_all_hacs_for_collection_exercise(get_collex_id())
+            cls.access_codes = get_all_hacs_by_collex_id(get_collex_id())
             if cls.access_codes:
                 break
             time.sleep(2)

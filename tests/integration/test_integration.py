@@ -18,7 +18,14 @@ logger = wrap_logger(logging.getLogger(__name__))
 class TestRespondentHome(AioHTTPTestCase):
 
     """
-    Assumes services are running on the default ports with social data pre-loaded with `make setup`.
+    Assumes services are running on the default ports with social data pre-loaded with `make setup`
+    or against deployed services that are configured via environment variables, including:
+        COLLECTION_EXERCISE_SERVICE_HOST
+        COLLECTION_EXERCISE_SERVICE_PORT
+        SECURITY_USER_NAME
+        SECURITY_USER_PASSWORD
+        DATABASE_URI
+    (for fetching hac and case from case database)
     """
     async def get_application(self):
         return create_app(env.str('APP_SETTINGS', default='DevelopmentConfig'))

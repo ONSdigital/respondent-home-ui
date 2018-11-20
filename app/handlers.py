@@ -6,7 +6,8 @@ from aiohttp.web import HTTPFound, RouteTableDef, json_response
 from sdc.crypto.encrypter import encrypt
 from structlog import wrap_logger
 
-from . import BAD_CODE_MSG, BAD_RESPONSE_MSG, CODE_USED_MSG, INVALID_CODE_MSG, NOT_AUTHORIZED_MSG, VERSION
+from . import (
+    BAD_CODE_MSG, BAD_CODE_TYPE_MSG, BAD_RESPONSE_MSG, INVALID_CODE_MSG, NOT_AUTHORIZED_MSG, VERSION)
 from .case import get_case, post_case_event
 from .eq import EqPayloadConstructor
 from .exceptions import InactiveCaseError, InvalidIACError
@@ -63,10 +64,10 @@ class Index:
         raise HTTPFound(self.request.app.router['Index:get'].url_for())
 
     async def get_iac_details(self):
-        logger.info(f"Making GET request to {self.iac_url}", iac=self.iac, client_ip=self.client_ip)
+        logger.debug(f"Making GET request to {self.iac_url}", iac=self.iac, client_ip=self.client_ip)
         try:
             async with self.request.app.http_session_pool.get(self.iac_url, auth=self.request.app["IAC_AUTH"]) as resp:
-                logger.info("Received response from IAC", iac=self.iac, status_code=resp.status)
+                logger.debug("Received response from IAC", iac=self.iac, status_code=resp.status)
 
                 try:
                     resp.raise_for_status()
@@ -78,7 +79,7 @@ class Index:
                         flash(self.request, NOT_AUTHORIZED_MSG)
                         return self.redirect()
                     elif 400 <= resp.status < 500:
-                        logger.info(
+                        logger.warn(
                             "Client error when accessing IAC service",
                             client_ip=self.client_ip,
                             status=resp.status,
@@ -117,15 +118,10 @@ class Index:
             iac_json = await self.get_iac_details()
         except InvalidIACError:
             logger.info("Attempt to use an invalid access code", client_ip=self.client_ip)
-            flash(self.request, BAD_CODE_MSG)
+            flash(self.request, INVALID_CODE_MSG)
             return aiohttp_jinja2.render_template("index.html", self.request, {}, status=202)
 
-        try:
-            self.validate_case(iac_json)
-        except InactiveCaseError:
-            logger.info("Attempt to use an inactive access code", client_ip=self.client_ip)
-            flash(self.request, CODE_USED_MSG)
-            return {}
+        self.validate_case(iac_json)
 
         try:
             case_id = iac_json["caseId"]
@@ -139,8 +135,8 @@ class Index:
         try:
             assert case['sampleUnitType'] == 'H'
         except AssertionError:
-            logger.error('Attempt to use unexpected sample unit type', sample_unit_type=case['sampleUnitType'])
-            flash(self.request, INVALID_CODE_MSG)
+            logger.warn('Attempt to use unexpected sample unit type', sample_unit_type=case['sampleUnitType'])
+            flash(self.request, BAD_CODE_TYPE_MSG)
             return {}
         except KeyError:
             logger.error('sampleUnitType missing from case response', client_ip=self.client_ip)
@@ -161,5 +157,12 @@ class Index:
 @routes.view('/cookies-privacy')
 class CookiesPrivacy:
     @aiohttp_jinja2.template('cookies-privacy.html')
+    async def get(self, _):
+        return {}
+
+
+@routes.view('/contact-us')
+class ContactUs:
+    @aiohttp_jinja2.template('contact-us.html')
     async def get(self, _):
         return {}

@@ -14,6 +14,8 @@ class TestCreateApp(AioHTTPTestCase):
     config = 'TestingConfig'
 
     async def get_application(self):
+        from app import settings
+        settings.DEBUG = False  # force security headers to be applied to response
         return create_app(self.config)
 
     @unittest_run_loop

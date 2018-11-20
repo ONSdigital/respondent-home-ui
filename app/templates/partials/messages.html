@@ -14,12 +14,7 @@
       </div>
 
       {% for message in messages %}
-      <div class="panel__body">
-        {% if message.clickable %}
-        <p class="mars">
-          This <strong>must be corrected</strong> to continue.
-        </p>
-        {% endif %}
+      <div class="panel__body" {% if message.type %}data-ga="error" data-ga-category="error" data-ga-action="error-validation" data-ga-label="error_type = {{ message.type }}" {% endif %}>
         <ul class="list list--bare">
           <li class="list__item mars">
             {% if message.clickable %}
@@ -35,7 +30,7 @@
 
     {% elif group=='INFO' %}
       {% for message in messages %}
-      <div class="panel panel--simple panel--info">
+      <div class="panel panel--simple panel--info" {% if message.type %}data-ga="error" data-ga-category="info" data-ga-action="info-message" data-ga-label="info_type = {{ message.type }}" {% endif %}>
         <div class="panel__body">
           {% for para in message.text.split('\n') %}
             <h2 class="mars">{{ para }}</h2>

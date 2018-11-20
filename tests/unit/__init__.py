@@ -186,8 +186,6 @@ class RHTestCase(AioHTTPTestCase):
         :param content: rendered HTML str
         """
         if message.get('clickable', False):
-            if message['level'] == 'ERROR':
-                self.assertIn('must be corrected', content)
             self.assertIn('js-inpagelink', content)
 
         for message_line in message['text'].split('\n'):
@@ -203,6 +201,8 @@ class RHTestCase(AioHTTPTestCase):
             self.collection_exercise_json = json.load(fp)
         with open('tests/test_data/collection_exercise/collection_exercise_events.json') as fp:
             self.collection_exercise_events_json = json.load(fp)
+        with open('tests/test_data/collection_exercise/collection_exercise_events_closed.json') as fp:
+            self.closed_ce_events_json = json.load(fp)
         with open('tests/test_data/collection_instrument/collection_instrument_eq.json') as fp:
             self.collection_instrument_json = json.load(fp)
         with open('tests/test_data/sample/sample_attributes.json') as fp:
@@ -212,6 +212,8 @@ class RHTestCase(AioHTTPTestCase):
 
         self.get_index = self.app.router['Index:get'].url_for()
         self.get_info = self.app.router['Info:get'].url_for()
+        self.get_cookies_privacy = self.app.router['CookiesPrivacy:get'].url_for()
+        self.get_contact_us = self.app.router['ContactUs:get'].url_for()
         self.post_index = self.app.router['Index:post'].url_for()
 
         self.action_plan_id = self.case_json['actionPlanId']
@@ -251,6 +253,7 @@ class RHTestCase(AioHTTPTestCase):
             "return_by": self.return_by,
             "ref_p_end_date": self.end_date,
             "ref_p_start_date": self.start_date,
+            "exercise_end": self.end_date,
             "display_address": f"{self.sample_attributes_json['attributes']['ADDRESS_LINE1']}, {self.sample_attributes_json['attributes']['TOWN_NAME']}",
             "address_line1": self.sample_attributes_json['attributes']['ADDRESS_LINE1'],
             "address_line2": self.sample_attributes_json['attributes']['ADDRESS_LINE2'],
@@ -295,3 +298,8 @@ class RHTestCase(AioHTTPTestCase):
         self.form_data = {
             'iac1': self.iac1, 'iac2': self.iac2, 'iac3': self.iac3, 'action[save_continue]': '',
         }
+
+        class DummyConstructor:
+            _collex_id = self.collection_exercise_id
+            _collex_events = self.collection_exercise_events_json
+        self.dummy_eq = DummyConstructor()

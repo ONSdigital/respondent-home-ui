@@ -27,11 +27,11 @@ and access using [http://localhost:9092](http://localhost:9092).
 ## Tests
 To run the unit tests for Respondent Home:
 
-  `make unittests`
+  `make test`
 
 To bring up all the RAS/RM & eQ Runner services and run the integration tests against them and Respondent Home:
 
-  `make test`
+  `make local_test`
 
 NB: Waiting for the services to be ready will likely take up to ten minutes.
 

@@ -4,6 +4,8 @@ RM_TOOLS_REPO_URL = https://github.com/ONSdigital/rm-tools.git
 
 .PHONY: test unit_tests integration_tests
 
+build: install
+
 install:
 	pipenv install --dev
 
@@ -13,9 +15,11 @@ serve:
 run:
 	pipenv run inv run
 
-test: flake8 unittests start_services wait_for_services setup integration_tests stop_services
+test: flake8 unittests
 
-live_test: start_services wait_for_services setup integration_tests stop_services
+local_test:  start_services wait_for_services setup integration_tests stop_services
+
+live_test: start_services wait_for_services setup live_integration_tests stop_services
 
 start_services:
 	./scripts/start_ras_rm.sh ${RAS_RM_REPO_URL}

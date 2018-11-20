@@ -196,6 +196,8 @@ class EqPayloadConstructor(object):
             "country_code": self._country_code,
             "language_code": self._language_code,  # currently only 'en' or 'cy'
             "display_address": self.build_display_address(self._sample_attributes),
+            "region_code": "GB-ENG",
+            "sexual_identity": True,
             "response_id": response_id
         }
 

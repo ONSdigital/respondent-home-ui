@@ -1,5 +1,4 @@
 import requests
-import json
 import time
 import sys
 import os
@@ -12,14 +11,10 @@ from app.eq import build_response_id
 from sdc.crypto.encrypter import encrypt
 from app import jwt
 
-collection_ex = sys.argv[1:]
-print("Collection exercise: " + str(collection_ex))
-
-
-if not os.getenv('APP_SETTINGS'):
+try:
+    config_info = getattr(config, os.env['APP_SETTINGS'])
+except (AttributeError, KeyError) as e:
     config_info = config.DevelopmentConfig
-else:
-    config_info = config.BaseConfig
 
 # Put config into a dict
 config = dict((name, getattr(config_info, name)) for name in dir(config_info) if not name.startswith('__'))
@@ -31,51 +26,63 @@ collex_url = f"{config['COLLECTION_EXERCISE_URL']}/collectionexercises/"
 sample_url = f"{config['SAMPLE_URL']}/samples/"
 eq_url = f"{config['EQ_URL']}"
 
-collection_ex_info = requests.get(collex_url + "link/" + collection_ex[0],
-                                  auth=config["COLLECTION_EXERCISE_AUTH"])
 
-sample_summary_id = json.loads(collection_ex_info.content)
+def main(collection_ex_id):
+    collection_ex_info = requests.get(collex_url + "link/" + collection_ex_id[0],
+                                      auth=config["COLLECTION_EXERCISE_AUTH"])
+    collection_ex_info.raise_for_status()
 
-sample_units = requests.get(sample_url + sample_summary_id[0] + "/sampleunits",
-                            auth=config["SAMPLE_AUTH"])
-sample_units = json.loads(sample_units.content)
+    sample_summary_id = collection_ex_info.json()
 
-samples = []
-for sample in sample_units:
-    samples.append(sample["id"])
+    sample_units = requests.get(sample_url + sample_summary_id[0] + "/sampleunits",
+                                auth=config["SAMPLE_AUTH"])
+    sample_units = sample_units.json()
 
-case_inprogress = []
-for sample in samples:
-    sample_return = requests.get(case_url + "?sampleUnitId=" + sample, auth=config["CASE_AUTH"])
-    case_return = json.loads(sample_return.content)
-    case_return = case_return[0]
-    if case_return["caseGroup"]["collectionExerciseId"] == str(collection_ex[0]) and case_return["caseGroup"][
-        "caseGroupStatus"] == "INPROGRESS":
-        case_inprogress.append(case_return)
+    samples = [sample['id'] for sample in sample_units]
+
+    case_inprogress = []
+    for sample in samples:
+        sample_return = requests.get(case_url + "?sampleUnitId=" + sample, auth=config["CASE_AUTH"])
+        sample_return.raise_for_status()
+        case_return = sample_return.json()
+        case_return = case_return[0]
+        if case_return["caseGroup"]["collectionExerciseId"] == str(collection_ex[0]) and case_return["caseGroup"][
+            "caseGroupStatus"] == "INPROGRESS":
+            case_inprogress.append(case_return)
+
+    # Loop over cases to flush them away
+    for case in case_inprogress:
+        print("Flushing case: " + case["id"])
+        flush_cases(case["id"])
 
 
 def flush_cases(case_id):
     # Get iac for case
     iac_return = requests.get(case_url + case_id + "/iac", auth=config["CASE_AUTH"])
-    iac_return = json.loads(iac_return.content)
+    iac_return.raise_for_status()
+    iac_return = iac_return.json()
 
     # Get case details
     case_return = requests.get(case_url + case_id, auth=config["CASE_AUTH"])
-    case = json.loads(case_return.content)
+    case_return.raise_for_status()
+    case = case_return.json()
 
     # Collection instrument details
     ci_return = requests.get(ci_url + case["collectionInstrumentId"], auth=config["COLLECTION_INSTRUMENT_AUTH"])
-    ci = json.loads(ci_return.content)
+    ci_return.raise_for_status()
+    ci = ci_return.json()
 
     # Get collection exercise info
     collex_return = requests.get(collex_url + case["caseGroup"]["collectionExerciseId"],
                                  auth=config["COLLECTION_EXERCISE_AUTH"])
-    collex = json.loads(collex_return.content)
+    collex_return.raise_for_status()
+    collex = collex_return.json()
 
     # Get sample details
     sample_return = requests.get(sample_url + case["sampleUnitId"] + "/attributes",
                                  auth=config["SAMPLE_AUTH"])
-    sample = json.loads(sample_return.content)
+    sample_return.raise_for_status()
+    sample = sample_return.json()
     sample_attributes = sample["attributes"]
 
     # For each IAC that is returned for a case
@@ -113,7 +120,7 @@ def flush_cases(case_id):
         requests.post(flush_url)
 
 
-# Loop over cases to flush them away
-for case in case_inprogress:
-    print("Flushing case: " + case["id"])
-    flush_cases(case["id"])
+if __name__ == '__main__':
+    collection_ex = sys.argv[1:]
+    print("Collection exercise: " + str(collection_ex))
+    main(collection_ex)

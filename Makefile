@@ -20,8 +20,6 @@ test: flake8 unittests
 
 local_test:  start_services wait_for_services setup integration_tests stop_services
 
-live_test: start_services wait_for_services setup live_integration_tests stop_services
-
 load_test: start_services wait_for_services setup load
 
 start_services:
@@ -40,9 +38,6 @@ setup:
 
 integration_tests:
 	pipenv run inv integration
-
-live_integration_tests:
-	pipenv run inv integration --live
 
 unittests:
 	pipenv run inv unittests

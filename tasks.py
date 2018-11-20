@@ -79,14 +79,12 @@ def smoke(_, local=False):
 
 
 @task
-def integration(ctx, clean=False, live=False):
+def integration(ctx, clean=False):
     """Run the integration tests."""
     import pytest
 
     if clean:
         cleanpy(ctx)
-    if live:
-        os.environ['LIVE_TEST'] = 'true'
     retcode = pytest.main(["tests/integration"])
     sys.exit(retcode)
 
@@ -119,12 +117,13 @@ def coverage(_):
 
 @task
 def load(_, web=False):
+    respondent_home_url = os.getenv('RESPONDENT_HOME_URL', "http://localhost:9092")
     if web:
-        run_command(f"locust -f tests/load/locustfile.py --host={os.environ['RESPONDENT_HOME_URL']}")
+        run_command(f"locust -f tests/load/locustfile.py --host={respondent_home_url}")
     else:
         run_command(f"locust -f tests/load/locustfile.py "
                     f"--no-web -c 1000 -r 50 --run-time 30s "
-                    f"--host={os.environ['RESPONDENT_HOME_URL']}")
+                    f"--host={respondent_home_url}")
 
 
 @task

@@ -6,7 +6,7 @@ import requests
 from sdc.crypto.encrypter import encrypt
 from uuid import uuid4
 
-sys.path.append(os.getcwd())  # NB: script needs to know about app so append to PYTHONPATH
+sys.path.append(os.path.join(os.path.dirname(__file__), os.path.pardir))  # NB: script needs to know about app so append to PYTHONPATH
 
 from app import config, jwt  # NOQA
 from app.eq import build_response_id  # NOQA

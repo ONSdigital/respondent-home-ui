@@ -61,6 +61,10 @@ class BaseConfig:
     SURVEY_URL = env("SURVEY_URL")
     SURVEY_AUTH = (env("SURVEY_USERNAME"), env("SURVEY_PASSWORD"))
 
+    REDIS_HOST = env("REDIS_HOST")
+    REDIS_PORT = env("REDIS_PORT")
+    REDIS_MAINTENANCE_KEY = env("REDIS_MAINTENANCE_KEY", default="maintenance")
+
     SECRET_KEY = env("SECRET_KEY")
 
     URL_PATH_PREFIX = env("URL_PATH_PREFIX", default="")
@@ -106,6 +110,10 @@ class DevelopmentConfig:
     SURVEY_URL = env("SURVEY_URL", default="http://localhost:8080")
     SURVEY_AUTH = (env("SURVEY_USERNAME", default="admin"), env("SURVEY_PASSWORD", default="secret"))
 
+    REDIS_HOST = env.str("REDIS_HOST", default="localhost")
+    REDIS_PORT = env.int("REDIS_PORT", default=6379)
+    REDIS_MAINTENANCE_KEY = env.str("REDIS_MAINTENANCE_KEY", default="maintenance")
+
     SECRET_KEY = env.str("SECRET_KEY", default=None) or generate_new_key()
 
     URL_PATH_PREFIX = env("URL_PATH_PREFIX", default="")
@@ -139,6 +147,10 @@ class TestingConfig:
 
     SURVEY_URL = "http://localhost:8080"
     SURVEY_AUTH = ("admin", "secret")
+
+    REDIS_HOST = "localhost"
+    REDIS_PORT = 6379
+    REDIS_MAINTENANCE_KEY = "maintenance"
 
     SECRET_KEY = generate_new_key()
 

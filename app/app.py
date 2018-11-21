@@ -3,6 +3,7 @@ import types
 
 import aiohttp_jinja2
 import jinja2
+import redis
 from aiohttp import BasicAuth, ClientSession, ClientTimeout
 from aiohttp.client_exceptions import ClientConnectionError, ClientConnectorError, ClientResponseError
 from aiohttp.web import Application
@@ -28,6 +29,7 @@ server_logger.setLevel("INFO")
 
 async def on_startup(app):
     app.http_session_pool = ClientSession(timeout=ClientTimeout(total=30))
+    app.redis_connection = redis.Redis(host=app['REDIS_HOST'], port=app['REDIS_PORT'])
 
 
 async def on_cleanup(app):
@@ -68,6 +70,7 @@ def create_app(config_name=None) -> Application:
             security.nonce_middleware,
             session.setup(app_config["SECRET_KEY"]),
             flash.flash_middleware,
+            flash.maintenance_middleware,
         ],
         router=routing.ResourceRouter(),
     )

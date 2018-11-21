@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+
+  respondent-home-ui:
+    container_name: respondent-home-ui
+    build: ./
+    depends_on:
+      - redis
+    env_file:
+      - .env
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - APP_SETTINGS=DevelopmentConfig
+      - PORT=9092
+    links:
+      - redis
+    ports:
+      - "9092:9092"
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"

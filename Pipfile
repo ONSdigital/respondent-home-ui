@@ -15,6 +15,7 @@ cchardet = "*"
 aiodns = "*"
 "iso8601" = "*"
 invoke = "*"
+redis = "*"
 
 [dev-packages]
 codecov = "*"

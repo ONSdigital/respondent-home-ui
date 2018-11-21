@@ -1,18 +1,19 @@
-import requests
 import time
 import sys
 import os
 
-sys.path.append(os.getcwd())
-
-from app import config
-from uuid import uuid4
-from app.eq import build_response_id
+import requests
 from sdc.crypto.encrypter import encrypt
-from app import jwt
+from uuid import uuid4
+
+sys.path.append(os.getcwd())  # NB: script needs to know about app so append to PYTHONPATH
+
+from app import config, jwt  # NOQA
+from app.eq import build_response_id  # NOQA
+
 
 try:
-    config_info = getattr(config, os.env['APP_SETTINGS'])
+    config_info = getattr(config, os.environ['APP_SETTINGS'])
 except (AttributeError, KeyError) as e:
     config_info = config.DevelopmentConfig
 

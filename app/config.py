@@ -64,6 +64,7 @@ class BaseConfig:
     REDIS_HOST = env("REDIS_HOST")
     REDIS_PORT = env("REDIS_PORT")
     REDIS_MAINTENANCE_KEY = env("REDIS_MAINTENANCE_KEY", default="maintenance")
+    REDIS_SERVICE = env("REDIS_SERVICE")
 
     SECRET_KEY = env("SECRET_KEY")
 

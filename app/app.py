@@ -10,6 +10,7 @@ from aiohttp.web import Application
 from aiohttp_utils import negotiation, routing
 from structlog import wrap_logger
 
+from . import cloud
 from . import config
 from . import error_handlers
 from . import flash
@@ -92,6 +93,12 @@ def create_app(config_name=None) -> Application:
     logger_initial_config(service_name="respondent-home", log_level=app["LOG_LEVEL"])
 
     logger.info("Logging configured", log_level=app['LOG_LEVEL'])
+
+    cf = cloud.ONSCloudFoundry(app)
+    if cf.detected:
+        logger.info("Cloudfoundry detected, setting service configurations")
+        app['REDIS_HOST'] = cf.redis.service.credentials['host']
+        app['REDIS_PORT'] = cf.redis.service.credentials['port']
 
     # Set up routes
     routes.setup(app, url_path_prefix=app['URL_PATH_PREFIX'])

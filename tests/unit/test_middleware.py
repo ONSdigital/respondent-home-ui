@@ -18,7 +18,7 @@ class TestMaintenanceMiddleware(RHTestCase):
     def setUp(self):
         super().setUp()
         self.message_dict = MAINTENANCE_MSG.copy()
-        self.message_dict['text'].format(custom_message='Test')
+        self.message_dict['text'] = self.message_dict['text'].format(custom_message='Test')
 
     @unittest_run_loop
     async def test_get_maintenance_message(self):

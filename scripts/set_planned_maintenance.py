@@ -20,7 +20,7 @@ redis_connection = redis.Redis(host=config_info.REDIS_HOST, port=config_info.RED
 
 def main(custom_message, ttl):
     message_dict = MAINTENANCE_MSG.copy()
-    message_dict['text'].format(custom_message=custom_message)
+    message_dict['text'] = message_dict['text'].format(custom_message=custom_message)
     redis_connection.set(config_info.REDIS_MAINTENANCE_KEY, json.dumps(message_dict))
     redis_connection.expire(config_info.REDIS_MAINTENANCE_KEY, ttl)
     print(message_dict['text'], f'{ttl}s')

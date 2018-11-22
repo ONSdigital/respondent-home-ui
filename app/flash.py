@@ -65,6 +65,8 @@ async def maintenance_middleware(request, handler):
             flash(request, maintenance_message, position=0)
     except redis.exceptions.ConnectionError as e:
         logger.error('Failed to connect to redis', message=str(e))
+    except TypeError as e:
+        logger.error('Unexpected message type received from redis', message=str(e))
     return await handler(request)
 
 

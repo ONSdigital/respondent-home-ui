@@ -63,7 +63,7 @@ class BaseConfig:
 
     REDIS_HOST = env("REDIS_HOST")
     REDIS_PORT = env("REDIS_PORT")
-    REDIS_MAINTENANCE_KEY = env("REDIS_MAINTENANCE_KEY", default="maintenance")
+    REDIS_MAINTENANCE_KEY = env("REDIS_MAINTENANCE_KEY", default="respondent-home-ui:maintenance")
     REDIS_SERVICE = env("REDIS_SERVICE")
 
     SECRET_KEY = env("SECRET_KEY")
@@ -113,7 +113,7 @@ class DevelopmentConfig:
 
     REDIS_HOST = env.str("REDIS_HOST", default="localhost")
     REDIS_PORT = env.int("REDIS_PORT", default=6379)
-    REDIS_MAINTENANCE_KEY = env.str("REDIS_MAINTENANCE_KEY", default="maintenance")
+    REDIS_MAINTENANCE_KEY = env.str("REDIS_MAINTENANCE_KEY", default="respondent-home-ui:maintenance")
 
     SECRET_KEY = env.str("SECRET_KEY", default=None) or generate_new_key()
 
@@ -151,7 +151,7 @@ class TestingConfig:
 
     REDIS_HOST = "localhost"
     REDIS_PORT = 6379
-    REDIS_MAINTENANCE_KEY = "maintenance"
+    REDIS_MAINTENANCE_KEY = "respondent-home-ui:maintenance"
 
     SECRET_KEY = generate_new_key()
 

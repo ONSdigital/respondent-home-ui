@@ -117,8 +117,8 @@ def flush_cases(case_id):
 
         # Call flusher
         flush_url = eq_url + "/flush?token=" + token
-        response = requests.post(flush_url)
-        print(case_id + " Response: " + response.json())
+        flush_response = requests.post(flush_url)
+        print(case_id + " Response: " + str(flush_response.status_code))
 
 if __name__ == '__main__':
     collection_ex = sys.argv[1:]

@@ -39,11 +39,14 @@ def remove_message():
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Set a planned maintenance message for Respondent Home UI')
-    parser.add_argument('message', type=str, help='message to be displayed as part of the planned maintenance')
+    parser.add_argument('message', nargs='?', type=str,
+                        help='message to be displayed as part of the planned maintenance')
     parser.add_argument('--remove', action='store_true', help='remove the planned maintenance message')
     parser.add_argument('--ttl', type=int, help='add a time to live in seconds')
     args = parser.parse_args()
     if args.remove:
         remove_message()
-    else:
+    elif args.message:
         main(args.message, ttl=args.ttl)
+    else:
+        parser.print_help()

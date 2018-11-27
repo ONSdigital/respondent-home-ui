@@ -61,10 +61,10 @@ class BaseConfig:
     SURVEY_URL = env("SURVEY_URL")
     SURVEY_AUTH = (env("SURVEY_USERNAME"), env("SURVEY_PASSWORD"))
 
-    REDIS_HOST = env("REDIS_HOST")
-    REDIS_PORT = env("REDIS_PORT")
+    REDIS_SERVICE = env("REDIS_SERVICE")  # required to populate host and port with cf values
+    REDIS_HOST = env("REDIS_HOST", default="")  # populated by cf after setup
+    REDIS_PORT = env("REDIS_PORT", default="")  # populated by cf after setup
     REDIS_MAINTENANCE_KEY = env("REDIS_MAINTENANCE_KEY", default="respondent-home-ui:maintenance")
-    REDIS_SERVICE = env("REDIS_SERVICE")
 
     SECRET_KEY = env("SECRET_KEY")
 

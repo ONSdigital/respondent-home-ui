@@ -148,6 +148,13 @@ class TestCFEnv(TestCase):
         ]
     }
 
+    def tearDown(self):
+        try:
+            del os.environ['VCAP_SERVICES']
+            del os.environ['VCAP_APPLICATION']
+        except KeyError:
+            pass
+
     def test_get_redis_service(self):
         os.environ['VCAP_SERVICES'] = json.dumps(self.vcap_services)
         os.environ['VCAP_APPLICATION'] = json.dumps(True)

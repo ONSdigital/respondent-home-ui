@@ -33,7 +33,7 @@
       <div class="panel panel--simple panel--info" {% if message.type %}data-ga="error" data-ga-category="info" data-ga-action="info-message" data-ga-label="info_type = {{ message.type }}" {% endif %}>
         <div class="panel__body">
           {% for para in message.text.split('\n') %}
-            <h2 class="mars">{{ para }}</h2>
+            <h2 class="mars">{{ para|safe }}</h2>
           {% endfor %}
         </div>
       </div>

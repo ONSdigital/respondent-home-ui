@@ -20,7 +20,7 @@ def create_error_middleware(overrides):
             resp = await handler(request)
             override = overrides.get(resp.status)
             return await override(request) if override else resp
-        except web.HTTPNotFound as ex:
+        except web.HTTPNotFound:
             index_resource = request.app.router['Index:get']
             if request.path + '/' == index_resource.canonical:
                 logger.debug('Redirecting to index', path=request.path)

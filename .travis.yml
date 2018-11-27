@@ -13,7 +13,8 @@ install:
   - pipenv install --dev --deploy
 
 script:
-  - pipenv run pytest tests/unit --cov=app --cov-report xml --ignore=node_modules
+  - pipenv run inv flake8
+  - pipenv run inv coverage
   - pipenv run coverage report
 
 after_success:

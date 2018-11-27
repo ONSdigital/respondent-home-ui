@@ -3,12 +3,14 @@ import types
 
 import aiohttp_jinja2
 import jinja2
+import redis
 from aiohttp import BasicAuth, ClientSession, ClientTimeout
 from aiohttp.client_exceptions import ClientConnectionError, ClientConnectorError, ClientResponseError
 from aiohttp.web import Application
 from aiohttp_utils import negotiation, routing
 from structlog import wrap_logger
 
+from . import cloud
 from . import config
 from . import error_handlers
 from . import flash
@@ -28,6 +30,7 @@ server_logger.setLevel("INFO")
 
 async def on_startup(app):
     app.http_session_pool = ClientSession(timeout=ClientTimeout(total=30))
+    app.redis_connection = redis.Redis(host=app['REDIS_HOST'], port=app['REDIS_PORT'])
 
 
 async def on_cleanup(app):
@@ -68,6 +71,7 @@ def create_app(config_name=None) -> Application:
             security.nonce_middleware,
             session.setup(app_config["SECRET_KEY"]),
             flash.flash_middleware,
+            flash.maintenance_middleware,
         ],
         router=routing.ResourceRouter(),
     )
@@ -89,6 +93,12 @@ def create_app(config_name=None) -> Application:
     logger_initial_config(service_name="respondent-home", log_level=app["LOG_LEVEL"])
 
     logger.info("Logging configured", log_level=app['LOG_LEVEL'])
+
+    cf = cloud.ONSCloudFoundry(app)
+    if cf.detected:
+        logger.info("Cloudfoundry detected, setting service configurations")
+        app['REDIS_HOST'] = cf.redis.service.credentials['host']
+        app['REDIS_PORT'] = cf.redis.service.credentials['port']
 
     # Set up routes
     routes.setup(app, url_path_prefix=app['URL_PATH_PREFIX'])

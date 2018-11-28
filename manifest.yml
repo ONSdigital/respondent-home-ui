@@ -7,3 +7,5 @@ applications:
   memory: 256M
   stack: cflinuxfs2
   timeout: 180
+  services:
+    - ras-redis

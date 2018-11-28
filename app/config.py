@@ -63,7 +63,7 @@ class BaseConfig:
 
     REDIS_SERVICE = env("REDIS_SERVICE")  # required to populate host and port with cf values
     REDIS_HOST = env("REDIS_HOST", default="")  # populated by cf after setup
-    REDIS_PORT = env("REDIS_PORT", default="")  # populated by cf after setup
+    REDIS_PORT = env("REDIS_PORT", default=0)  # populated by cf after setup
     REDIS_MAINTENANCE_KEY = env("REDIS_MAINTENANCE_KEY", default="respondent-home-ui:maintenance")
 
     SECRET_KEY = env("SECRET_KEY")

@@ -1,3 +1,5 @@
+import json
+import os
 from importlib import reload
 from unittest import TestCase, mock
 
@@ -122,3 +124,54 @@ class TestCheckServices(AioHTTPTestCase):
     async def test_check_services_failed(self):
         with aioresponses():
             self.assertFalse(await self.app.check_services())
+
+
+class TestCFEnv(TestCase):
+
+    config = 'TestingConfig'
+    vcap_services = {
+        'broker-name': [
+            {
+                'credentials': {
+                    'host': 'redis-host',
+                    'name': 'redis-hostname',
+                    'port': 1234
+                },
+                'label': 'broker-name',
+                'name': 'test-redis',
+                'plan': 'small',
+                'provider': None,
+                'syslog_drain_url': None,
+                'tags': ['redis'],
+                'volume_mounts': []
+            }
+        ]
+    }
+
+    def tearDown(self):
+        try:
+            del os.environ['VCAP_SERVICES']
+            del os.environ['VCAP_APPLICATION']
+        except KeyError:
+            pass
+
+    def test_get_redis_service(self):
+        os.environ['VCAP_SERVICES'] = json.dumps(self.vcap_services)
+        os.environ['VCAP_APPLICATION'] = json.dumps(True)
+
+        with self.assertLogs('respondent-home', 'INFO') as cm:
+            app = create_app(self.config)
+        self.assertIn('Cloudfoundry detected, setting service configurations',
+                      [json.loads(record.message)['event'] for record in cm.records])
+
+        self.assertEqual(app['REDIS_HOST'], 'redis-host')
+        self.assertEqual(app['REDIS_PORT'], 1234)
+
+    def test_get_redis_service_default(self):
+        with self.assertLogs('respondent-home', 'INFO') as cm:
+            app = create_app(self.config)
+        self.assertNotIn('Cloudfoundry detected, setting service configurations',
+                         [json.loads(record.message)['event'] for record in cm.records])
+
+        self.assertEqual(app['REDIS_HOST'], 'localhost')
+        self.assertEqual(app['REDIS_PORT'], 6379)

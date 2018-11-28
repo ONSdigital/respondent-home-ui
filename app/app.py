@@ -97,8 +97,8 @@ def create_app(config_name=None) -> Application:
     cf = cloud.ONSCloudFoundry(app)
     if cf.detected:
         logger.info("Cloudfoundry detected, setting service configurations")
-        app['REDIS_HOST'] = cf.redis.service.credentials['host']
-        app['REDIS_PORT'] = cf.redis.service.credentials['port']
+        app['REDIS_HOST'] = cf.redis.credentials['host']
+        app['REDIS_PORT'] = cf.redis.credentials['port']
 
     # Set up routes
     routes.setup(app, url_path_prefix=app['URL_PATH_PREFIX'])

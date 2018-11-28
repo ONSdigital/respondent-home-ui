@@ -151,6 +151,7 @@ class TestingConfig:
 
     REDIS_HOST = "localhost"
     REDIS_PORT = 6379
+    REDIS_SERVICE = "test-redis"
     REDIS_MAINTENANCE_KEY = "respondent-home-ui:maintenance"
 
     SECRET_KEY = generate_new_key()

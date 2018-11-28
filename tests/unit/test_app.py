@@ -159,13 +159,19 @@ class TestCFEnv(TestCase):
         os.environ['VCAP_SERVICES'] = json.dumps(self.vcap_services)
         os.environ['VCAP_APPLICATION'] = json.dumps(True)
 
-        app = create_app(self.config)
+        with self.assertLogs('respondent-home', 'INFO') as cm:
+            app = create_app(self.config)
+        self.assertIn('Cloudfoundry detected, setting service configurations',
+                      [json.loads(record.message)['event'] for record in cm.records])
 
         self.assertEqual(app['REDIS_HOST'], 'redis-host')
         self.assertEqual(app['REDIS_PORT'], 1234)
 
     def test_get_redis_service_default(self):
-        app = create_app(self.config)
+        with self.assertLogs('respondent-home', 'INFO') as cm:
+            app = create_app(self.config)
+        self.assertNotIn('Cloudfoundry detected, setting service configurations',
+                         [json.loads(record.message)['event'] for record in cm.records])
 
         self.assertEqual(app['REDIS_HOST'], 'localhost')
         self.assertEqual(app['REDIS_PORT'], 6379)

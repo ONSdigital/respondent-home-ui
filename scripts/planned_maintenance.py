@@ -9,6 +9,7 @@ import redis
 sys.path.append(os.path.join(os.path.dirname(__file__), os.path.pardir))
 
 from app import MAINTENANCE_MSG  # NOQA
+from app import cloud  # NOQA
 from app import config  # NOQA
 
 
@@ -16,6 +17,12 @@ try:
     config_info = getattr(config, os.environ['APP_SETTINGS'])
 except (AttributeError, KeyError):
     config_info = config.DevelopmentConfig
+
+cf = cloud.ONSCloudFoundry(redis_name=getattr(config_info, 'REDIS_SERVICE', None))
+if cf.detected and cf.redis:
+    print("Cloud Foundry detected, setting service configurations")
+    config_info.REDIS_HOST = cf.redis.credentials['host']
+    config_info.REDIS_PORT = cf.redis.credentials['port']
 
 redis_connection = redis.Redis(host=config_info.REDIS_HOST, port=config_info.REDIS_PORT)
 

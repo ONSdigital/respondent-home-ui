@@ -62,6 +62,10 @@ def create_app(config_name=None) -> Application:
     config_name = (config_name or app_config["ENV"])
     app_config.from_object(getattr(config, config_name))
 
+    # Bind logger
+    logger_initial_config(service_name="respondent-home", log_level=app_config["LOG_LEVEL"])
+    logger.info("Logging configured", log_level=app_config['LOG_LEVEL'], config=config_name)
+
     # Create basic auth for services
     [app_config.__setitem__(key, BasicAuth(*app_config[key])) for key in app_config if key.endswith('_AUTH')]
 
@@ -89,14 +93,9 @@ def create_app(config_name=None) -> Application:
     # Monkey patch the check_services function as a method to the app object
     app.check_services = types.MethodType(check_services, app)
 
-    # Bind logger
-    logger_initial_config(service_name="respondent-home", log_level=app["LOG_LEVEL"])
-
-    logger.info("Logging configured", log_level=app['LOG_LEVEL'])
-
-    cf = cloud.ONSCloudFoundry(app)
-    if cf.detected:
-        logger.info("Cloudfoundry detected, setting service configurations")
+    cf = cloud.ONSCloudFoundry(redis_name=app.get('REDIS_SERVICE'))
+    if cf.detected and cf.redis:
+        logger.info("Cloud Foundry detected, setting service configurations", redis_name=cf.redis.name)
         app['REDIS_HOST'] = cf.redis.credentials['host']
         app['REDIS_PORT'] = cf.redis.credentials['port']
 

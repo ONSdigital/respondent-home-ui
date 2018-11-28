@@ -161,7 +161,7 @@ class TestCFEnv(TestCase):
 
         with self.assertLogs('respondent-home', 'INFO') as cm:
             app = create_app(self.config)
-        self.assertIn('Cloudfoundry detected, setting service configurations',
+        self.assertIn('Cloud Foundry detected, setting service configurations',
                       [json.loads(record.message)['event'] for record in cm.records])
 
         self.assertEqual(app['REDIS_HOST'], 'redis-host')
@@ -170,7 +170,7 @@ class TestCFEnv(TestCase):
     def test_get_redis_service_default(self):
         with self.assertLogs('respondent-home', 'INFO') as cm:
             app = create_app(self.config)
-        self.assertNotIn('Cloudfoundry detected, setting service configurations',
+        self.assertNotIn('Cloud Foundry detected, setting service configurations',
                          [json.loads(record.message)['event'] for record in cm.records])
 
         self.assertEqual(app['REDIS_HOST'], 'localhost')

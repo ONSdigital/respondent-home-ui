@@ -9,7 +9,7 @@ env = Env()
 
 
 @task
-def run(ctx, port=None):
+def run(_, port=None):
     """Run the development server"""
     port = port or env("PORT", default=9092)
     if not os.getenv('APP_SETTINGS'):
@@ -18,7 +18,7 @@ def run(ctx, port=None):
 
 
 @task
-def server(ctx, port=None, reload=True, debug=False, production=True):
+def server(_, port=None, reload=True, debug=False, production=True):
     """Run the gunicorn server"""
     try:
         port = port or env("PORT")
@@ -43,13 +43,13 @@ def server(ctx, port=None, reload=True, debug=False, production=True):
 
 
 @task
-def flake8(ctx):
+def flake8(_):
     """Run flake8 on the codebase"""
     run_command("flake8 app", echo=True)
 
 
 @task
-def unittests(ctx):
+def unittests(_):
     """Run the unit tests"""
     import pytest
 
@@ -67,7 +67,7 @@ def test(ctx, clean=False):
 
 
 @task
-def smoke(ctx, local=False):
+def smoke(_, local=False):
     """Run the smoke tests."""
     import pytest
 
@@ -79,39 +79,55 @@ def smoke(ctx, local=False):
 
 
 @task
-def integration(ctx, clean=False, live=False):
+def integration(ctx, clean=False):
     """Run the integration tests."""
     import pytest
 
     if clean:
         cleanpy(ctx)
-    if live:
-        os.environ['LIVE_TEST'] = 'true'
     retcode = pytest.main(["tests/integration"])
     sys.exit(retcode)
 
 
 @task
-def cleanpy(ctx):
+def cleanpy(_):
     """Clear out __pycache__ directories."""
     run_command("find . -path '*/__pycache__/*' -delete", echo=True)
     print("Cleaned up.")
 
 
 @task
-def demo(ctx):
+def demo(_):
     """Run the demo server"""
     run_command("python -m tests.demo")
 
 
 @task
-def wait(ctx):
+def wait(_):
     from tests.wait_for_services import check_all_services
     check_all_services()
     print('all services are up')
 
 
 @task
-def coverage(ctx):
+def coverage(_):
     """Calculate coverage and render to HTML"""
     run_command("pytest tests/unit --cov app --cov-report html --ignore=node_modules")
+
+
+@task
+def load(_, web=False):
+    respondent_home_url = os.getenv('RESPONDENT_HOME_URL', "http://localhost:9092")
+    if web:
+        run_command(f"locust -f tests/load/locustfile.py --host={respondent_home_url}")
+    else:
+        run_command(f"locust -f tests/load/locustfile.py "
+                    f"--no-web -c 1000 -r 50 --run-time 30s "
+                    f"--host={respondent_home_url}")
+
+
+@task
+def create_sample(_, rows=1):
+    from tests import generate_social_sample
+    generate_social_sample(int(rows))
+    print(f'created sample file with {rows} rows')

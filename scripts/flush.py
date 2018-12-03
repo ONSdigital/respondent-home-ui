@@ -6,11 +6,11 @@ import requests
 from sdc.crypto.encrypter import encrypt
 from uuid import uuid4
 
-sys.path.append(os.path.join(os.path.dirname(__file__), os.path.pardir))  # NB: script needs to know about app so append to PYTHONPATH
+sys.path.append(os.path.join(os.path.dirname(__file__),
+                             os.path.pardir))  # NB: script needs to know about app so append to PYTHONPATH
 
 from app import config, jwt  # NOQA
 from app.eq import build_response_id  # NOQA
-
 
 try:
     config_info = getattr(config, os.environ['APP_SETTINGS'])
@@ -41,15 +41,14 @@ def main(collection_ex_id):
 
     samples = [sample['id'] for sample in sample_units]
 
+    sample_return = requests.get(case_url + "sampleunitids?sampleUnitId=" + ','.join(samples), auth=config["CASE_AUTH"])
+    sample_return.raise_for_status()
+    
     case_inprogress = []
-    for sample in samples:
-        sample_return = requests.get(case_url + "?sampleUnitId=" + sample, auth=config["CASE_AUTH"])
-        sample_return.raise_for_status()
-        case_return = sample_return.json()
-        case_return = case_return[0]
-        if case_return["caseGroup"]["collectionExerciseId"] == str(collection_ex[0]) and case_return["caseGroup"][
+    for sample in sample_return.json():
+        if sample["caseGroup"]["collectionExerciseId"] == str(collection_ex[0]) and sample["caseGroup"][
             "caseGroupStatus"] == "INPROGRESS":
-            case_inprogress.append(case_return)
+            case_inprogress.append(sample)
 
     # Loop over cases to flush them away
     for case in case_inprogress:
@@ -120,6 +119,7 @@ def flush_cases(case_id):
         flush_url = eq_url + "/flush?token=" + token
         flush_response = requests.post(flush_url)
         print(f'Response from flushing {case_id}: {flush_response.status_code}')
+
 
 if __name__ == '__main__':
     collection_ex = sys.argv[1:]

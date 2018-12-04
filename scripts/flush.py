@@ -122,6 +122,7 @@ def flush_cases(case_id):
 
 
 if __name__ == '__main__':
-    collection_ex = sys.argv[1:]
+     print(f'Using {config_info.__name__}')
+     collection_ex = sys.argv[1:]
      print(f'Collection exercise: {str(collection_ex)}')
     main(collection_ex)

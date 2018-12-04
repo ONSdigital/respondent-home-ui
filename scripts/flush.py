@@ -49,6 +49,8 @@ def main(collection_ex_id):
         if sample["caseGroup"]["collectionExerciseId"] == str(collection_ex[0]) and sample["caseGroup"][
             "caseGroupStatus"] == "INPROGRESS":
             case_inprogress.append(sample)
+        
+        print(f'Cases in progress: {len(case_inprogress)}')
 
     # Loop over cases to flush them away
     for case in case_inprogress:

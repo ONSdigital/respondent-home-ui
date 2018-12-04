@@ -40,14 +40,24 @@ def main(collection_ex_id):
     sample_units = sample_units.json()
 
     samples = [sample['id'] for sample in sample_units]
+    print(f'Sample units for collection exercise: {len(samples)}')
 
-    sample_return = requests.get(case_url + "sampleunitids?sampleUnitId=" + ','.join(samples), auth=config["CASE_AUTH"])
-    sample_return.raise_for_status()
-    
+    sample_chunks = []
+    for i in range(0, len(samples), 10):
+        sample_chunks.append(samples[i:i + 10])
+
+    sample_return = []
+    for sample_chunk in sample_chunks:
+        sample_chunk_return = requests.get(case_url + "sampleunitids?sampleUnitId=" + ','.join(samples),
+                                           auth=config["CASE_AUTH"])
+        sample_chunk_return.raise_for_status()
+        for sample in sample_chunk_return.json():
+            sample_return.append(sample)
+
     case_inprogress = []
-    for sample in sample_return.json():
-        if sample["caseGroup"]["collectionExerciseId"] == str(collection_ex[0]) and sample["caseGroup"][
-            "caseGroupStatus"] == "INPROGRESS":
+    for sample in sample_return:
+        if (sample["caseGroup"]["collectionExerciseId"] == str(collection_ex[0]) and sample["caseGroup"][
+            "caseGroupStatus"] == "INPROGRESS"):
             case_inprogress.append(sample)
 
     # Loop over cases to flush them away

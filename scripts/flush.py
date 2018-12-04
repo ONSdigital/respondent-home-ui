@@ -48,7 +48,7 @@ def main(collection_ex_id):
 
     sample_return = []
     for sample_chunk in sample_chunks:
-        sample_chunk_return = requests.get(case_url + "sampleunitids?sampleUnitId=" + ','.join(samples),
+        sample_chunk_return = requests.get(case_url + "sampleunitids?sampleUnitId=" + ','.join(sample_chunk),
                                            auth=config["CASE_AUTH"])
         sample_chunk_return.raise_for_status()
         for sample in sample_chunk_return.json():
@@ -59,6 +59,8 @@ def main(collection_ex_id):
         if (sample["caseGroup"]["collectionExerciseId"] == str(collection_ex[0]) and sample["caseGroup"][
             "caseGroupStatus"] == "INPROGRESS"):
             case_inprogress.append(sample)
+
+    print(f'Cases in progress: {len(case_inprogress)}')
 
     # Loop over cases to flush them away
     for case in case_inprogress:
@@ -132,6 +134,7 @@ def flush_cases(case_id):
 
 
 if __name__ == '__main__':
+    print(f'Using {config_info.__name__}')
     collection_ex = sys.argv[1:]
     print(f'Collection exercise: {str(collection_ex)}')
     main(collection_ex)

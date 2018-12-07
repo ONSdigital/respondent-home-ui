@@ -6,10 +6,26 @@ from aiohttp.client_exceptions import (
     ClientResponseError, ClientConnectorError, ClientConnectionError, ContentTypeError)
 from structlog import wrap_logger
 
-from .exceptions import ExerciseClosedError, InactiveCaseError, InvalidEqPayLoad
-
+from .exceptions import ExerciseClosedError, InactiveCaseError, InvalidEqPayLoad, UnactionableCaseInactiveIACError
 
 logger = wrap_logger(logging.getLogger("respondent-home"))
+
+
+def pretty_print_POST(req):
+    """
+    At this point it is completely built and ready
+    to be fired; it is "prepared".
+
+    However pay attention at the formatting used in
+    this function because it is programmed to be pretty
+    printed and may differ from the actual request.
+    """
+    print('{}\n{}\n{}\n\n{}'.format(
+        '-----------START-----------',
+        req.method() + ' ' + req.url(),
+        '\n'.join('{}: {}'.format(k, v) for k, v in req.headers.items()),
+        req.body,
+    ))
 
 
 def create_error_middleware(overrides):
@@ -27,7 +43,11 @@ def create_error_middleware(overrides):
                 raise web.HTTPMovedPermanently(index_resource.url_for())
             return await not_found_error(request)
         except InactiveCaseError:
+            logger.warn('Inacive case Error thrown, going to attempt printing of request')
             return await inactive_case(request)
+        except UnactionableCaseInactiveIACError:
+            logger.warn('Inactive iac with unactionable case')
+            return await inactive_iac_unationable_case(request)
         except ExerciseClosedError as ex:
             return await ce_closed(request, ex.collection_exercise_id)
         except InvalidEqPayLoad as ex:
@@ -47,6 +67,11 @@ def create_error_middleware(overrides):
 async def inactive_case(request):
     logger.info("Attempt to use an inactive access code")
     return aiohttp_jinja2.render_template("completed.html", request, {})
+
+
+async def inactive_iac_unationable_case(request):
+    logger.warn("Attempt to use an inactive access code with an unactionable case")
+    return aiohttp_jinja2.render_template("inactive-iac-case-unactionable.html", request, {})
 
 
 async def ce_closed(request, collex_id):

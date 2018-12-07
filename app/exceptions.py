@@ -2,6 +2,10 @@ class InactiveCaseError(Exception):
     """Raised when a user enters a used IAC code"""
 
 
+class UnactionableCaseInactiveIACError(Exception):
+    """Raised when a user enters an inactive IAC code when the case is set to UNACTIONABLE"""
+
+
 class InvalidEqPayLoad(Exception):
 
     def __init__(self, message):

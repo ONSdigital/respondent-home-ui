@@ -10,7 +10,7 @@ from . import (
     BAD_CODE_MSG, BAD_CODE_TYPE_MSG, BAD_RESPONSE_MSG, INVALID_CODE_MSG, NOT_AUTHORIZED_MSG, VERSION)
 from .case import get_case, post_case_event
 from .eq import EqPayloadConstructor
-from .exceptions import InactiveCaseError, InvalidIACError
+from .exceptions import InactiveCaseError, InvalidIACError, UnactionableCaseInactiveIACError
 from .flash import flash
 
 
@@ -56,9 +56,24 @@ class Index:
         return combined
 
     @staticmethod
-    def validate_case(case_json):
-        if not case_json.get("active", False):
-            raise InactiveCaseError
+    def validate_case(iac, case):
+        logger.warn('IAC Case JSON: ' + ', '.join("{!s}={!r}".format(key, val) for (key, val) in iac.items()))
+        logger.warn('CASE JSON: ' + ', '.join("{!s}={!r}".format(key, val) for (key, val) in case.items()))
+
+        logger.warn('CASE Status: ' + case.get('state'))
+
+        if not iac.get("active", False):
+
+            state = case.get('state')
+
+            logger.warn('State equals: ' + state)
+
+            if state == 'INACTIONABLE':
+                logger.warn('About to throw UnactionableCaseInactiveIACError')
+                raise UnactionableCaseInactiveIACError
+            else:
+                logger.warn( 'About to throw InactiveCaseError')
+                raise InactiveCaseError
 
     def redirect(self):
         raise HTTPFound(self.request.app.router['Index:get'].url_for())
@@ -121,8 +136,6 @@ class Index:
             flash(self.request, INVALID_CODE_MSG)
             return aiohttp_jinja2.render_template("index.html", self.request, {}, status=202)
 
-        self.validate_case(iac_json)
-
         try:
             case_id = iac_json["caseId"]
         except KeyError:
@@ -131,6 +144,8 @@ class Index:
             return {}
 
         case = await get_case(case_id, self.request.app)
+
+        self.validate_case(iac_json, case)
 
         try:
             assert case['sampleUnitType'] == 'H'

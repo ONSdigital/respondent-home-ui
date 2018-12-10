@@ -8,7 +8,7 @@ from aioresponses import aioresponses
 
 from app import (
     BAD_CODE_MSG, BAD_CODE_TYPE_MSG, BAD_RESPONSE_MSG, INVALID_CODE_MSG, NOT_AUTHORIZED_MSG)
-from app.exceptions import InactiveCaseError
+from app.exceptions import CompletedCaseError, InactiveIACError
 from app.handlers import Index
 
 from . import RHTestCase, build_eq_raises, skip_build_eq, skip_encrypt
@@ -382,13 +382,35 @@ class TestHandlers(RHTestCase):
     async def test_post_index_iac_active_missing(self):
         iac_json = self.iac_json.copy()
         del iac_json['active']
+        case_json = self.case_json.copy()
+        case_json['caseGroupStatus'] = 'OTHERNONRESPONSE'
 
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
             mocked.get(self.iac_url, payload=iac_json)
+            mocked.get(self.case_url, payload=case_json)
 
             with self.assertLogs('respondent-home', 'INFO') as cm:
                 response = await self.client.request("POST", self.post_index, data=self.form_data)
-            self.assertLogLine(cm, "Attempt to use an inactive access code")
+            self.assertLogLine(cm, "Attempt to use an iac code that is inactive,"
+                                   " malformed or iac_details missing active field")
+
+        self.assertEqual(response.status, 200)
+        self.assertIn('Access Code Inactive', str(await response.content.read()))
+
+    @unittest_run_loop
+    async def test_post_index_case_complete(self):
+        iac_json = self.iac_json.copy()
+        iac_json['active'] = False
+        case_json = self.case_json.copy()
+        case_json['caseGroupStatus'] = 'COMPLETED'
+
+        with aioresponses(passthrough=[str(self.server._root)]) as mocked:
+            mocked.get(self.iac_url, payload=iac_json)
+            mocked.get(self.case_url, payload=case_json)
+
+            with self.assertLogs('respondent-home', 'INFO') as cm:
+                response = await self.client.request("POST", self.post_index, data=self.form_data)
+            self.assertLogLine(cm, "Attempt to use an inactive iac for a completed case")
 
         self.assertEqual(response.status, 200)
         self.assertIn('Study complete', str(await response.content.read()))
@@ -397,16 +419,23 @@ class TestHandlers(RHTestCase):
     async def test_post_index_iac_inactive(self):
         iac_json = self.iac_json.copy()
         iac_json['active'] = False
+        case_json = self.case_json.copy()
+        case_json['caseGroupStatus'] = 'OTHERNONRESPONSE'
 
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
             mocked.get(self.iac_url, payload=iac_json)
+            mocked.get(self.case_url, payload=case_json)
 
             with self.assertLogs('respondent-home', 'INFO') as cm:
                 response = await self.client.request("POST", self.post_index, data=self.form_data)
-            self.assertLogLine(cm, "Attempt to use an inactive access code")
+            self.assertLogLine(cm, "Attempt to use an iac code that is inactive,"
+                                   " malformed or iac_details missing active field")
 
         self.assertEqual(response.status, 200)
-        self.assertIn('Study complete', str(await response.content.read()))
+
+        response_content = str(await response.content.read())
+        self.assertIn('Access code disabled', response_content)
+        self.assertIn('The access code you entered has been disabled', response_content)
 
     @unittest_run_loop
     async def test_post_index_iac_service_connection_error(self):
@@ -522,29 +551,32 @@ class TestHandlers(RHTestCase):
 
     def test_validate_case(self):
         # Given a dict with an active key and value
-        case_json = {'active': True}
+        iac_json = {'active': True}
+        case_json = {'caseGroupStatus': 'NOTSTARTED'}
 
         # When validate_case is called
-        Index.validate_case(case_json)
+        Index.validate_iac_active(iac_json, case_json)
 
         # Nothing happens
 
-    def test_validate_case_inactive(self):
+    def test_validate_case_inactive_iac(self):
         # Given a dict with an active key and value
-        case_json = {'active': False}
+        iac_json = {'active': False}
+        case_json = {'caseGroupStatus': 'NOTSTARTED'}
 
         # When validate_case is called
-        with self.assertRaises(InactiveCaseError):
-            Index.validate_case(case_json)
+        with self.assertRaises(InactiveIACError):
+            Index.validate_iac_active(case_json, iac_json)
 
-        # Then an InactiveCaseError is raised
+        # Then an InactiveIACError is raised
 
-    def test_validate_case_empty(self):
+    def test_validate_iac_empty(self):
         # Given an empty dict
-        case_json = {}
+        iac_json = {}
+        case_json = {'caseGroupStatus': 'NOTSTARTED'}
 
         # When validate_case is called
-        with self.assertRaises(InactiveCaseError):
-            Index.validate_case(case_json)
+        with self.assertRaises(InactiveIACError):
+            Index.validate_iac_active(iac_json, case_json)
 
-        # Then an InactiveCaseError is raised
+        # Then an InactiveIACError is raised

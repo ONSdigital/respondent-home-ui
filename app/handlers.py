@@ -10,7 +10,7 @@ from . import (
     BAD_CODE_MSG, BAD_CODE_TYPE_MSG, BAD_RESPONSE_MSG, INVALID_CODE_MSG, NOT_AUTHORIZED_MSG, VERSION)
 from .case import get_case, post_case_event
 from .eq import EqPayloadConstructor
-from .exceptions import InactiveCaseError, InvalidIACError
+from .exceptions import CompletedCaseError, InvalidIACError, InactiveIACError
 from .flash import flash
 
 
@@ -56,9 +56,28 @@ class Index:
         return combined
 
     @staticmethod
-    def validate_case(case_json):
-        if not case_json.get("active", False):
-            raise InactiveCaseError
+    def validate_iac_active(iac_json, case_json):
+        if not iac_json.get("active", False):
+            case_group_status = case_json.get('caseGroupStatus')
+
+            if case_group_status == 'COMPLETED':
+                raise CompletedCaseError
+            else:
+                raise InactiveIACError
+
+    def check_case_sample_unit_type_valid(self, case_json):
+        try:
+            assert case_json['sampleUnitType'] == 'H'
+        except AssertionError:
+            logger.warn('Attempt to use unexpected sample unit type', sample_unit_type=case_json['sampleUnitType'])
+            flash(self.request, BAD_CODE_TYPE_MSG)
+            return False
+        except KeyError:
+            logger.error('sampleUnitType missing from case response', client_ip=self.client_ip)
+            flash(self.request, BAD_RESPONSE_MSG)
+            return False
+
+        return True
 
     def redirect(self):
         raise HTTPFound(self.request.app.router['Index:get'].url_for())
@@ -121,8 +140,6 @@ class Index:
             flash(self.request, INVALID_CODE_MSG)
             return aiohttp_jinja2.render_template("index.html", self.request, {}, status=202)
 
-        self.validate_case(iac_json)
-
         try:
             case_id = iac_json["caseId"]
         except KeyError:
@@ -130,20 +147,14 @@ class Index:
             flash(self.request, BAD_RESPONSE_MSG)
             return {}
 
-        case = await get_case(case_id, self.request.app)
+        case_json = await get_case(case_id, self.request.app)
 
-        try:
-            assert case['sampleUnitType'] == 'H'
-        except AssertionError:
-            logger.warn('Attempt to use unexpected sample unit type', sample_unit_type=case['sampleUnitType'])
-            flash(self.request, BAD_CODE_TYPE_MSG)
-            return {}
-        except KeyError:
-            logger.error('sampleUnitType missing from case response', client_ip=self.client_ip)
-            flash(self.request, BAD_RESPONSE_MSG)
+        self.validate_iac_active(iac_json, case_json)
+
+        if not self.check_case_sample_unit_type_valid(case_json):
             return {}
 
-        eq_payload = await EqPayloadConstructor(case, self.request.app, self.iac).build()
+        eq_payload = await EqPayloadConstructor(case_json, self.request.app, self.iac).build()
 
         token = encrypt(eq_payload, key_store=self.request.app['key_store'], key_purpose="authentication")
 

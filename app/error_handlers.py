@@ -6,8 +6,7 @@ from aiohttp.client_exceptions import (
     ClientResponseError, ClientConnectorError, ClientConnectionError, ContentTypeError)
 from structlog import wrap_logger
 
-from .exceptions import ExerciseClosedError, InactiveCaseError, InvalidEqPayLoad
-
+from .exceptions import ExerciseClosedError, CompletedCaseError, InvalidEqPayLoad, InactiveIACError
 
 logger = wrap_logger(logging.getLogger("respondent-home"))
 
@@ -26,8 +25,10 @@ def create_error_middleware(overrides):
                 logger.debug('Redirecting to index', path=request.path)
                 raise web.HTTPMovedPermanently(index_resource.url_for())
             return await not_found_error(request)
-        except InactiveCaseError:
-            return await inactive_case(request)
+        except CompletedCaseError:
+            return await completed_case(request)
+        except InactiveIACError:
+            return await inactive_iac(request)
         except ExerciseClosedError as ex:
             return await ce_closed(request, ex.collection_exercise_id)
         except InvalidEqPayLoad as ex:
@@ -44,9 +45,14 @@ def create_error_middleware(overrides):
     return middleware_handler
 
 
-async def inactive_case(request):
-    logger.info("Attempt to use an inactive access code")
+async def completed_case(request):
+    logger.info("Attempt to use an inactive iac for a completed case")
     return aiohttp_jinja2.render_template("completed.html", request, {})
+
+
+async def inactive_iac(request):
+    logger.info("Attempt to use an iac code that is inactive, malformed or iac_details missing active field")
+    return aiohttp_jinja2.render_template("inactive-iac.html", request, {})
 
 
 async def ce_closed(request, collex_id):

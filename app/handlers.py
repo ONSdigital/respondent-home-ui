@@ -58,9 +58,7 @@ class Index:
     @staticmethod
     def validate_iac_active(iac_json, case_json):
         if not iac_json.get("active", False):
-            case_group_status = case_json.get('caseGroupStatus')
-
-            if case_group_status == 'COMPLETED':
+            if case_json.get('caseGroupStatus') == 'COMPLETED':
                 raise CompletedCaseError
             else:
                 raise InactiveIACError
@@ -81,6 +79,10 @@ class Index:
 
     def redirect(self):
         raise HTTPFound(self.request.app.router['Index:get'].url_for())
+
+    async def get_token(self, case_json):
+        eq_payload = await EqPayloadConstructor(case_json, self.request.app, self.iac).build()
+        return encrypt(eq_payload, key_store=self.request.app['key_store'], key_purpose="authentication")
 
     async def get_iac_details(self):
         logger.debug(f"Making GET request to {self.iac_url}", iac=self.iac, client_ip=self.client_ip)
@@ -154,9 +156,7 @@ class Index:
         if not self.check_case_sample_unit_type_valid(case_json):
             return {}
 
-        eq_payload = await EqPayloadConstructor(case_json, self.request.app, self.iac).build()
-
-        token = encrypt(eq_payload, key_store=self.request.app['key_store'], key_purpose="authentication")
+        token = await self.get_token(case_json)
 
         description = f"Instrument LMS launched for case {case_id}"
         await post_case_event(case_id, 'EQ_LAUNCH', description, self.request.app)

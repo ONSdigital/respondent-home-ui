@@ -21,7 +21,8 @@ routes = RouteTableDef()
 @routes.view('/info', use_prefix=False)
 class Info:
 
-    async def get(self, request):
+    @staticmethod
+    async def get(request):
         info = {
             "name": 'respondent-home-ui',
             "version": VERSION,

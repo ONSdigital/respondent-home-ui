@@ -8,7 +8,7 @@ from aioresponses import aioresponses
 
 from app import (
     BAD_CODE_MSG, BAD_CODE_TYPE_MSG, BAD_RESPONSE_MSG, INVALID_CODE_MSG, NOT_AUTHORIZED_MSG)
-from app.exceptions import CompletedCaseError, InactiveIACError
+from app.exceptions import InactiveIACError
 from app.handlers import Index
 
 from . import RHTestCase, build_eq_raises, skip_build_eq, skip_encrypt

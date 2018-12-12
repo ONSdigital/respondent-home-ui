@@ -60,7 +60,7 @@ class Index:
     def validate_iac_active(iac_json, case_json):
         if not iac_json.get("active", False):
             try:
-                if case_json['caseGroup']['caseGroupStatus'] in ['COMPLETE', 'COMPLETEDBYPHONE']:
+                if case_json['caseGroup']['caseGroupStatus'] == 'COMPLETE':
                     logger.info('Attempt to use inactive iac for completed case')
                     raise CompletedCaseError
             except KeyError:

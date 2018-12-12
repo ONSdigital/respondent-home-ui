@@ -416,24 +416,6 @@ class TestHandlers(RHTestCase):
         self.assertIn('Study complete', str(await response.content.read()))
 
     @unittest_run_loop
-    async def test_post_index_case_completed_by_phone(self):
-        iac_json = self.iac_json.copy()
-        iac_json['active'] = False
-        case_json = self.case_json.copy()
-        case_json['caseGroup']['caseGroupStatus'] = 'COMPLETEDBYPHONE'
-
-        with aioresponses(passthrough=[str(self.server._root)]) as mocked:
-            mocked.get(self.iac_url, payload=iac_json)
-            mocked.get(self.case_url, payload=case_json)
-
-            with self.assertLogs('respondent-home', 'INFO') as cm:
-                response = await self.client.request("POST", self.post_index, data=self.form_data)
-            self.assertLogLine(cm, "Attempt to use an inactive iac for a completed case")
-
-        self.assertEqual(response.status, 200)
-        self.assertIn('Study complete', str(await response.content.read()))
-
-    @unittest_run_loop
     async def test_missing_case_group_status(self):
         iac_json = self.iac_json.copy()
         iac_json['active'] = False

@@ -59,10 +59,15 @@ class Index:
     @staticmethod
     def validate_iac_active(iac_json, case_json):
         if not iac_json.get("active", False):
-            if case_json.get('caseGroupStatus') == 'COMPLETED':
-                raise CompletedCaseError
-            else:
-                raise InactiveIACError
+            try:
+                if case_json['caseGroup']['caseGroupStatus'] in ['COMPLETE', 'COMPLETEDBYPHONE']:
+                    logger.info('Attempt to use inactive iac for completed case')
+                    raise CompletedCaseError
+            except KeyError:
+                logger.warn("Field case_json['caseGroup']['caseGroupStatus'] not found")
+
+            logger.info('Attempt to use inactive iac for incomplete case')
+            raise InactiveIACError
 
     def check_case_sample_unit_type_valid(self, case_json):
         try:

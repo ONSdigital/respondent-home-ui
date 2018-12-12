@@ -383,7 +383,7 @@ class TestHandlers(RHTestCase):
         iac_json = self.iac_json.copy()
         del iac_json['active']
         case_json = self.case_json.copy()
-        case_json['caseGroupStatus'] = 'OTHERNONRESPONSE'
+        case_json['caseGroup']['caseGroupStatus'] = 'OTHERNONRESPONSE'
 
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
             mocked.get(self.iac_url, payload=iac_json)
@@ -402,7 +402,7 @@ class TestHandlers(RHTestCase):
         iac_json = self.iac_json.copy()
         iac_json['active'] = False
         case_json = self.case_json.copy()
-        case_json['caseGroupStatus'] = 'COMPLETED'
+        case_json['caseGroup']['caseGroupStatus'] = 'COMPLETE'
 
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
             mocked.get(self.iac_url, payload=iac_json)
@@ -416,11 +416,29 @@ class TestHandlers(RHTestCase):
         self.assertIn('Study complete', str(await response.content.read()))
 
     @unittest_run_loop
-    async def test_post_index_iac_inactive(self):
+    async def test_post_index_case_completed_by_phone(self):
         iac_json = self.iac_json.copy()
         iac_json['active'] = False
         case_json = self.case_json.copy()
-        case_json['caseGroupStatus'] = 'OTHERNONRESPONSE'
+        case_json['caseGroup']['caseGroupStatus'] = 'COMPLETEDBYPHONE'
+
+        with aioresponses(passthrough=[str(self.server._root)]) as mocked:
+            mocked.get(self.iac_url, payload=iac_json)
+            mocked.get(self.case_url, payload=case_json)
+
+            with self.assertLogs('respondent-home', 'INFO') as cm:
+                response = await self.client.request("POST", self.post_index, data=self.form_data)
+            self.assertLogLine(cm, "Attempt to use an inactive iac for a completed case")
+
+        self.assertEqual(response.status, 200)
+        self.assertIn('Study complete', str(await response.content.read()))
+
+    @unittest_run_loop
+    async def test_missing_case_group_status(self):
+        iac_json = self.iac_json.copy()
+        iac_json['active'] = False
+        case_json = self.case_json.copy()
+        del case_json['caseGroup']['caseGroupStatus']
 
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
             mocked.get(self.iac_url, payload=iac_json)
@@ -432,7 +450,27 @@ class TestHandlers(RHTestCase):
                                    " malformed or iac_details missing active field")
 
         self.assertEqual(response.status, 200)
+        response_content = str(await response.content.read())
+        self.assertIn('Access code disabled', response_content)
+        self.assertIn('The access code you entered has been disabled', response_content)
 
+    @unittest_run_loop
+    async def test_post_index_iac_inactive(self):
+        iac_json = self.iac_json.copy()
+        iac_json['active'] = False
+        case_json = self.case_json.copy()
+        case_json['caseGroup']['caseGroupStatus'] = 'OTHERNONRESPONSE'
+
+        with aioresponses(passthrough=[str(self.server._root)]) as mocked:
+            mocked.get(self.iac_url, payload=iac_json)
+            mocked.get(self.case_url, payload=case_json)
+
+            with self.assertLogs('respondent-home', 'INFO') as cm:
+                response = await self.client.request("POST", self.post_index, data=self.form_data)
+            self.assertLogLine(cm, "Attempt to use an iac code that is inactive,"
+                                   " malformed or iac_details missing active field")
+
+        self.assertEqual(response.status, 200)
         response_content = str(await response.content.read())
         self.assertIn('Access code disabled', response_content)
         self.assertIn('The access code you entered has been disabled', response_content)

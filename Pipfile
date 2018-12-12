@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-aiohttp = "*"
+aiohttp = ">=3.4,<=4"
 aiohttp-utils = "*"
 envparse = "*"
 "aiohttp-jinja2" = "*"

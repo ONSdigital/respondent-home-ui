@@ -57,16 +57,28 @@ class Index:
         return combined
 
     @staticmethod
+    def get_collex_id(case_json):
+        try:
+            collex_id = case_json['caseGroup']['collectionExerciseId']
+        except KeyError:
+            logger.warn("Failed to get case_json['caseGroup']['collectionExerciseId']")
+            collex_id = "[collex_id not found]"
+
+        return collex_id
+
+    @staticmethod
     def validate_iac_active(iac_json, case_json):
         if not iac_json.get("active", False):
+            collex_id = Index.get_collex_id(case_json)
+
             try:
                 if case_json['caseGroup']['caseGroupStatus'] == 'COMPLETE':
-                    logger.info('Attempt to use inactive iac for completed case')
+                    logger.info('Attempt to use inactive iac for completed case, collex id: ' + collex_id)
                     raise CompletedCaseError
             except KeyError:
                 logger.warn("Field case_json['caseGroup']['caseGroupStatus'] not found")
 
-            logger.info('Attempt to use inactive iac for incomplete case')
+            logger.info('Attempt to use inactive iac for incomplete case, collex id: ' + collex_id)
             raise InactiveIACError
 
     def check_case_sample_unit_type_valid(self, case_json):

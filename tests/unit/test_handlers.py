@@ -442,6 +442,7 @@ class TestHandlers(RHTestCase):
         iac_json['active'] = False
         case_json = self.case_json.copy()
         case_json['caseGroup']['caseGroupStatus'] = 'OTHERNONRESPONSE'
+        case_json['caseGroup']['collectionExerciseId'] = 'expected_collex_id'
 
         with aioresponses(passthrough=[str(self.server._root)]) as mocked:
             mocked.get(self.iac_url, payload=iac_json)
@@ -451,6 +452,30 @@ class TestHandlers(RHTestCase):
                 response = await self.client.request("POST", self.post_index, data=self.form_data)
             self.assertLogLine(cm, "Attempt to use an iac code that is inactive,"
                                    " malformed or iac_details missing active field")
+            self.assertLogLine(cm, "Attempt to use inactive iac for incomplete case, collex id: expected_collex_id")
+
+        self.assertEqual(response.status, 200)
+        response_content = str(await response.content.read())
+        self.assertIn('Access code disabled', response_content)
+        self.assertIn('The access code you entered has been disabled', response_content)
+
+    @unittest_run_loop
+    async def test_post_index_iac_inactive_collex_id_missing(self):
+        iac_json = self.iac_json.copy()
+        iac_json['active'] = False
+        case_json = self.case_json.copy()
+        case_json['caseGroup']['caseGroupStatus'] = 'OTHERNONRESPONSE'
+        del case_json['caseGroup']['collectionExerciseId']
+
+        with aioresponses(passthrough=[str(self.server._root)]) as mocked:
+            mocked.get(self.iac_url, payload=iac_json)
+            mocked.get(self.case_url, payload=case_json)
+
+            with self.assertLogs('respondent-home', 'INFO') as cm:
+                response = await self.client.request("POST", self.post_index, data=self.form_data)
+            self.assertLogLine(cm, "Attempt to use an iac code that is inactive,"
+                                   " malformed or iac_details missing active field")
+            self.assertLogLine(cm, "[collex_id not found]")
 
         self.assertEqual(response.status, 200)
         response_content = str(await response.content.read())
@@ -586,7 +611,7 @@ class TestHandlers(RHTestCase):
 
         # When validate_case is called
         with self.assertRaises(InactiveIACError):
-            Index.validate_iac_active(case_json, iac_json)
+            Index.validate_iac_active(iac_json, case_json)
 
         # Then an InactiveIACError is raised
 
@@ -598,5 +623,3 @@ class TestHandlers(RHTestCase):
         # When validate_case is called
         with self.assertRaises(InactiveIACError):
             Index.validate_iac_active(iac_json, case_json)
-
-        # Then an InactiveIACError is raised

@@ -64,7 +64,6 @@ class Index:
             logger.warn("Failed to get case_json['caseGroup']['collectionExerciseId']")
             collex_id = "[collex_id not found]"
 
-        return collex_id
 
     @staticmethod
     def validate_iac_active(iac_json, case_json):

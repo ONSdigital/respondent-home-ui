@@ -59,7 +59,7 @@ class Index:
     @staticmethod
     def get_collex_id(case_json):
         try:
-            collex_id = case_json['caseGroup']['collectionExerciseId']
+            return case_json['caseGroup']['collectionExerciseId']
         except KeyError:
             logger.warn("Failed to get case_json['caseGroup']['collectionExerciseId']")
             collex_id = "[collex_id not found]"

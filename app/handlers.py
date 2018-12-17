@@ -78,7 +78,7 @@ class Index:
             except KeyError:
                 logger.warn("Field case_json['caseGroup']['caseGroupStatus'] not found")
 
-            logger.info('Attempt to use inactive iac for incomplete case, collex id: ' + collex_id)
+            logger.info('Attempt to use inactive iac for incomplete case', collex_id=collex_id)
             raise InactiveIACError
 
     def check_case_sample_unit_type_valid(self, case_json):

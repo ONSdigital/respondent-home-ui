@@ -62,7 +62,6 @@ class Index:
             return case_json['caseGroup']['collectionExerciseId']
         except KeyError:
             logger.warn("Failed to get case_json['caseGroup']['collectionExerciseId']")
-            collex_id = "[collex_id not found]"
 
 
     @staticmethod

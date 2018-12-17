@@ -73,7 +73,7 @@ class Index:
 
             try:
                 if case_json['caseGroup']['caseGroupStatus'] == 'COMPLETE':
-                    logger.info('Attempt to use inactive iac for completed case, collex id: ' + collex_id)
+                    logger.info('Attempt to use inactive iac for completed case', collex_id=collex_id)
                     raise CompletedCaseError
             except KeyError:
                 logger.warn("Field case_json['caseGroup']['caseGroupStatus'] not found")

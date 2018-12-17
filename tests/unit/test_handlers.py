@@ -452,7 +452,7 @@ class TestHandlers(RHTestCase):
                 response = await self.client.request("POST", self.post_index, data=self.form_data)
             self.assertLogLine(cm, "Attempt to use an iac code that is inactive,"
                                    " malformed or iac_details missing active field")
-            self.assertLogLine(cm, "Attempt to use inactive iac for incomplete case, collex id: expected_collex_id")
+            self.assertLogLine(cm, "Attempt to use inactive iac for incomplete case", collex_id='expected_collex_id')
 
         self.assertEqual(response.status, 200)
         response_content = str(await response.content.read())

@@ -61,8 +61,7 @@ class Index:
         try:
             return case_json['caseGroup']['collectionExerciseId']
         except KeyError:
-            logger.warn("Failed to get case_json['caseGroup']['collectionExerciseId']")
-
+            logger.warn("Failed to get collex_id from case_json['caseGroup']['collectionExerciseId']")
 
     @staticmethod
     def validate_iac_active(iac_json, case_json):

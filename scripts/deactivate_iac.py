@@ -36,7 +36,7 @@ def main(collection_ex_id):
     samples = [sample['id'] for sample in sample_units]
     print(f'Sample units for collection exercise: {len(samples)}')
 
-    sample_chunks = []
+    sample_chunks = [samples[i:i + 10] for i in range(0, len(samples), 10)]
     for i in range(0, len(samples), 10):
         sample_chunks.append(samples[i:i + 10])
 

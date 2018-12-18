@@ -1,9 +1,13 @@
 import os
 import sys
+import logging
 
 import requests
 
 from app import config
+from structlog import configure, get_logger, wrap_logger
+from structlog.processors import TimeStamper, JSONRenderer
+from structlog.stdlib import add_log_level, filter_by_level, LoggerFactory
 
 try:
     config_info = getattr(config, os.environ['APP_SETTINGS'])
@@ -12,6 +16,9 @@ except (AttributeError, KeyError) as e:
 
 # Put config into a dict
 config = dict((name, getattr(config_info, name)) for name in dir(config_info) if not name.startswith('__'))
+
+# Configure logger
+logger = wrap_logger(logging.getLogger(__name__))
 
 # Setup URLs
 case_url = f"{config['CASE_URL']}/cases/"
@@ -23,21 +30,18 @@ eq_url = f"{config['EQ_URL']}"
 
 
 def main(collection_ex_id):
+
     collection_ex_info = requests.get(collex_url + "link/" + collection_ex_id[0],
                                       auth=config["COLLECTION_EXERCISE_AUTH"])
     collection_ex_info.raise_for_status()
-
     sample_summary_id = collection_ex_info.json()
-
     sample_units = requests.get(sample_url + sample_summary_id[0] + "/sampleunits",
                                 auth=config["SAMPLE_AUTH"])
     sample_units = sample_units.json()
-
     samples = [sample['id'] for sample in sample_units]
-    print(f'Sample units for collection exercise: {len(samples)}')
+    logger.info(sample_size=len(samples))
 
     sample_chunks = [samples[i:i + 10] for i in range(0, len(samples), 10)]
-
     sample_return = []
     for sample_chunk in sample_chunks:
         sample_chunk_return = requests.get(case_url + "sampleunitids?sampleUnitId=" + ','.join(sample_chunk),
@@ -56,7 +60,7 @@ def main(collection_ex_id):
                 iac = requests.get(iac_url + iac['iac'], auth=config["IAC_AUTH"])
                 iac.raise_for_status()
                 iac_data = iac.json()
-                print(f'IAC: {iac_data["iac"]} Active: {iac_data["active"]}')
+                logger.info('Found IAC', iac=iac_data["iac"],  active=iac_data["active"])
                 if iac_data.get("active", False):
                     deactivate_iac(iac.json())
 
@@ -65,11 +69,26 @@ def deactivate_iac(iac):
     deactivate_data = {"active": "false", "updatedBy": "Tricky"}
     result = requests.put(iac_url + iac['iac'], json=deactivate_data, auth=config["IAC_AUTH"])
     result.raise_for_status()
-    print(f'Deactivated {iac}')
+    logger.info('Deactivated', iac=iac)
+
+
+def add_service(_1, _2, event_dict):
+    """
+    Add the service name to the event dict.
+    """
+    event_dict['service'] = 'deactivate_iac'
+    return event_dict
 
 
 if __name__ == '__main__':
-    print(f'Using {config_info.__name__}')
+    logging.basicConfig(format="%(message)s", stream=sys.stdout, level=logging.INFO)
+    configure(processors=[add_log_level, filter_by_level, add_service,
+                          TimeStamper(fmt="%Y-%m-%dT%H:%M%s", utc=True, key="created_at"),
+                          JSONRenderer(indent=1)],
+              logger_factory=LoggerFactory
+              )
+
+    logger.info(configuration=config_info.__name__)
     collection_ex = sys.argv[1:]
-    print(f'Collection exercise: {str(collection_ex)}')
+    logger.info(collection_exercise=str(collection_ex))
     main(collection_ex)

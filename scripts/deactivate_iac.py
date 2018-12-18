@@ -59,7 +59,7 @@ def main(collection_ex_id):
                 iac.raise_for_status()
                 iac_data = iac.json()
                 print(f'IAC: {iac_data["iac"]} Active: {iac_data["active"]}')
-                if iac_data["active"]:
+                if iac_data.get("active", False):
                     deactivate_iac(iac.json())
 
 

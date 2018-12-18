@@ -1,5 +1,9 @@
-class InactiveCaseError(Exception):
-    """Raised when a user enters a used IAC code"""
+class CompletedCaseError(Exception):
+    """Raised when a user enters a IAC code for a completed case"""
+
+
+class InactiveIACError(Exception):
+    """Raised when a user enters an inactive IAC code"""
 
 
 class InvalidEqPayLoad(Exception):

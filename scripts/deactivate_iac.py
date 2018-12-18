@@ -49,11 +49,11 @@ def main(collection_ex_id):
             sample_return.append(sample)
 
     for sample in sample_return:
-        case_id = sample["id"]
-        iac_return = requests.get(case_url + case_id + "/iac", auth=config["CASE_AUTH"])
-        iac_return.raise_for_status()
-        iacs = iac_return.json()
         if sample["sampleUnitType"] == "H" and sample["state"] == "INACTIONABLE":
+            case_id = sample["id"]
+            iac_return = requests.get(case_url + case_id + "/iac", auth=config["CASE_AUTH"])
+            iac_return.raise_for_status()
+            iacs = iac_return.json()
             for iac in iacs:
                 iac = requests.get(iac_url + iac['iac'], auth=config["IAC_AUTH"])
                 iac.raise_for_status()

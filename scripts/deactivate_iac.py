@@ -58,7 +58,7 @@ def main(collection_ex_id):
                 iac = requests.get(iac_url + iac['iac'], auth=config["IAC_AUTH"])
                 iac.raise_for_status()
                 iac_data = iac.json()
-                print(f'IAC: {iac_data["iac"]} {iac_data["active"]}')
+                print(f'IAC: {iac_data["iac"]} Active: {iac_data["active"]}')
                 if iac_data["active"]:
                     deactivate_iac(iac.json())
 
@@ -67,6 +67,7 @@ def deactivate_iac(iac):
     deactivate_data = {"active": "false", "updatedBy": "Tricky"}
     result = requests.put(iac_url + iac['iac'], json=deactivate_data, auth=config["IAC_AUTH"])
     result.raise_for_status()
+    print(f'Deactivated {iac}')
 
 
 if __name__ == '__main__':

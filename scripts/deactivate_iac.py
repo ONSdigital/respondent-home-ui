@@ -1,14 +1,14 @@
+import argparse
+import logging
 import os
 import sys
-import logging
 
 import requests
-import argparse
-
-from app import config
 from structlog import configure, wrap_logger
 from structlog.processors import TimeStamper, JSONRenderer
 from structlog.stdlib import add_log_level, filter_by_level, LoggerFactory
+
+from app import config
 
 try:
     config_info = getattr(config, os.environ['APP_SETTINGS'])

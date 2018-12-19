@@ -3,9 +3,10 @@ import sys
 import logging
 
 import requests
+import argparse
 
 from app import config
-from structlog import configure, get_logger, wrap_logger
+from structlog import configure, wrap_logger
 from structlog.processors import TimeStamper, JSONRenderer
 from structlog.stdlib import add_log_level, filter_by_level, LoggerFactory
 
@@ -16,9 +17,13 @@ except (AttributeError, KeyError) as e:
 
 # Put config into a dict
 config = dict((name, getattr(config_info, name)) for name in dir(config_info) if not name.startswith('__'))
-
+0
 # Configure logger
 logger = wrap_logger(logging.getLogger(__name__))
+
+# Configure argument parser
+parser = argparse.ArgumentParser(description='Deactivate IACs for a Collection Exercise.')
+parser.add_argument('-c', dest='collectionExercise', type=str, help='Collection Exercise ID.')
 
 # Setup URLs
 case_url = f"{config['CASE_URL']}/cases/"
@@ -31,7 +36,7 @@ eq_url = f"{config['EQ_URL']}"
 
 def main(collection_ex_id):
 
-    collection_ex_info = requests.get(collex_url + "link/" + collection_ex_id[0],
+    collection_ex_info = requests.get(collex_url + "link/" + collection_ex_id,
                                       auth=config["COLLECTION_EXERCISE_AUTH"])
     collection_ex_info.raise_for_status()
     sample_summary_id = collection_ex_info.json()
@@ -69,7 +74,7 @@ def deactivate_iac(iac):
     deactivate_data = {"active": "false", "updatedBy": "Tricky"}
     result = requests.put(iac_url + iac['iac'], json=deactivate_data, auth=config["IAC_AUTH"])
     result.raise_for_status()
-    logger.info('Deactivated', iac=iac)
+    logger.info('Deactivated IAC', iac=iac)
 
 
 def add_service(_1, _2, event_dict):
@@ -85,10 +90,12 @@ if __name__ == '__main__':
     configure(processors=[add_log_level, filter_by_level, add_service,
                           TimeStamper(fmt="%Y-%m-%dT%H:%M%s", utc=True, key="created_at"),
                           JSONRenderer(indent=1)],
-              logger_factory=LoggerFactory
-              )
+              logger_factory=LoggerFactory)
 
     logger.info(configuration=config_info.__name__)
-    collection_ex = sys.argv[1:]
-    logger.info(collection_exercise=str(collection_ex))
-    main(collection_ex)
+    # collection_ex = sys.argv[1:]
+    args = parser.parse_args()
+    collection_ex = args.collectionExercise
+    if collection_ex:
+        logger.info(collection_exercise=str(collection_ex))
+        main(collection_ex)

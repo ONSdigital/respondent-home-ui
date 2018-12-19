@@ -322,6 +322,16 @@ class TestEq(RHTestCase):
         # Then the date is formatted correctly
         self.assertEqual(result, '2007-01-25')
 
+    def test_iso8601_adjusts_to_local_time(self):
+        # Given a valid date in tz -1hr before midnight
+        date = '2007-01-25T23:59:59-0100'
+
+        # When format_date is called
+        result = format_date(parse_date(date))
+
+        # Then the date is localised to the next day
+        self.assertEqual(result, '2007-01-26')
+
     def test_invalid_iso8601_date_format(self):
         # Given a valid date
         date = 'invalid_date'

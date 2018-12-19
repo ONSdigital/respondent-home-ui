@@ -36,7 +36,7 @@ def parse_date(string_date):
     :return: datetime object
     """
     try:
-        return iso8601.parse_date(string_date)
+        return iso8601.parse_date(string_date).astimezone()
     except (ValueError, iso8601.iso8601.ParseError):
         raise InvalidEqPayLoad(f"Unable to parse {string_date}")
 

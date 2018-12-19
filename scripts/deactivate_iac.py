@@ -17,7 +17,7 @@ except (AttributeError, KeyError) as e:
 
 # Put config into a dict
 config = dict((name, getattr(config_info, name)) for name in dir(config_info) if not name.startswith('__'))
-0
+
 # Configure logger
 logger = wrap_logger(logging.getLogger(__name__))
 
@@ -93,7 +93,6 @@ if __name__ == '__main__':
               logger_factory=LoggerFactory)
 
     logger.info(configuration=config_info.__name__)
-    # collection_ex = sys.argv[1:]
     args = parser.parse_args()
     collection_ex = args.collectionExercise
     if collection_ex:

@@ -17,6 +17,7 @@ aiodns = "*"
 invoke = "*"
 redis = "*"
 cfenv = "*"
+argparse = "*"
 
 [dev-packages]
 codecov = "*"

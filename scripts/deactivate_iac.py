@@ -65,6 +65,7 @@ def main(collection_ex_id):
             sample_return.append(sample)
 
     logger.info("De-activating IACs for Sample", collection_exercise=collection_ex_id, sample_summary=sample_summary_id)
+    deactivated_total = 0
     for sample in sample_return:
         if sample["sampleUnitType"] == "H":
             case_id = sample["id"]
@@ -76,7 +77,6 @@ def main(collection_ex_id):
                 iac.raise_for_status()
                 iac_data = iac.json()
                 logger.info('Found IAC', case_id=iac_data["caseId"],  iac_active=iac_data["active"])
-                deactivated_total = 0
                 if iac_data.get("active", False):
                     deactivate_iac(iac.json())
                     deactivated_total += 1

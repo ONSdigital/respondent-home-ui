@@ -77,10 +77,11 @@ def main(collection_ex_id):
                 iac.raise_for_status()
                 iac_data = iac.json()
                 logger.info('Found IAC', case_id=iac_data["caseId"],  iac_active=iac_data["active"])
+                deactivated_total += 1
                 if iac_data.get("active", False):
                     deactivate_iac(iac.json())
                     deactivated_total += 1
-            logger.info("Deactivated IACs total", deactivated_total=deactivated_total)
+    logger.info("Deactivated IACs total", deactivated_total=deactivated_total)
 
 
 def deactivate_iac(iac):

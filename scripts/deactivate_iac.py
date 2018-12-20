@@ -56,7 +56,7 @@ def main(collection_ex_id):
             sample_return.append(sample)
 
     for sample in sample_return:
-        if sample["sampleUnitType"] == "H" and sample["state"] == "INACTIONABLE":
+        if sample["sampleUnitType"] == "H":
             case_id = sample["id"]
             iac_return = requests.get(case_url + case_id + "/iac", auth=config["CASE_AUTH"])
             iac_return.raise_for_status()

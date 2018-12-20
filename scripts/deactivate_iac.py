@@ -32,10 +32,8 @@ parser.add_argument('-c', dest='collectionExercise', type=str, help='Collection 
 # Setup URLs
 case_url = f"{config['CASE_URL']}/cases/"
 iac_url = f"{config['IAC_URL']}/iacs/"
-ci_url = f"{config['COLLECTION_INSTRUMENT_URL']}/collection-instrument-api/1.0.2/collectioninstrument/id/"
 collex_url = f"{config['COLLECTION_EXERCISE_URL']}/collectionexercises/"
 sample_url = f"{config['SAMPLE_URL']}/samples/"
-eq_url = f"{config['EQ_URL']}"
 
 
 def main(collection_ex_id):
@@ -77,7 +75,6 @@ def main(collection_ex_id):
                 iac.raise_for_status()
                 iac_data = iac.json()
                 logger.info('Found IAC', case_id=iac_data["caseId"],  iac_active=iac_data["active"])
-                deactivated_total += 1
                 if iac_data.get("active", False):
                     deactivate_iac(iac.json())
                     deactivated_total += 1

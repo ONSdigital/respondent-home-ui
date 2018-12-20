@@ -78,7 +78,7 @@ def main(collection_ex_id):
                 if iac_data.get("active", False):
                     deactivate_iac(iac.json())
                     deactivated_total += 1
-    logger.info("Deactivated IACs total", deactivated_total=deactivated_total)
+    logger.info("Deactivated IACs total", deactivated_total=deactivated_total, collection_exercise=collection_ex_id)
 
 
 def deactivate_iac(iac):

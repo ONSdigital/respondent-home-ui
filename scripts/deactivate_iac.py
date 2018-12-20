@@ -92,9 +92,9 @@ if __name__ == '__main__':
                           JSONRenderer(indent=1)],
               logger_factory=LoggerFactory)
 
-    logger.info(configuration=config_info.__name__)
     args = parser.parse_args()
     collection_ex = args.collectionExercise
     if collection_ex:
+        logger.info(configuration=config_info.__name__)
         logger.info(collection_exercise=str(collection_ex))
         main(collection_ex)

@@ -77,7 +77,7 @@ def main(collection_ex_id):
 
 
 def deactivate_iac(iac):
-    deactivate_data = {"active": "false", "updatedBy": "SYSTEM"}
+    deactivate_data = {"active": "false", "updatedBy": "RM_DEACTIVATE_IAC_SCRIPT"}
     result = requests.put(iac_url + iac['iac'], json=deactivate_data, auth=config["IAC_AUTH"])
     result.raise_for_status()
 

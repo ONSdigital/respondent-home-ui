@@ -36,16 +36,21 @@ eq_url = f"{config['EQ_URL']}"
 
 def main(collection_ex_id):
 
-    collection_ex_info = requests.get(collex_url + "link/" + collection_ex_id,
-                                      auth=config["COLLECTION_EXERCISE_AUTH"])
+    logger.info("Finding Sample Summary IDs linked to Collection Exercise", collection_exercise=collection_ex_id)
+    collection_ex_info = requests.get(collex_url + "link/" + collection_ex_id, auth=config["COLLECTION_EXERCISE_AUTH"])
     collection_ex_info.raise_for_status()
     sample_summary_id = collection_ex_info.json()
+
+    logger.info("Finding Sample Units by Sample Summary ID", collection_exercise=collection_ex_id,
+                sample_summary=sample_summary_id)
     sample_units = requests.get(sample_url + sample_summary_id[0] + "/sampleunits",
                                 auth=config["SAMPLE_AUTH"])
     sample_units = sample_units.json()
     samples = [sample['id'] for sample in sample_units]
     logger.info(sample_size=len(samples))
 
+    logger.info("Finding Cases for Sample Units", collection_exercise=collection_ex_id,
+                sample_summary=sample_summary_id)
     sample_chunks = [samples[i:i + 10] for i in range(0, len(samples), 10)]
     sample_return = []
     for sample_chunk in sample_chunks:
@@ -55,6 +60,7 @@ def main(collection_ex_id):
         for sample in sample_chunk_return.json():
             sample_return.append(sample)
 
+    logger.info("De-activating IACs for Sample", collection_exercise=collection_ex_id, sample_summary=sample_summary_id)
     for sample in sample_return:
         if sample["sampleUnitType"] == "H":
             case_id = sample["id"]
@@ -65,7 +71,7 @@ def main(collection_ex_id):
                 iac = requests.get(iac_url + iac['iac'], auth=config["IAC_AUTH"])
                 iac.raise_for_status()
                 iac_data = iac.json()
-                logger.info('Found IAC', iac=iac_data["iac"],  active=iac_data["active"])
+                logger.info('Found IAC', case_id=iac_data["caseId"],  iac_active=iac_data["active"])
                 if iac_data.get("active", False):
                     deactivate_iac(iac.json())
 
@@ -74,7 +80,6 @@ def deactivate_iac(iac):
     deactivate_data = {"active": "false", "updatedBy": "SYSTEM"}
     result = requests.put(iac_url + iac['iac'], json=deactivate_data, auth=config["IAC_AUTH"])
     result.raise_for_status()
-    logger.info('Deactivated IAC', iac=iac)
 
 
 def add_service(_1, _2, event_dict):

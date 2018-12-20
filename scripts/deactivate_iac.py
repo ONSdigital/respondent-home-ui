@@ -74,7 +74,8 @@ def main(collection_ex_id):
                 iac = requests.get(iac_url + iac['iac'], auth=config["IAC_AUTH"])
                 iac.raise_for_status()
                 iac_data = iac.json()
-                logger.info('Found IAC', case_id=iac_data["caseId"],  iac_active=iac_data["active"])
+                logger.info('Found IAC', case_id=iac_data["caseId"],  iac_active=iac_data["active"],
+                            collection_exercise=collection_ex_id)
                 if iac_data.get("active", False):
                     deactivate_iac(iac.json())
                     deactivated_total += 1

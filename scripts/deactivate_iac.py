@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import argparse
 import logging
 import os
@@ -8,7 +9,10 @@ from structlog import configure, wrap_logger
 from structlog.processors import TimeStamper, JSONRenderer
 from structlog.stdlib import add_log_level, filter_by_level, LoggerFactory
 
-from app import config
+# Script needs to know about app so append to PYTHONPATH
+sys.path.append(os.path.join(os.path.dirname(__file__), os.path.pardir))
+from app import config  # NOQA
+
 
 try:
     config_info = getattr(config, os.environ['APP_SETTINGS'])
@@ -98,6 +102,10 @@ if __name__ == '__main__':
               logger_factory=LoggerFactory)
 
     args = parser.parse_args()
+    # Print help if no options supplied
+    if len(sys.argv) == 1:
+        parser.print_help(sys.stderr)
+        sys.exit(1)
     collection_ex = args.collectionExercise
     if collection_ex:
         logger.info(configuration=config_info.__name__)

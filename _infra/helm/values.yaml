@@ -1,0 +1,14 @@
+replicaCount: 1
+
+env: "dev"
+
+service:
+  port: 8093
+
+resources:
+  requests:
+    cpu: "500m"
+    memory: "512Mi"
+  limits:
+    cpu: "1000m"
+    memory: "1028Mi"

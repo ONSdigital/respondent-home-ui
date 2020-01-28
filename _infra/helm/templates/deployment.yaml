@@ -96,25 +96,25 @@ spec:
           - name: ACCOUNT_SERVICE_URL
             value: "$(ACCOUNT_SERVICE_URL)"
           - name: CASE_URL
-            value: "http://$(CASESVC_SERVICE_HOST):$(CASESVC_SERVICE_PORT)"
+            value: "http://$(CASE_SERVICE_HOST):$(CASE_SERVICE_PORT)"
           - name: CASE_USERNAME
             value: "$(SECURITY_USER_NAME)"
           - name: CASE_PASSWORD
             value: "$(SECURITY_USER_PASSWORD)"
           - name: COLLECTION_EXERCISE_URL
-            value: "http://$(COLLECTIONEXERCISESVC_SERVICE_HOST):$(COLLECTIONEXERCISESVC_SERVICE_PORT)"
+            value: "http://$(COLLECTION_EXERCISE_SERVICE_HOST):$(COLLECTION_EXERCISE_SERVICE_PORT)"
           - name: COLLECTION_EXERCISE_USERNAME
             value: "$(SECURITY_USER_NAME)"
           - name: COLLECTION_EXERCISE_PASSWORD
             value: "$(SECURITY_USER_PASSWORD)"
           - name: COLLECTION_INSTRUMENT_URL
-            value: "http://$(RAS_COLLECTION_INSTRUMENT_SERVICE_HOST):$(RAS_COLLECTION_INSTRUMENT_SERVICE_PORT)"
+            value: "http://$(COLLECTION_INSTRUMENT_SERVICE_HOST):$(COLLECTION_INSTRUMENT_SERVICE_PORT)"
           - name: COLLECTION_INSTRUMENT_USERNAME
             value: "$(SECURITY_USER_NAME)"
           - name: COLLECTION_INSTRUMENT_PASSWORD
             value: "$(SECURITY_USER_PASSWORD)"
           - name: IAC_URL
-            value: "http://$(IACSVC_SERVICE_HOST):$(IACSVC_SERVICE_PORT)"
+            value: "http://$(IAC_SERVICE_HOST):$(IAC_SERVICE_PORT)"
           - name: IAC_USERNAME
             value: "$(SECURITY_USER_NAME)"
           - name: IAC_PASSWORD
@@ -124,16 +124,16 @@ spec:
           - name: REDIS_PORT
             value: "$(REDIS_MASTER_SERVICE_PORT)"
           - name: SAMPLE_URL
-            value: "http://$(SAMPLESVC_SERVICE_HOST):$(SAMPLESVC_SERVICE_PORT)"
+            value: "http://$(SAMPLE_SERVICE_HOST):$(SAMPLE_SERVICE_PORT)"
           - name: SAMPLE_USERNAME
             value: "$(SECURITY_USER_NAME)"
           - name: SAMPLE_PASSWORD
             value: "$(SECURITY_USER_PASSWORD)"
           - name: SURVEY_URL
-            value: "http://$(SURVEYSVC_SERVICE_HOST):$(SURVEYSVC_SERVICE_PORT)"
+            value: "http://$(SURVEY_SERVICE_HOST):$(SURVEY_SERVICE_PORT)"
           - name: SURVEY_USERNAME
             value: "$(SECURITY_USER_NAME)"
           - name: SURVEY_PASSWORD
             value: "$(SECURITY_USER_PASSWORD)"
           resources:
-{{ toYaml .Values.resources | indent 12 }}
+            {{ toYaml .Values.resources | nindent 12 }}

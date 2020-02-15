@@ -16,13 +16,11 @@ spec:
     matchLabels:
       app: {{ .Chart.Name }}
       env: {{ required "A valid .Values.env entry required!" .Values.env }}
-      version: {{ required "A valid .Values.version entry required!" .Values.version | quote}}
   template:
     metadata:
       labels:
         app: {{ .Chart.Name }}
         env: {{ required "A valid .Values.env entry required!" .Values.env }}
-        version: {{ required "A valid .Values.version entry required!" .Values.version | quote }}
     spec:
       containers:
         - name: {{ .Chart.Name }}

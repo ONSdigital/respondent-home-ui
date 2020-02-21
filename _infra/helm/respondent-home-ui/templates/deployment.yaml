@@ -4,13 +4,13 @@ metadata:
   name: {{ .Chart.Name }}
   labels:
     app: {{ .Chart.Name }}
-    env: "{{ .Values.env }}"
+    env: {{ .Values.env }}
 spec:
   replicas: {{ .Values.replicaCount }}
   strategy:
     rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 1
+      maxSurge: {{ .Values.rollingUpdate.maxSurge }}
+      maxUnavailable: {{ .Values.rollingUpdate.maxUnavailable }}
     type: RollingUpdate
   selector:
     matchLabels:
@@ -24,15 +24,15 @@ spec:
     spec:
       containers:
         - name: {{ .Chart.Name }}
-          image: "eu.gcr.io/ons-rasrmbs-management/{{ .Chart.Name }}:{{ .Chart.AppVersion }}"
-          imagePullPolicy: Always
+          image: "{{ .Values.image.name }}/{{ .Chart.Name }}:{{ .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http-server
-              containerPort: {{ .Values.service.port }}
+              containerPort: {{ .Values.container.port }}
           readinessProbe:
             httpGet:
               path: /info
-              port: {{ .Values.service.port }}
+              port: {{ .Values.container.port }}
             initialDelaySeconds: 1
             periodSeconds: 20
             failureThreshold: 5
@@ -41,7 +41,7 @@ spec:
           livenessProbe:
             httpGet:
               path: /info
-              port: {{ .Values.service.port }}
+              port: {{ .Values.container.port }}
             initialDelaySeconds: 1
             periodSeconds: 20
             failureThreshold: 5
@@ -88,7 +88,7 @@ spec:
           - name: APP_SETTINGS
             value: "DevelopmentConfig"
           - name: PORT
-            value: "{{ .Values.service.port }}"
+            value: "{{ .Values.container.port }}"
           - name: EQ_URL
             value: "http://localhost:5000"
           - name: ACCOUNT_SERVICE_URL

@@ -96,9 +96,23 @@ spec:
           - name: IAC_PASSWORD
             value: "$(SECURITY_USER_PASSWORD)"
           - name: REDIS_HOST
+            {{- if .Values.database.managedRedis }}
+            valueFrom:
+              configMapKeyRef:
+                name: redis-config
+                key: redis-host
+            {{- else }}
             value: "$(REDIS_MASTER_SERVICE_HOST)"
+            {{- end }}
           - name: REDIS_PORT
+            {{- if .Values.database.managedRedis }}
+            valueFrom:
+              configMapKeyRef:
+                name: redis-config
+                key: redis-port
+            {{- else }}
             value: "$(REDIS_MASTER_SERVICE_PORT)"
+            {{- end}}
           - name: SAMPLE_URL
             value: "http://$(SAMPLE_SERVICE_HOST):$(SAMPLE_SERVICE_PORT)"
           - name: SAMPLE_USERNAME

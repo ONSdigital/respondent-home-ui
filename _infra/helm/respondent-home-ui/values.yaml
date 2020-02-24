@@ -10,8 +10,11 @@ image:
   name: eu.gcr.io/ons-rasrmbs-management
   pullPolicy: Always
 
+database:
+  managedRedis: false
+
 container:
-  port: 80
+  port: 8080
 service:
   port: 80
 

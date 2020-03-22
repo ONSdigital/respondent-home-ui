@@ -1,0 +1,21 @@
+{
+  "schema": "v2",
+  "application": "respondent-home-ui",
+  "name": "deploy dev",
+  "template": {
+    "artifactAccount": "front50ArtifactCredentials",
+    "reference": "spinnaker://individualDeploymentTemplate",
+    "type": "front50/pipelineTemplate"
+  },
+  "variables": {
+    "namespace": "dev",
+    "environment": "dev",
+    "service": "respondent-home-ui"
+  },
+  "exclude": [],
+  "triggers": [],
+  "parameters": [],
+  "notifications": [],
+  "description": "",
+  "stages": []
+}

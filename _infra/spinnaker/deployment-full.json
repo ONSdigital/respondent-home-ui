@@ -1,16 +1,15 @@
 {
   "schema": "v2",
   "application": "respondent-home-ui",
-  "name": "respondent-home-ui",
+  "name": "deployment",
   "template": {
     "artifactAccount": "front50ArtifactCredentials",
-    "reference": "spinnaker://rasrmApplicationTemplate",
+    "reference": "spinnaker://fullDeploymentTemplate",
     "type": "front50/pipelineTemplate"
   },
   "variables": {
-    "name": "respondent-home-ui",
-    "defaultHelmChart": "respondent-home-ui-0.1.0.tgz",
-    "helmChartMatcher": "respondent-home-ui-.*\\.tgz"
+    "service": "respondent-home-ui",
+    "defaultVersion": "1.0.0"
   },
   "exclude": [],
   "triggers": [],

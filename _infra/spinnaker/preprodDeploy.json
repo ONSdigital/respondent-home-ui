@@ -10,7 +10,8 @@
   "variables": {
     "namespace": "preprod",
     "environment": "preprod",
-    "service": "respondent-home-ui"
+    "service": "respondent-home-ui",
+    "bucket": "ras-rm-preprod-configuration"
   },
   "exclude": [],
   "triggers": [],

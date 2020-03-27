@@ -9,8 +9,10 @@
   },
   "variables": {
     "namespace": "dev",
+    "configNamespace": "dev",
     "environment": "dev",
-    "service": "respondent-home-ui"
+    "service": "respondent-home-ui",
+    "bucket": "ras-rm-configuration"
   },
   "exclude": [],
   "triggers": [],

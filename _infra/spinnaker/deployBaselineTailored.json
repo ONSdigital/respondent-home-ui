@@ -4,13 +4,11 @@
   "name": "deploy dev",
   "template": {
     "artifactAccount": "front50ArtifactCredentials",
-    "reference": "spinnaker://deployBaseline",
+    "reference": "spinnaker://deployBaselineTailored",
     "type": "front50/pipelineTemplate"
   },
   "variables": {
-    "namespace": "dev",
-    "environment": "dev",
-    "service": "respondent-home-ui"
+    "application": "respondent-home-ui"
   },
   "exclude": [],
   "triggers": [],

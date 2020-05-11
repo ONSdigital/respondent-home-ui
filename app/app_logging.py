@@ -8,7 +8,7 @@ from structlog.stdlib import add_log_level, filter_by_level
 
 
 def logger_initial_config(
-    service_name=None, log_level=None, logger_format=None, logger_date_format=None
+        service_name=None, log_level=None, logger_format=None, logger_date_format=None
 ):
 
     if not logger_date_format:
@@ -35,8 +35,20 @@ def logger_initial_config(
 
     logging.basicConfig(stream=sys.stdout, level=log_level, format=logger_format)
 
+    def add_severity_level(logger, method_name, event_dict):
+        """
+        Add the log level to the event dict.
+        """
+        if method_name == "warn":
+            # The stdlib has an alias
+            method_name = "warning"
+
+        event_dict["severity"] = method_name
+        return event_dict
+
     configure(
         processors=[
+            add_severity_level,
             add_log_level,
             filter_by_level,
             add_service,
